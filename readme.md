@@ -13,9 +13,8 @@ O Excurcionistas oferece uma variedade de funcionalidades para usuários e admin
 
 ## Tecnologias Utilizadas
 O Excurcionistas é desenvolvido utilizando as seguintes tecnologias:
-- **Framework Web:** React Native
 - **Banco de Dados:** MySQL
-- **Frontend:** React
+- **Frontend:** React Native
 - **Backend / API:** PHP / Laravel
 - **Ferramentas de Versionamento:** Git, GitHub
 

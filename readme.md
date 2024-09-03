@@ -1,4 +1,4 @@
-# Projeto Excurcionistas - Sistema de Gerenciamento de Caravanas
+# Projeto Excursionistas - Sistema de Gerenciamento de Caravanas
 
 ## Visão Geral
 O projeto Excurcionistas, desenvolvido pelo grupo SuricatoDev, é um sistema de gerenciamento de caravanas que visa facilitar a organização e a gestão de viagens em grupo. O sistema foi concebido para oferecer uma plataforma centralizada para planejar, reservar e monitorar excursões de forma eficiente e intuitiva.

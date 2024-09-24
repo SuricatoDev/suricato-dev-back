@@ -10,7 +10,7 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
-docker-composer.yml
+docker-compose.yml
 Homestead.json
 Homestead.yaml
 auth.json

@@ -12,7 +12,7 @@
 
     <p>Prezado(a) {{$user->name}}</p>
 
-    <p>Para recuperar a sua senha do app Excursionistas, use o código de verificação abaixo:</p>
+    <p>Para recuperar a sua senha do App Excursionistas, use o código de verificação abaixo:</p>
 
     <p>{{ $code }}</p>
 

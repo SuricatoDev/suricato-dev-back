@@ -25,7 +25,7 @@ class ResetPasswordValidateCodeRequest extends FormRequest
     {
         return [
             'code' => ['required'],
-            'email' => ['required|email'],
+            'email' => ['required', 'email'],
         ];
     }
 

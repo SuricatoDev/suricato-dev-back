@@ -8,7 +8,7 @@ use App\Http\Requests\ResetPasswordCodeRequest;
 use App\Http\Requests\ResetPasswordValidateCodeRequest;
 use App\Mail\SendEmailForgetPasswordCode;
 use App\Models\User;
-use App\Service\ResetPasswordValidateCodeService;
+use App\Services\ResetPasswordValidateCodeService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;

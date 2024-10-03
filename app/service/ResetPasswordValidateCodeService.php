@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class PasswordResetService
- * 
+ *
  * Esta classe fornece métodos para validar códigos de redefinição de senha.
  */
 class ResetPasswordValidateCodeService
@@ -55,8 +55,8 @@ class ResetPasswordValidateCodeService
         // Calcular a diferença em minutos entre o momento atual e o $createdAt
         $differenceInMinutes = Carbon::parse($passwordResetTokens->created_at)->diffInMinutes(Carbon::now());
 
-        // Verificar se a diferença é maior que 5 minutos
-        if($differenceInMinutes > 5){
+        // Verificar se a diferença é maior que 10 minutos
+        if($differenceInMinutes > 10){
 
             // Salvar log
             Log::notice('Código expirado.', ['email' => $email]);
@@ -74,7 +74,6 @@ class ResetPasswordValidateCodeService
             'message' => 'Código válido!',
         ];
 
-        
     }
 
 }

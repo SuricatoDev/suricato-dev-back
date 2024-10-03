@@ -14,10 +14,10 @@
 
     <p>Para recuperar a sua senha do App Excursionistas, use o código de verificação abaixo:</p>
 
-    <p>{{ $code }}</p>
+    <p><strong>{{ $code }}</strong></p>
 
     <p>Por questões de segurança esse código é válido somente até as {{ $formattedTime }} do dia {{ $formattedDate }}. Caso esse prazo esteja expirado, será necessário solicitar outro código.</p>
-
+    <br>
     <p>Atenciosamente,</p>
 
     <p>Equipe Excursionistas</p>

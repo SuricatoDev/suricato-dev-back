@@ -64,7 +64,7 @@ class RecoverPasswordCodeController extends Controller
             ]);
 
             $currentDate = Carbon::now();
-            $fiveMinutesLater = $currentDate->addMinutes(5);
+            $fiveMinutesLater = $currentDate->addMinutes(10);
             $formattedTime = $fiveMinutesLater->format('H:i');
             $formattedDate = $fiveMinutesLater->format('d/m/Y');
 

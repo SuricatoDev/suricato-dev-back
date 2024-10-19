@@ -4,19 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use function Laravel\Prompts\table;
+
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->increments('id')->unsigned();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('endereco');
+            $table->string('cep');
+            $table->integer('cidade_id')->unsigned();
+            $table->foreign('cidade_id')
+                ->references('id')
+                ->on('cidades');
+            $table->string('telefone');
+            $table->enum('tipo', ['PF', 'PJ']);
+            $table->boolean('ativo')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,9 +44,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

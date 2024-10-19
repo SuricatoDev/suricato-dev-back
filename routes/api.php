@@ -10,8 +10,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 //Rota de Teste
-Route::any('ping', function () {
-    return ['pong' => true];
+Route::any('test', function () {
+    return ['API em funcionamento' => true,
+        'Projeto' => 'Excursionistas - Gestão de Caravanas',
+        'API' => 'v1.0.0',
+        'Data de verificação' => now(),
+        'Status' => 200,
+        'Autor' => 'Filipe Lamego',
+        'Email' => 'filipe.lamego@fatec.sp.gov.br',
+        'GitHub' => 'https://github.com/filipelamego/suricato-dev-back',
+        'Faculdade' => 'Fatec Sorocaba',
+        'Curso' => 'Análise e Desenvolvimento de Sistemas'
+    ];
 });
 
 //Rotas Liberadas

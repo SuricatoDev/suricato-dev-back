@@ -14,7 +14,7 @@ class Estado extends Model
         'sigla',
     ];
 
-    /* ************************** Relationships ************************** */
+    /* ************************** RELACIONAMENTOS ************************** */
 
     public function cidades()
     {

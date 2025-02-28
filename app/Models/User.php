@@ -51,4 +51,26 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /************************* RELACIONAMENTOS *************************/
+
+    public function passageiro()
+    {
+        return $this->hasOne(Passageiro::class);
+    }
+
+    public function organizador()
+    {
+        return $this->hasOne(Organizador::class);
+    }
+
+    public function suporte()
+    {
+        return $this->hasMany(Suporte::class);
+    }
+
+    public function denuncia()
+    {
+        return $this->hasMany(Denuncia::class);
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PessoaFisica;
-use App\Models\PessoaJuridica;
+use App\Models\Passageiro;
+use App\Models\Organizador;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function register(Request $request)
     {
-        // Validações básicas e específicas para PF ou PJ
+        // Validações básicas e específicas para Passageiros ou Organizadores
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
@@ -55,18 +55,18 @@ class UserController extends Controller
             ]);
 
             // Verifica o tipo de usuário para criar o registro correspondente
-            if ($request->tipo == 'PF') {
+            if ($request->tipo == 'Passageiro') {
 
-                PessoaFisica::create([
+                Passageiro::create([
                     'user_id' => $user->id,
                     'nome' => $request->nome,
                     'cpf' => $request->cpf,
                     'rg' => $request->rg,
                     'data_nascimento' => $request->data_nascimento,
                 ]);
-            } elseif ($request->tipo == 'PJ') {
-                
-                PessoaJuridica::create([
+            } elseif ($request->tipo == 'Organizador') {
+
+                Organizador::create([
                     'user_id' => $user->id,
                     'razao_social' => $request->razao_social,
                     'cnpj' => $request->cnpj,

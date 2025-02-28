@@ -15,7 +15,7 @@ class Cidade extends Model
         'estado_id',
     ];
 
-    /* ************************** Relationships ************************** */
+    /* ************************** RELACIONAMENTOS ************************** */
 
     public function users()
     {

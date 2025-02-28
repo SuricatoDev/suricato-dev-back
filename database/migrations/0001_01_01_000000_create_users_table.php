@@ -22,7 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('cidades');
             $table->string('telefone');
-            $table->enum('tipo', ['PF', 'PJ']);
+            $table->enum('tipo', ['Passageiro', 'Organizador']);
             $table->boolean('ativo')->default(true);
             $table->rememberToken();
             $table->timestamps();

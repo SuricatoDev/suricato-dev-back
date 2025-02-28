@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PessoaFisica extends Model
+class Passageiro extends Model
 {
     use HasFactory;
 
@@ -25,5 +25,20 @@ class PessoaFisica extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
+    public function caravanaPassageiros()
+    {
+        return $this->hasMany(CaravanaPassageiro::class);
+    }
+
+    public function avaliacao()
+    {
+        return $this->hasMany(Avaliacao::class);
+    }
+
+    public function denuncia()
+    {
+        return $this->hasMany(Denuncia::class);
+    }
+
 }

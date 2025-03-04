@@ -54,6 +54,9 @@ class RecoverPasswordCodeController extends Controller
                 $userPasswordResets->delete();
             }
 
+            // Forçar o fuso horário para America/Sao_Paulo
+            Carbon::setTimezone('America/Sao_Paulo');
+
             $code = mt_rand(100000, 999999);
             $token = Hash::make($code);
 
@@ -70,7 +73,7 @@ class RecoverPasswordCodeController extends Controller
 
             Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
 
-            // Log::info('Recuperar senha.', ['email' => $request->email]);
+            Log::info('Recuperar senha.', ['email' => $request->email]);
 
             return response()->json([
                 'status' => true,

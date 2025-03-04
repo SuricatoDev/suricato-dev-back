@@ -68,33 +68,9 @@ class RecoverPasswordCodeController extends Controller
             $formattedTime = $tenMinutesLater->format('H:i');
             $formattedDate = $tenMinutesLater->format('d/m/Y');
 
-            // Tente enviar o e-mail, dentro de um try-catch separado
-            try {
-                Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
-            } catch (\Exception $e) {
-                Log::error('Erro ao enviar o e-mail de recuperação de senha.', [
-                    'email' => $request->email,
-                    'error' => $e->getMessage(),
-                ]);
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Erro ao enviar o e-mail. Tente mais tarde.',
-                ], 500);
-            }
+            Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
 
-            // Logue a tentativa de recuperação de senha
-            try {
-                Log::info('Recuperar senha.', ['email' => $request->email]);
-            } catch (\Exception $e) {
-                Log::error('Erro ao escrever no log de recuperação de senha.', [
-                    'email' => $request->email,
-                    'error' => $e->getMessage(),
-                ]);
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Erro ao registrar o log de recuperação de senha.',
-                ], 500);
-            }
+            Log::info('Recuperar senha.', ['email' => $request->email]);
 
             return response()->json([
                 'status' => true,
@@ -109,7 +85,6 @@ class RecoverPasswordCodeController extends Controller
             ], 400);
         }
     }
-
 
     /**
      * Validar o código de recuperação de senha enviado pelo usuário.

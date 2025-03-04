@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -82,7 +83,6 @@ class UserController extends Controller
                 'message' => 'Usuário registrado com sucesso!',
                 'user' => $user,
             ], 201);
-
         } catch (Exception $e) {
             //Rollback em caso de erro
             DB::rollBack();
@@ -91,6 +91,29 @@ class UserController extends Controller
                 'message' => 'Erro ao registrar o usuário',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // Rota para verificação de email
+    public function verificarEmail(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+
+            if (!$email) {
+                return response()->json(['error' => 'O campo email é obrigatório'], 400);
+            }
+
+            $existe = DB::table('users')->where('email', $email)->exists();
+
+            if ($existe) {
+                return response()->json(['message' => 'E-mail encontrado'], 200);
+            } else {
+                return response()->json(['error' => 'E-mail não cadastrado'], 404);
+            }
+        } catch (\Exception $e) {
+            Log::error('Erro ao acessar o banco: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro interno no servidor'], 500);
         }
     }
 }

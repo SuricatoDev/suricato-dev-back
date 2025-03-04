@@ -18,7 +18,7 @@ Route::any('test', function () {
         'Status' => 200,
         'Autor' => 'Filipe Lamego',
         'Email' => 'filipe.lamego@fatec.sp.gov.br',
-        'GitHub' => 'https://github.com/filipelamego/suricato-dev-back',
+        'GitHub' => 'https://github.com/SuricatoDev',
         'Faculdade' => 'Fatec Sorocaba',
         'Curso' => 'Análise e Desenvolvimento de Sistemas'
     ];
@@ -28,6 +28,8 @@ Route::any('test', function () {
 Route::post('login', [AuthController::class, 'login']);
 
 Route::post('register', [UserController::class, 'register']);
+
+Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 
 //Rotas Forgot Password
 Route::post('forgot-password-code', [RecoverPasswordCodeController::class, 'forgotPasswordCode']);

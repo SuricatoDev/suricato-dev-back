@@ -19,7 +19,7 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'tipo' => 'required|in:PF,PJ',
+            'tipo' => 'required|in:passageiro,organizador',
 
             // Validações gerais
             'endereco' => 'required',
@@ -27,15 +27,15 @@ class UserController extends Controller
             'cidade_id' => 'required|exists:cidades,id',
             'telefone' => 'required',
 
-            // Validações específicas para PF
-            'nome' => 'required_if:tipo,PF',
-            'cpf' => 'required_if:tipo,PF|unique:pessoa_fisica,cpf',
-            'rg' => 'required_if:tipo,PF',
-            'data_nascimento' => 'required_if:tipo,PF|date',
+            // Validações específicas para Passageiro
+            'nome' => 'required_if:tipo,passageiro',
+            'cpf' => 'required_if:tipo,passageiro|unique:passageiros,cpf',
+            'rg' => 'required_if:tipo,passageiro',
+            'data_nascimento' => 'required_if:tipo,passageiro|date',
 
-            // Validações específicas para PJ
-            'razao_social' => 'required_if:tipo,PJ',
-            'cnpj' => 'required_if:tipo,PJ|unique:pessoa_juridica,cnpj',
+            // Validações específicas para Organizador
+            'razao_social' => 'required_if:tipo,organizador',
+            'cnpj' => 'required_if:tipo,organizador|unique:organizadores,cnpj',
             'inscricao_estadual' => 'nullable',
             'inscricao_municipal' => 'nullable',
         ]);
@@ -56,7 +56,7 @@ class UserController extends Controller
             ]);
 
             // Verifica o tipo de usuário para criar o registro correspondente
-            if ($request->tipo == 'Passageiro') {
+            if ($request->tipo == 'passageiro') {
 
                 Passageiro::create([
                     'user_id' => $user->id,
@@ -65,7 +65,7 @@ class UserController extends Controller
                     'rg' => $request->rg,
                     'data_nascimento' => $request->data_nascimento,
                 ]);
-            } elseif ($request->tipo == 'Organizador') {
+            } elseif ($request->tipo == 'organizador') {
 
                 Organizador::create([
                     'user_id' => $user->id,

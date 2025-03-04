@@ -54,9 +54,6 @@ class RecoverPasswordCodeController extends Controller
                 $userPasswordResets->delete();
             }
 
-            // Forçar o fuso horário para America/Sao_Paulo
-            Carbon::setTimezone('America/Sao_Paulo');
-
             $code = mt_rand(100000, 999999);
             $token = Hash::make($code);
 

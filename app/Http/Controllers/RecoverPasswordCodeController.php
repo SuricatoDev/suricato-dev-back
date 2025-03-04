@@ -54,9 +54,6 @@ class RecoverPasswordCodeController extends Controller
                 $userPasswordResets->delete();
             }
 
-            // Forçar o fuso horário para America/Sao_Paulo
-            Carbon::setTimezone('America/Sao_Paulo');
-
             $code = mt_rand(100000, 999999);
             $token = Hash::make($code);
 
@@ -66,15 +63,25 @@ class RecoverPasswordCodeController extends Controller
                 'created_at' => Carbon::now(),
             ]);
 
+            // Gerar o código de recuperação e a data/hora formatadas
             $currentDate = Carbon::now();
             $tenMinutesLater = $currentDate->addMinutes(10);
             $formattedTime = $tenMinutesLater->format('H:i');
             $formattedDate = $tenMinutesLater->format('d/m/Y');
 
-            // Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
-            // Teste simples de envio de e-mail sem formatação de data
-            Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, 'Teste', '00:00'));
-
+            // Enviar o e-mail com o código de recuperação
+            try {
+                Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
+            } catch (\Exception $e) {
+                Log::error('Erro ao enviar e-mail de recuperação de senha.', [
+                    'email' => $user->email,
+                    'error' => $e->getMessage(),
+                ]);
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Erro ao enviar o e-mail. Tente mais tarde.',
+                ], 500);
+            }
 
             Log::info('Recuperar senha.', ['email' => $request->email]);
 
@@ -91,6 +98,7 @@ class RecoverPasswordCodeController extends Controller
             ], 400);
         }
     }
+
 
     /**
      * Validar o código de recuperação de senha enviado pelo usuário.

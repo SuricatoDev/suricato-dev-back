@@ -9,7 +9,7 @@ class Passageiro extends Model
 {
     use HasFactory;
 
-    protected $table = 'pessoa_fisica';
+    protected $table = 'passageiros';
 
     protected $fillable = [
         'user_id',

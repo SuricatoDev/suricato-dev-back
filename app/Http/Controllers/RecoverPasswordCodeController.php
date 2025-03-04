@@ -70,7 +70,7 @@ class RecoverPasswordCodeController extends Controller
 
             // Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
 
-            //Log::info('Recuperar senha.', ['email' => $request->email]);
+            Log::info('Recuperar senha.', ['email' => $request->email]);
 
             return response()->json([
                 'status' => true,

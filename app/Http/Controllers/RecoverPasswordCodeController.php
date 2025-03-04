@@ -71,7 +71,10 @@ class RecoverPasswordCodeController extends Controller
             $formattedTime = $tenMinutesLater->format('H:i');
             $formattedDate = $tenMinutesLater->format('d/m/Y');
 
-            Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
+            // Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, $formattedDate, $formattedTime));
+            // Teste simples de envio de e-mail sem formatação de data
+            Mail::to($user->email)->send(new SendEmailForgetPasswordCode($user, $code, 'Teste', '00:00'));
+
 
             Log::info('Recuperar senha.', ['email' => $request->email]);
 

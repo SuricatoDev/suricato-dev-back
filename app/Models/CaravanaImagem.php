@@ -21,6 +21,6 @@ class CaravanaImagem extends Model
 
     public function caravana()
     {
-        return $this->belongsTo(Caravana::class);
+        return $this->belongsTo(Caravana::class, 'caravana_id', 'id');
     }
 }

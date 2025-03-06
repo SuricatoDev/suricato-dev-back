@@ -48,7 +48,7 @@ class Caravana extends Model
 
     public function imagens()
     {
-        return $this->hasMany(CaravanaImagem::class);
+        return $this->hasMany(CaravanaImagem::class, 'caravana_id', 'id');
     }
 
     public function avaliacao()

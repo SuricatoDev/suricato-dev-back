@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->string('placa');
             $table->string('marca');
+            $table->string('antt');
             $table->enum('tipo', ['Van', 'Ônibus', 'Micro-ônibus']);
             $table->integer('capacidade');
             $table->string('motorista');

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -114,6 +115,119 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('Erro ao acessar o banco: ' . $e->getMessage());
             return response()->json(['error' => 'Erro interno no servidor'], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        /** @var User $user */
+        $user = Auth::user(); // Obtém o usuário autenticado
+
+        // Verifica se o usuário está tentando editar outro usuário
+        if ($user->id != $id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Você só pode editar seu próprio perfil.'
+            ], 403);
+        }
+
+        // Validação dos dados de entrada
+        $validated = $request->validate([
+            'password' => 'sometimes|string|min:6',
+            'endereco' => 'sometimes|string',
+            'cep' => 'sometimes|string|min:8|max:8',
+            'cidade_id' => 'sometimes|integer|exists:cidades,id',
+            'telefone' => 'sometimes|string|min:10|max:11',
+
+            // Validações dinâmicas com base no tipo do usuário
+            'nome' => 'required_if:tipo,passageiro|sometimes|string',
+            'rg' => 'required_if:tipo,passageiro|sometimes|string',
+            'data_nascimento' => 'required_if:tipo,passageiro|sometimes|date',
+
+            'razao_social' => 'required_if:tipo,organizador|sometimes|string',
+            'inscricao_estadual' => 'sometimes|string',
+            'inscricao_municipal' => 'sometimes|string',
+        ]);
+
+        // Atualiza a senha se fornecida
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']); // Criptografa a senha usando Hash
+        }
+
+        // Atualiza os dados na tabela users (informações comuns)
+        $user->update($validated);
+
+        // Atualiza as informações específicas, dependendo do tipo de usuário
+        if ($user->tipo == 'passageiro') {
+            $passageiro = $user->passageiro; // Relação entre 'users' e 'passageiro'
+            $passageiro->update([
+                'nome' => $validated['nome'] ?? $passageiro->nome,
+                'cpf' => $validated['cpf'] ?? $passageiro->cpf,
+                'rg' => $validated['rg'] ?? $passageiro->rg,
+                'data_nascimento' => $validated['data_nascimento'] ?? $passageiro->data_nascimento,
+            ]);
+        } elseif ($user->tipo == 'organizador') {
+            $organizador = $user->organizador; // Relação entre 'users' e 'organizador'
+            $organizador->update([
+                'razao_social' => $validated['razao_social'] ?? $organizador->razao_social,
+                'cnpj' => $validated['cnpj'] ?? $organizador->cnpj,
+                'inscricao_estadual' => $validated['inscricao_estadual'] ?? $organizador->inscricao_estadual,
+                'inscricao_municipal' => $validated['inscricao_municipal'] ?? $organizador->inscricao_municipal,
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Perfil atualizado com sucesso!',
+            'data' => $user
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        /** @var User $user */
+        $user = Auth::user(); // Obtém o usuário autenticado
+
+        // Verifica o id do usuário autenticado
+        if ($user->id != $id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao excluir o perfil.'
+            ], 403);
+        }
+
+        // Inicia uma transação para garantir que todas as exclusões aconteçam com sucesso
+        DB::beginTransaction();
+
+        try {
+            // Deleta as informações específicas do passageiro ou organizador
+            if ($user->tipo == 'passageiro') {
+                // Exclui o registro na tabela passageiros
+                $user->passageiro()->delete();
+            } elseif ($user->tipo == 'organizador') {
+                // Exclui o registro na tabela organizadores
+                $user->organizador()->delete();
+            }
+
+            // Deleta o usuário da tabela users
+            $user->delete();
+
+            // Se todas as exclusões forem feitas com sucesso, confirma a transação
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Perfil excluído com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            // Se algum erro ocorrer, desfaz todas as exclusões realizadas na transação
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao excluir o perfil.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

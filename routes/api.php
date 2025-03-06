@@ -27,11 +27,10 @@ Route::any('test', function () {
 
 //Rotas Liberadas
 Route::post('login', [AuthController::class, 'login']);
-
 Route::post('register', [UserController::class, 'register']);
-
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 
+// Rota para visualizar todas as caravanas (não é necessário estar logado)
 Route::get('caravanas', [CaravanaController::class, 'index']);
 
 //Rotas Forgot Password
@@ -39,9 +38,17 @@ Route::post('forgot-password-code', [RecoverPasswordCodeController::class, 'forg
 Route::post('reset-password-validate-code', [RecoverPasswordCodeController::class, 'resetPasswordValidateCode']);
 Route::post('reset-password-code', [RecoverPasswordCodeController::class, 'resetPasswordCode']);
 
-//Rotas Protegidas
+//Rotas Protegidas (Necessita estar logado)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
+
+    //Rotas Caravanas
     Route::post('caravanas', [CaravanaController::class, 'store']);
+    Route::put('caravanas/{id}', [CaravanaController::class, 'update']);
+    Route::delete('caravanas/{id}', [CaravanaController::class, 'destroy']);
+
+    //Rotas Users
+    Route::put('users/{id}', [UserController::class, 'update']);
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
 });

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Info(
- *      version="1.2.0",
+ *      version="1.3.0",
  *      title="Documentação - API SuricatoDev (Projeto Excursionistas)",
  *      description="Esta API fornece endpoints para a gestão de caravanas, passageiros e organizadores, realizar reservas, denúncias e avaliações.
  *      🚀 **Principais funcionalidades:**
@@ -75,13 +76,27 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Credenciais inválidas",
+     *         description="Erro ao realizar login, usuário ou senha incorretos",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Erro ao realizar login. Verifique suas credenciais.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Usuário já está logado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuário já está logado!"),
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="João da Silva"),
+     *                 @OA\Property(property="email", type="string", format="email", example="usuario@email.com"),
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|abcde12345")
      *         )
      *     )
      * )
      */
+
 
     public function login(Request $request)
     {
@@ -91,12 +106,25 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        // Busca o usuário pelo e-mail
+        $user = User::where('email', $request->email)->first();
+
+        // Verifica se o usuário já tem um token ativo
+        if ($user && $user->tokens()->count() > 0) {
+            return response()->json([
+                'message' => 'Usuário já está logado! Faça logout antes de tentar novamente.',
+                'user' => $user,
+                'token' => $user->tokens()->first()->token
+            ], 403);
+        }
+
         // Verificação de credenciais de login
         if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password
         ])) {
             // Se o login for bem-sucedido, cria o token e retorna os dados
+
             /** @var User $user */
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -106,14 +134,15 @@ class AuthController extends Controller
                 'user' => $user, // Retorna os dados do usuário logado
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ], 200);  // Status 200 para sucesso
+            ], 200);
         }
 
         // Se o login falhar, retorna uma mensagem de erro
         return response()->json([
-            'message' => 'Erro ao realizar login. Verifique suas credenciais.',
-        ], 401);  // Status 401 para erro de autenticação
+            'message' => 'Erro ao realizar login. Usuário ou senha incorretos.',
+        ], 401);
     }
+
 
     /**
      * @OA\Post(
@@ -132,7 +161,7 @@ class AuthController extends Controller
      *         response=200,
      *         description="Logout realizado com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Successfully logged out"),
+     *             @OA\Property(property="message", type="string", example="Logout realizado com sucesso!"),
      *             @OA\Property(property="status", type="boolean", example=true)
      *         )
      *     ),
@@ -149,10 +178,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
         return response()->json(
             [
-                'message' => 'Successfully logged out',
+                'message' => 'Logout realizado com sucesso!',
                 'status' => true
             ],
             200

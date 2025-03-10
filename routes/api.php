@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaravanaController;
+use App\Http\Controllers\CaravanaPassageiroController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
 use App\Models\User;
@@ -51,4 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rotas Users
     Route::put('users/{id}', [UserController::class, 'update']);
     Route::delete('users/{id}', [UserController::class, 'destroy']);
+
+    //Rotas para gerenciar reservas
+    Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);
+    Route::get('caravanas/{id}/minhas-reservas/{id_reserva}', [CaravanaPassageiroController::class, 'exibirMinhasReservas']);
+    Route::get('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'visualizarReserva']);
+    Route::put('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'editarReserva']);
+    Route::delete('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'cancelarReserva']);
 });

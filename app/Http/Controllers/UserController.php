@@ -12,8 +12,72 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+/**
+ *
+ * @OA\Tag(
+ *     name="Usuários",
+ *     description="Rotas relacionadas aos Usuários"
+ * )
+ */
+
 class UserController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Registrar um novo usuário",
+     *     description="Registra um novo usuário como Passageiro ou Organizador.",
+     *     tags={"Usuários"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password", "tipo", "endereco", "cep", "cidade_id", "telefone"},
+     *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="123456"),
+     *             @OA\Property(property="tipo", type="string", enum={"passageiro", "organizador"}, example="passageiro"),
+     *             @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123"),
+     *             @OA\Property(property="cep", type="string", example="12345678"),
+     *             @OA\Property(property="cidade_id", type="integer", example=1),
+     *             @OA\Property(property="telefone", type="string", example="11987654321"),
+     *
+     *             @OA\Property(property="nome", type="string", example="João Silva", description="Necessário se for passageiro"),
+     *             @OA\Property(property="cpf", type="string", example="12345678900", description="Necessário se for passageiro"),
+     *             @OA\Property(property="rg", type="string", example="12345678-9", description="Necessário se for passageiro"),
+     *             @OA\Property(property="data_nascimento", type="string", format="date", example="1990-05-15", description="Necessário se for passageiro"),
+     *
+     *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Necessário se for organizador"),
+     *             @OA\Property(property="cnpj", type="string", example="12345678000199", description="Necessário se for organizador"),
+     *             @OA\Property(property="inscricao_estadual", type="string", nullable=true, example="123456789"),
+     *             @OA\Property(property="inscricao_municipal", type="string", nullable=true, example="987654321"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário registrado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuário registrado com sucesso!"),
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="email", type="string", example="usuario@example.com"),
+     *                 @OA\Property(property="tipo", type="string", example="passageiro"),
+     *                 @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123"),
+     *                 @OA\Property(property="cep", type="string", example="12345678"),
+     *                 @OA\Property(property="cidade_id", type="integer", example=1),
+     *                 @OA\Property(property="telefone", type="string", example="11987654321")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dados inválidos"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro ao registrar o usuário"
+     *     )
+     * )
+     */
+
     public function register(Request $request)
     {
         // Validações básicas e específicas para Passageiros ou Organizadores
@@ -96,6 +160,50 @@ class UserController extends Controller
     }
 
     // Rota para verificação de email
+    /**
+     * @OA\Post(
+     *     path="/api/verificar-email",
+     *     summary="Verificar se um e-mail está cadastrado",
+     *     description="Verifica se um e-mail já está cadastrado no sistema.",
+     *     tags={"Usuários"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="E-mail encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="E-mail encontrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Campo email obrigatório",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="O campo email é obrigatório")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="E-mail não cadastrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="E-mail não cadastrado")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno no servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Erro interno no servidor")
+     *         )
+     *     )
+     * )
+     */
+
     public function verificarEmail(Request $request)
     {
         try {
@@ -118,6 +226,62 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Atualiza os dados do usuário autenticado.
+     *
+     * @OA\Put(
+     *     path="/api/users/{id}",
+     *     tags={"Usuários"},
+     *     summary="Atualiza os dados do usuário autenticado",
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do usuário",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"password", "telefone"},
+     *             @OA\Property(property="password", type="string", example="12345678"),
+     *             @OA\Property(property="telefone", type="string", example="11987654321"),
+     *             @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123"),
+     *             @OA\Property(property="cep", type="string", example="12345678"),
+     *             @OA\Property(property="cidade_id", type="integer", example=1),
+     *             @OA\Property(property="nome", type="string", example="João Silva"),
+     *             @OA\Property(property="data_nascimento", type="string", format="date", example="1990-05-15")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Perfil atualizado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Perfil atualizado com sucesso!"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Usuário não autorizado a editar outro perfil",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Você só pode editar seu próprio perfil.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro de validação."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         /** @var User $user */
@@ -162,7 +326,6 @@ class UserController extends Controller
             $passageiro = $user->passageiro; // Relação entre 'users' e 'passageiro'
             $passageiro->update([
                 'nome' => $validated['nome'] ?? $passageiro->nome,
-                'cpf' => $validated['cpf'] ?? $passageiro->cpf,
                 'rg' => $validated['rg'] ?? $passageiro->rg,
                 'data_nascimento' => $validated['data_nascimento'] ?? $passageiro->data_nascimento,
             ]);
@@ -170,7 +333,6 @@ class UserController extends Controller
             $organizador = $user->organizador; // Relação entre 'users' e 'organizador'
             $organizador->update([
                 'razao_social' => $validated['razao_social'] ?? $organizador->razao_social,
-                'cnpj' => $validated['cnpj'] ?? $organizador->cnpj,
                 'inscricao_estadual' => $validated['inscricao_estadual'] ?? $organizador->inscricao_estadual,
                 'inscricao_municipal' => $validated['inscricao_municipal'] ?? $organizador->inscricao_municipal,
             ]);
@@ -182,6 +344,49 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
+
+    // Método para excluir um usuário
+    /**
+     * @OA\Delete(
+     *     path="/api/usuarios/{id}",
+     *     summary="Excluir o próprio perfil",
+     *     description="Permite que um usuário autenticado exclua seu próprio perfil. Exclui também os dados associados de passageiro ou organizador.",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do usuário a ser excluído",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Perfil excluído com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Perfil excluído com sucesso!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Erro ao excluir o perfil (tentativa de excluir outro usuário)",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro ao excluir o perfil.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno ao excluir o perfil",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro ao excluir o perfil."),
+     *             @OA\Property(property="error", type="string", example="Detalhes do erro interno")
+     *         )
+     *     )
+     * )
+     */
 
     public function destroy($id)
     {

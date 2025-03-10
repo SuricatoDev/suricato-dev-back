@@ -315,10 +315,10 @@ class CaravanaPassageiroController extends Controller
     }
 
     /**
-     * Visualizar uma reserva (passageiro ou organizador)
+     * Visualizar os detalhes de uma reserva (passageiro ou organizador)
      * @OA\Get(
      *     path="/api/caravanas/{id}/reservas/{id_reserva}",
-     *     summary="Visualizar reserva de uma caravana",
+     *     summary="Visualizar uma reserva especifica",
      *     operationId="visualizarReserva",
      *     tags={"Reservas"},
      *     security={{"bearerAuth": {}}},

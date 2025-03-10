@@ -1197,8 +1197,8 @@
                 "tags": [
                     "Reservas"
                 ],
-                "summary": "Visualizar reserva de uma caravana",
-                "description": "Visualizar uma reserva (passageiro ou organizador)",
+                "summary": "Visualizar uma reserva especifica",
+                "description": "Visualizar os detalhes de uma reserva (passageiro ou organizador)",
                 "operationId": "visualizarReserva",
                 "parameters": [
                     {

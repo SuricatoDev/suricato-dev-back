@@ -1442,6 +1442,99 @@
                 ]
             }
         },
+        "/api/cep/{cep}": {
+            "get": {
+                "tags": [
+                    "CEP"
+                ],
+                "summary": "Buscar informações de um CEP",
+                "description": "Este endpoint consulta o ViaCEP para retornar informações sobre um determinado CEP.",
+                "operationId": "877485f9678e32ff52ff708e00569aaa",
+                "parameters": [
+                    {
+                        "name": "cep",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "description": "CEP a ser consultado",
+                            "type": "string",
+                            "example": "01001000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informações do CEP encontradas com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "cep": {
+                                            "description": "CEP encontrado",
+                                            "type": "string",
+                                            "example": "01001-000"
+                                        },
+                                        "logradouro": {
+                                            "description": "Logradouro do CEP",
+                                            "type": "string",
+                                            "example": "Praça da Sé"
+                                        },
+                                        "bairro": {
+                                            "description": "Bairro do CEP",
+                                            "type": "string",
+                                            "example": "Centro"
+                                        },
+                                        "cidade": {
+                                            "description": "Cidade do CEP",
+                                            "type": "string",
+                                            "example": "São Paulo"
+                                        },
+                                        "uf": {
+                                            "description": "UF do CEP",
+                                            "type": "string",
+                                            "example": "SP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "CEP não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "CEP não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao buscar o CEP.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao buscar o CEP. Tente novamente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -2193,6 +2286,10 @@
         {
             "name": "Autenticação",
             "description": "Autenticação"
+        },
+        {
+            "name": "CEP",
+            "description": "CEP"
         },
         {
             "name": "Organizador",

@@ -109,15 +109,6 @@ class AuthController extends Controller
         // Busca o usuário pelo e-mail
         $user = User::where('email', $request->email)->first();
 
-        // Verifica se o usuário já tem um token ativo
-        if ($user && $user->tokens()->count() > 0) {
-            return response()->json([
-                'message' => 'Usuário já está logado! Faça logout antes de tentar novamente.',
-                'user' => $user,
-                'token' => $user->tokens()->first()->token
-            ], 403);
-        }
-
         // Verificação de credenciais de login
         if (Auth::attempt([
             'email' => $request->email,

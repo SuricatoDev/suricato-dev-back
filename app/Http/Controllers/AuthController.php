@@ -136,13 +136,6 @@ class AuthController extends Controller
      *             @OA\Property(property="status", type="boolean", example=true)
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Token inválido ou usuário não autenticado",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     )
      * )
      */
 

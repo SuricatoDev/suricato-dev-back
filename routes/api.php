@@ -30,6 +30,7 @@ Route::any('test', function () {
 
 //Rotas Liberadas
 Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 
@@ -44,7 +45,6 @@ Route::post('reset-password-code', [RecoverPasswordCodeController::class, 'reset
 //Rotas Protegidas (Necessita estar logado)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
-    Route::post('logout', [AuthController::class, 'logout']);
 
     //Rotas Caravanas
     Route::post('caravanas', [CaravanaController::class, 'store']);

@@ -136,22 +136,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Token inválido ou usuário não autenticado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1574,30 +1558,36 @@
                 }
             }
         },
-        "/api/organizadores": {
+        "/api/register-organizador/{id}": {
             "post": {
                 "tags": [
                     "Organizador"
                 ],
                 "summary": "Registrar organizador",
                 "description": "Registra um novo organizador no sistema, associando-o a um usuário existente.",
-                "operationId": "92911a18699577cb1ae300b72ebe90c8",
+                "operationId": "abe00243485b1eafa7a07a20e41741df",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário que será registrado como organizador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
                                     "razao_social",
                                     "cnpj"
                                 ],
                                 "properties": {
-                                    "id": {
-                                        "description": "ID do usuário",
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "razao_social": {
                                         "description": "Razão social da empresa organizadora",
                                         "type": "string",
@@ -1717,30 +1707,36 @@
                 }
             }
         },
-        "/api/passageiros": {
+        "/api/register-passageiro/{id}": {
             "post": {
                 "tags": [
                     "Passageiro"
                 ],
                 "summary": "Registrar passageiro",
                 "description": "Registra um novo passageiro no sistema, associando-o a um usuário existente.",
-                "operationId": "46863dc13675586377113a215e2e9261",
+                "operationId": "af87834b5993e16f4bdf1c79df97334f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário que será registrado como passageiro",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
                                     "cpf",
                                     "rg"
                                 ],
                                 "properties": {
-                                    "id": {
-                                        "description": "ID do usuário",
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "cpf": {
                                         "description": "CPF do passageiro",
                                         "type": "string",
@@ -1764,12 +1760,12 @@
                                     "complemento": {
                                         "description": "Complemento do endereço",
                                         "type": "string",
-                                        "example": "Apartamento 101"
+                                        "example": "Apto 101"
                                     },
                                     "bairro": {
                                         "description": "Bairro do passageiro",
                                         "type": "string",
-                                        "example": "Bairro Exemplo"
+                                        "example": "Centro"
                                     },
                                     "cep": {
                                         "description": "CEP do passageiro",
@@ -2085,7 +2081,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Você só pode editar seu próprio perfil."
+                                            "example": "Acesso não autorizado."
                                         }
                                     },
                                     "type": "object"

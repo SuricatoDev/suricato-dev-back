@@ -88,15 +88,21 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register-organizador",
+     *     path="/api/register-organizador/{id}",
      *     summary="Registrar organizador",
      *     description="Registra um novo organizador no sistema, associando-o a um usuário existente.",
      *     tags={"Organizador"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do usuário que será registrado como organizador",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"id", "razao_social", "cnpj"},
-     *             @OA\Property(property="id", type="integer", example=1, description="ID do usuário"),
+     *             required={"razao_social", "cnpj"},
      *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social da empresa organizadora"),
      *             @OA\Property(property="cnpj", type="string", example="12.345.678/0001-90", description="CNPJ da empresa organizadora"),
      *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual da empresa (opcional)"),
@@ -132,12 +138,11 @@ class UserController extends Controller
      * )
      */
 
-    public function registerOrganizador(Request $request)
+
+    public function registerOrganizador(Request $request, $id)
     {
         try {
-
             $request->validate([
-                'id' => 'required|exists:users,id|unique:organizadores,id',
                 'razao_social' => 'required|string|max:255',
                 'cnpj' => 'required|string|unique:organizadores,cnpj',
                 'inscricao_estadual' => 'nullable|string',
@@ -156,7 +161,7 @@ class UserController extends Controller
             DB::beginTransaction(); // Inicia a transação
 
             $organizador = Organizador::create([
-                'id' => $request->id,
+                'id' => $id,
                 'razao_social' => $request->razao_social,
                 'cnpj' => $request->cnpj,
                 'cadastur' => $request->cadastur,
@@ -164,7 +169,7 @@ class UserController extends Controller
                 'inscricao_municipal' => $request->inscricao_municipal,
             ]);
 
-            $user = User::findOrFail($request->id);
+            $user = User::findOrFail($id);
             $user->update([
                 'endereco' => $request->endereco,
                 'numero' => $request->numero,
@@ -194,21 +199,27 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register-passageiro",
+     *     path="/api/register-passageiro/{id}",
      *     summary="Registrar passageiro",
      *     description="Registra um novo passageiro no sistema, associando-o a um usuário existente.",
      *     tags={"Passageiro"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do usuário que será registrado como passageiro",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"id", "cpf", "rg"},
-     *             @OA\Property(property="id", type="integer", example=1, description="ID do usuário"),
+     *             required={"cpf", "rg"},
      *             @OA\Property(property="cpf", type="string", example="123.456.789-00", description="CPF do passageiro"),
      *             @OA\Property(property="rg", type="string", example="12.345.678-9", description="RG do passageiro"),
      *             @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123", description="Endereço do passageiro"),
      *             @OA\Property(property="numero", type="string", example="123", description="Número do endereço"),
-     *             @OA\Property(property="complemento", type="string", example="Apartamento 101", description="Complemento do endereço"),
-     *             @OA\Property(property="bairro", type="string", example="Bairro Exemplo", description="Bairro do passageiro"),
+     *             @OA\Property(property="complemento", type="string", example="Apto 101", description="Complemento do endereço"),
+     *             @OA\Property(property="bairro", type="string", example="Centro", description="Bairro do passageiro"),
      *             @OA\Property(property="cep", type="string", example="12345-678", description="CEP do passageiro"),
      *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do passageiro"),
      *             @OA\Property(property="estado", type="string", example="SP", description="Estado do passageiro"),
@@ -236,11 +247,10 @@ class UserController extends Controller
      */
 
 
-    public function registerPassageiro(Request $request)
+    public function registerPassageiro(Request $request, $id)
     {
         try {
             $request->validate([
-                'id' => 'required|exists:users,id|unique:passageiros,id',
                 'cpf' => 'required|string|unique:passageiros,cpf',
                 'rg' => 'required|string|max:20',
                 'endereco' => 'nullable|string|max:255',
@@ -256,12 +266,12 @@ class UserController extends Controller
             DB::beginTransaction(); // Inicia a transação
 
             $passageiro = Passageiro::create([
-                'id' => $request->id,
+                'id' => $id,
                 'cpf' => $request->cpf,
                 'rg' => $request->rg,
             ]);
 
-            $user = User::findOrFail($request->id);
+            $user = User::findOrFail($id);
             $user->update([
                 'endereco' => $request->endereco,
                 'numero' => $request->numero,

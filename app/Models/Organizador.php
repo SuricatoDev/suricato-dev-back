@@ -12,9 +12,10 @@ class Organizador extends Model
     protected $table = 'organizadores';
 
     protected $fillable = [
-        'user_id',
+        'id',
         'razao_social',
         'cnpj',
+        'cadastur',
         'inscricao_estadual',
         'inscricao_municipal',
     ];
@@ -23,7 +24,7 @@ class Organizador extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id', 'id');
     }
 
     public function caravanas()

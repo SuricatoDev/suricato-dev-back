@@ -1448,7 +1448,7 @@
                     "Usuários"
                 ],
                 "summary": "Registrar um novo usuário",
-                "description": "Registra um novo usuário como Passageiro ou Organizador.",
+                "description": "Cria um novo usuário no sistema, com dados básicos, validando as informações fornecidas.",
                 "operationId": "2f25885f3b6f61ca11724ec302d2e439",
                 "requestBody": {
                     "required": true,
@@ -1456,89 +1456,38 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "nome",
+                                    "data_nascimento",
+                                    "telefone",
                                     "email",
-                                    "password",
-                                    "tipo",
-                                    "endereco",
-                                    "cep",
-                                    "cidade_id",
-                                    "telefone"
+                                    "password"
                                 ],
                                 "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "usuario@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "123456"
-                                    },
-                                    "tipo": {
-                                        "type": "string",
-                                        "enum": [
-                                            "passageiro",
-                                            "organizador"
-                                        ],
-                                        "example": "passageiro"
-                                    },
-                                    "endereco": {
-                                        "type": "string",
-                                        "example": "Rua Exemplo, 123"
-                                    },
-                                    "cep": {
-                                        "type": "string",
-                                        "example": "12345678"
-                                    },
-                                    "cidade_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "telefone": {
-                                        "type": "string",
-                                        "example": "11987654321"
-                                    },
                                     "nome": {
-                                        "description": "Necessário se for passageiro",
+                                        "description": "Nome completo do usuário",
                                         "type": "string",
                                         "example": "João Silva"
                                     },
-                                    "cpf": {
-                                        "description": "Necessário se for passageiro",
-                                        "type": "string",
-                                        "example": "12345678900"
-                                    },
-                                    "rg": {
-                                        "description": "Necessário se for passageiro",
-                                        "type": "string",
-                                        "example": "12345678-9"
-                                    },
                                     "data_nascimento": {
-                                        "description": "Necessário se for passageiro",
+                                        "description": "Data de nascimento do usuário",
                                         "type": "string",
                                         "format": "date",
-                                        "example": "1990-05-15"
+                                        "example": "1990-01-01"
                                     },
-                                    "razao_social": {
-                                        "description": "Necessário se for organizador",
+                                    "telefone": {
+                                        "description": "Telefone de contato do usuário",
                                         "type": "string",
-                                        "example": "Empresa Exemplo LTDA"
+                                        "example": "11987654321"
                                     },
-                                    "cnpj": {
-                                        "description": "Necessário se for organizador",
+                                    "email": {
+                                        "description": "E-mail do usuário",
                                         "type": "string",
-                                        "example": "12345678000199"
+                                        "example": "joao.silva@email.com"
                                     },
-                                    "inscricao_estadual": {
+                                    "password": {
+                                        "description": "Senha do usuário (mínimo de 6 caracteres)",
                                         "type": "string",
-                                        "example": "123456789",
-                                        "nullable": true
-                                    },
-                                    "inscricao_municipal": {
-                                        "type": "string",
-                                        "example": "987654321",
-                                        "nullable": true
+                                        "example": "senha123"
                                     }
                                 },
                                 "type": "object"
@@ -1548,7 +1497,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usuário registrado com sucesso",
+                        "description": "Usuário registrado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1558,36 +1507,7 @@
                                             "example": "Usuário registrado com sucesso!"
                                         },
                                         "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "usuario@example.com"
-                                                },
-                                                "tipo": {
-                                                    "type": "string",
-                                                    "example": "passageiro"
-                                                },
-                                                "endereco": {
-                                                    "type": "string",
-                                                    "example": "Rua Exemplo, 123"
-                                                },
-                                                "cep": {
-                                                    "type": "string",
-                                                    "example": "12345678"
-                                                },
-                                                "cidade_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "telefone": {
-                                                    "type": "string",
-                                                    "example": "11987654321"
-                                                }
-                                            },
+                                            "description": "Dados do usuário registrado",
                                             "type": "object"
                                         }
                                     },
@@ -1596,11 +1516,292 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Dados inválidos"
+                    "422": {
+                        "description": "Erro de validação ou e-mail já cadastrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "E-mail ja cadastrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/organizadores": {
+            "post": {
+                "tags": [
+                    "Organizador"
+                ],
+                "summary": "Registrar organizador",
+                "description": "Registra um novo organizador no sistema, associando-o a um usuário existente.",
+                "operationId": "92911a18699577cb1ae300b72ebe90c8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "razao_social",
+                                    "cnpj"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "ID do usuário",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "razao_social": {
+                                        "description": "Razão social da empresa organizadora",
+                                        "type": "string",
+                                        "example": "Empresa Exemplo LTDA"
+                                    },
+                                    "cnpj": {
+                                        "description": "CNPJ da empresa organizadora",
+                                        "type": "string",
+                                        "example": "12.345.678/0001-90"
+                                    },
+                                    "inscricao_estadual": {
+                                        "description": "Inscrição estadual da empresa (opcional)",
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "inscricao_municipal": {
+                                        "description": "Inscrição municipal da empresa (opcional)",
+                                        "type": "string",
+                                        "example": "987654321"
+                                    },
+                                    "cadastur": {
+                                        "description": "Cadastro no Cadastur (opcional)",
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "endereco": {
+                                        "description": "Endereço da empresa",
+                                        "type": "string",
+                                        "example": "Avenida Exemplo, 456"
+                                    },
+                                    "numero": {
+                                        "description": "Número do endereço",
+                                        "type": "string",
+                                        "example": "456"
+                                    },
+                                    "complemento": {
+                                        "description": "Complemento do endereço",
+                                        "type": "string",
+                                        "example": "Sala 202"
+                                    },
+                                    "bairro": {
+                                        "description": "Bairro da empresa",
+                                        "type": "string",
+                                        "example": "Bairro Exemplo"
+                                    },
+                                    "cep": {
+                                        "description": "CEP da empresa",
+                                        "type": "string",
+                                        "example": "98765-432"
+                                    },
+                                    "cidade": {
+                                        "description": "Cidade da empresa",
+                                        "type": "string",
+                                        "example": "Cidade Exemplo"
+                                    },
+                                    "estado": {
+                                        "description": "Estado da empresa",
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "tipo": {
+                                        "description": "Tipo de usuário (passageiro ou organizador)",
+                                        "type": "string",
+                                        "example": "organizador"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Organizador registrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Organizador registrado com sucesso!"
+                                        },
+                                        "organizador": {
+                                            "description": "Dados do organizador registrado",
+                                            "type": "object"
+                                        },
+                                        "user": {
+                                            "description": "Dados do usuário associado",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Erro ao registrar o usuário"
+                        "description": "Erro ao registrar organizador.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário já cadastrado como organizador."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Descrição do erro"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/passageiros": {
+            "post": {
+                "tags": [
+                    "Passageiro"
+                ],
+                "summary": "Registrar passageiro",
+                "description": "Registra um novo passageiro no sistema, associando-o a um usuário existente.",
+                "operationId": "46863dc13675586377113a215e2e9261",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "cpf",
+                                    "rg"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "ID do usuário",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "cpf": {
+                                        "description": "CPF do passageiro",
+                                        "type": "string",
+                                        "example": "123.456.789-00"
+                                    },
+                                    "rg": {
+                                        "description": "RG do passageiro",
+                                        "type": "string",
+                                        "example": "12.345.678-9"
+                                    },
+                                    "endereco": {
+                                        "description": "Endereço do passageiro",
+                                        "type": "string",
+                                        "example": "Rua Exemplo, 123"
+                                    },
+                                    "numero": {
+                                        "description": "Número do endereço",
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "complemento": {
+                                        "description": "Complemento do endereço",
+                                        "type": "string",
+                                        "example": "Apartamento 101"
+                                    },
+                                    "bairro": {
+                                        "description": "Bairro do passageiro",
+                                        "type": "string",
+                                        "example": "Bairro Exemplo"
+                                    },
+                                    "cep": {
+                                        "description": "CEP do passageiro",
+                                        "type": "string",
+                                        "example": "12345-678"
+                                    },
+                                    "cidade": {
+                                        "description": "Cidade do passageiro",
+                                        "type": "string",
+                                        "example": "Cidade Exemplo"
+                                    },
+                                    "estado": {
+                                        "description": "Estado do passageiro",
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "tipo": {
+                                        "description": "Tipo de usuário (passageiro ou organizador)",
+                                        "type": "string",
+                                        "example": "passageiro"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Passageiro registrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Passageiro registrado com sucesso!"
+                                        },
+                                        "passageiro": {
+                                            "description": "Dados do passageiro registrado",
+                                            "type": "object"
+                                        },
+                                        "user": {
+                                            "description": "Dados do usuário associado",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao registrar passageiro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao registrar passageiro."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Descrição do erro"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1608,7 +1809,7 @@
         "/api/verificar-email": {
             "post": {
                 "tags": [
-                    "Usuários"
+                    "Autenticação"
                 ],
                 "summary": "Verificar se um e-mail está cadastrado",
                 "description": "Verifica se um e-mail já está cadastrado no sistema.",
@@ -1701,14 +1902,14 @@
                 }
             }
         },
-        "/api/users/{id}": {
+        "/api/usuarios/{id}": {
             "put": {
                 "tags": [
                     "Usuários"
                 ],
-                "summary": "Atualiza os dados do usuário autenticado",
-                "description": "Atualiza os dados do usuário autenticado.",
-                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "summary": "Atualizar perfil de usuário",
+                "description": "Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
+                "operationId": "7bc446ec56fee5b08c575b930697a5f9",
                 "parameters": [
                     {
                         "name": "id",
@@ -1716,7 +1917,8 @@
                         "description": "ID do usuário",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
@@ -1726,38 +1928,83 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "password",
-                                    "telefone"
+                                    "nome"
                                 ],
                                 "properties": {
-                                    "password": {
-                                        "type": "string",
-                                        "example": "12345678"
-                                    },
-                                    "telefone": {
-                                        "type": "string",
-                                        "example": "11987654321"
-                                    },
-                                    "endereco": {
-                                        "type": "string",
-                                        "example": "Rua Exemplo, 123"
-                                    },
-                                    "cep": {
-                                        "type": "string",
-                                        "example": "12345678"
-                                    },
-                                    "cidade_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "nome": {
+                                        "description": "Nome do usuário",
                                         "type": "string",
                                         "example": "João Silva"
                                     },
-                                    "data_nascimento": {
+                                    "password": {
+                                        "description": "Nova senha do usuário (opcional)",
                                         "type": "string",
-                                        "format": "date",
+                                        "example": "senha123"
+                                    },
+                                    "data_nascimento": {
+                                        "description": "Data de nascimento do usuário",
+                                        "type": "string",
                                         "example": "1990-05-15"
+                                    },
+                                    "endereco": {
+                                        "description": "Endereço do usuário",
+                                        "type": "string",
+                                        "example": "Rua Exemplo, 123"
+                                    },
+                                    "numero": {
+                                        "description": "Número do endereço",
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "complemento": {
+                                        "description": "Complemento do endereço",
+                                        "type": "string",
+                                        "example": "Apto 202"
+                                    },
+                                    "bairro": {
+                                        "description": "Bairro do usuário",
+                                        "type": "string",
+                                        "example": "Bairro Exemplo"
+                                    },
+                                    "cep": {
+                                        "description": "CEP do usuário",
+                                        "type": "string",
+                                        "example": "98765-432"
+                                    },
+                                    "cidade": {
+                                        "description": "Cidade do usuário",
+                                        "type": "string",
+                                        "example": "Cidade Exemplo"
+                                    },
+                                    "estado": {
+                                        "description": "Estado do usuário",
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "telefone": {
+                                        "description": "Telefone do usuário",
+                                        "type": "string",
+                                        "example": "11987654321"
+                                    },
+                                    "razao_social": {
+                                        "description": "Razão social do organizador (opcional)",
+                                        "type": "string",
+                                        "example": "Empresa Exemplo LTDA"
+                                    },
+                                    "inscricao_estadual": {
+                                        "description": "Inscrição estadual do organizador (opcional)",
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "inscricao_municipal": {
+                                        "description": "Inscrição municipal do organizador (opcional)",
+                                        "type": "string",
+                                        "example": "987654321"
+                                    },
+                                    "cadastur": {
+                                        "description": "Cadastro no Cadastur do organizador (opcional)",
+                                        "type": "boolean",
+                                        "example": true
                                     }
                                 },
                                 "type": "object"
@@ -1767,21 +2014,23 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Perfil atualizado com sucesso",
+                        "description": "Perfil do usuário atualizado com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Perfil atualizado com sucesso!"
                                         },
                                         "data": {
+                                            "description": "Dados atualizados do usuário",
                                             "type": "object"
+                                        },
+                                        "tipo_usuario": {
+                                            "description": "Tipo de usuário (passageiro ou organizador)",
+                                            "type": "string",
+                                            "example": "passageiro"
                                         }
                                     },
                                     "type": "object"
@@ -1790,15 +2039,11 @@
                         }
                     },
                     "403": {
-                        "description": "Usuário não autorizado a editar outro perfil",
+                        "description": "Acesso não autorizado.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Você só pode editar seu próprio perfil."
@@ -1809,22 +2054,19 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Erro de validação",
+                    "500": {
+                        "description": "Erro ao atualizar perfil do usuário.",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
                                         "message": {
                                             "type": "string",
-                                            "example": "Erro de validação."
+                                            "example": "Erro ao atualizar perfil."
                                         },
-                                        "errors": {
-                                            "type": "object"
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Descrição do erro"
                                         }
                                     },
                                     "type": "object"
@@ -1832,15 +2074,8 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/usuarios/{id}": {
+                }
+            },
             "delete": {
                 "tags": [
                     "Usuários"
@@ -1958,6 +2193,14 @@
         {
             "name": "Autenticação",
             "description": "Autenticação"
+        },
+        {
+            "name": "Organizador",
+            "description": "Organizador"
+        },
+        {
+            "name": "Passageiro",
+            "description": "Passageiro"
         }
     ]
 }

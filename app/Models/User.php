@@ -14,14 +14,21 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
+        'nome',
         'email',
         'password',
-        'endereco',
-        'cep',
-        'cidade_id',
+        'data_nascimento',
         'telefone',
+        'endereco',
+        'numero',
+        'complemento',
+        'bairro',
+        'cep',
+        'cidade',
+        'estado',
         'tipo',
         'ativo',
+        'foto_perfil',
     ];
 
     protected $hidden = [
@@ -41,12 +48,12 @@ class User extends Authenticatable
 
     public function passageiro()
     {
-        return $this->hasOne(Passageiro::class);
+        return $this->hasOne(Passageiro::class, 'id', 'id');
     }
 
     public function organizador()
     {
-        return $this->hasOne(Organizador::class);
+        return $this->hasOne(Organizador::class, 'id', 'id');
     }
 
     public function suporte()

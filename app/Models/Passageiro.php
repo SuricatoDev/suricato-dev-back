@@ -12,18 +12,16 @@ class Passageiro extends Model
     protected $table = 'passageiros';
 
     protected $fillable = [
-        'user_id',
-        'nome',
+        'id',
         'cpf',
         'rg',
-        'data_nascimento',
     ];
 
 /************************* RELACIONAMENTOS ************************ */
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id', 'id');
     }
 
     public function caravanaPassageiros()

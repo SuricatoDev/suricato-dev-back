@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaravanaController;
 use App\Http\Controllers\CaravanaPassageiroController;
+use App\Http\Controllers\CepController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
 use App\Models\User;
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 
 //Rota de Teste
 Route::any('test', function () {
-    return ['API em funcionamento' => true,
+    return [
+        'API em funcionamento' => true,
         'Projeto' => 'Excursionistas - Gestão de Caravanas',
         'API' => 'v1.0.0',
         'Data de verificação' => now(),
@@ -50,8 +52,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('caravanas/{id}', [CaravanaController::class, 'destroy']);
 
     //Rotas Users
+    Route::post('register/organizador', [UserController::class, 'registerOrganizador']);
+    Route::post('register/passageiro', [UserController::class, 'registerPassageiro']);
     Route::put('users/{id}', [UserController::class, 'update']);
     Route::delete('users/{id}', [UserController::class, 'destroy']);
+
+    //Rota via CEP
+    Route::get('/cep/{cep}', [CepController::class, 'buscarCep']);
 
     //Rotas para gerenciar reservas
     Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);

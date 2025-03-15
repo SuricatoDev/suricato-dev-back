@@ -12,17 +12,21 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id')->unsigned();
+            $table->string('nome');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('endereco');
-            $table->string('cep');
-            $table->integer('cidade_id')->unsigned();
-            $table->foreign('cidade_id')
-                ->references('id')
-                ->on('cidades');
-            $table->string('telefone');
-            $table->enum('tipo', ['passageiro', 'organizador']);
+            $table->date('data_nascimento');
+            $table->string('endereco')->nullable();
+            $table->string('numero')->nullable();
+            $table->string('complemento')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('cep')->nullable();
+            $table->string('cidade')->nullable();
+            $table->string('estado', 2)->nullable();
+            $table->string('telefone')->nullable();
+            $table->enum('tipo', ['passageiro', 'organizador'])->nullable();
+            $table->string('foto_perfil')->nullable(); // Caminho da imagem (URL S3)
             $table->boolean('ativo')->default(true);
             $table->rememberToken();
             $table->timestamps();

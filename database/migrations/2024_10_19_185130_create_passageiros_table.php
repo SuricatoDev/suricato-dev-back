@@ -9,18 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('passageiros', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
-            $table->string('nome');
+            $table->unsignedInteger('id'); // Usa o mesmo ID do user
+            $table->primary('id'); // Define como chave primária
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); // Chave estrangeira vinculada a users
             $table->string('cpf')->unique();
             $table->string('rg');
-            $table->date('data_nascimento');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

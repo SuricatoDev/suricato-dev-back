@@ -57,8 +57,6 @@ class UserController extends Controller
      * )
      */
 
-
-
     public function register(Request $request)
     {
         if (User::where('email', $request->email)->exists()) {
@@ -136,7 +134,6 @@ class UserController extends Controller
 
     public function registerOrganizador(Request $request)
     {
-
         try {
 
             $request->validate([

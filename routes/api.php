@@ -52,8 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('caravanas/{id}', [CaravanaController::class, 'destroy']);
 
     //Rotas Users
-    Route::post('register/organizador', [UserController::class, 'registerOrganizador']);
-    Route::post('register/passageiro', [UserController::class, 'registerPassageiro']);
+    Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
+    Route::post('register-passageiro/{id}', [UserController::class, 'registerPassageiro']);
     Route::put('users/{id}', [UserController::class, 'update']);
     Route::delete('users/{id}', [UserController::class, 'destroy']);
 
@@ -62,8 +62,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Rotas para gerenciar reservas
     Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);
-    Route::get('caravanas/{id}/minhas-reservas/{id_reserva}', [CaravanaPassageiroController::class, 'exibirMinhasReservas']);
-    Route::get('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'visualizarReserva']);
-    Route::put('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'editarReserva']);
-    Route::delete('caravanas/{id}/reservas/{id_reserva}', [CaravanaPassageiroController::class, 'cancelarReserva']);
+    Route::get('caravanas/{id}/minhas-reservas/{reserva_id}', [CaravanaPassageiroController::class, 'exibirMinhasReservas']);
+    Route::get('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'visualizarReserva']);
+    Route::put('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
+    Route::delete('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
 });

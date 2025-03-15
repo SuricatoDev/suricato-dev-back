@@ -88,7 +88,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/organizadores",
+     *     path="/api/register-organizador",
      *     summary="Registrar organizador",
      *     description="Registra um novo organizador no sistema, associando-o a um usuário existente.",
      *     tags={"Organizador"},
@@ -194,7 +194,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/passageiros",
+     *     path="/api/register-passageiro",
      *     summary="Registrar passageiro",
      *     description="Registra um novo passageiro no sistema, associando-o a um usuário existente.",
      *     tags={"Passageiro"},

@@ -81,19 +81,6 @@ class AuthController extends Controller
      *             @OA\Property(property="message", type="string", example="Erro ao realizar login. Verifique suas credenciais.")
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Usuário já está logado",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Usuário já está logado!"),
-     *             @OA\Property(property="user", type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example="João da Silva"),
-     *                 @OA\Property(property="email", type="string", format="email", example="usuario@email.com"),
-     *             ),
-     *             @OA\Property(property="token", type="string", example="1|abcde12345")
-     *         )
-     *     )
      * )
      */
 
@@ -140,14 +127,7 @@ class AuthController extends Controller
      *     path="/api/logout",
      *     summary="Desloga o usuário autenticado",
      *     tags={"Autenticação"},
-     *     security={{ "bearerAuth":{} }},
-     *     @OA\Parameter(
-     *         name="Authorization",
-     *         in="header",
-     *         required=true,
-     *         description="Token de autenticação Bearer. Exemplo: Bearer {seu_token}",
-     *         @OA\Schema(type="string")
-     *     ),
+
      *     @OA\Response(
      *         response=200,
      *         description="Logout realizado com sucesso",

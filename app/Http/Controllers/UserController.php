@@ -289,7 +289,6 @@ class UserController extends Controller
         }
     }
 
-    // Rota para verificação de email
     /**
      * @OA\Post(
      *     path="/api/verificar-email",
@@ -403,7 +402,7 @@ class UserController extends Controller
      *         response=403,
      *         description="Acesso não autorizado.",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Você só pode editar seu próprio perfil.")
+     *             @OA\Property(property="message", type="string", example="Acesso não autorizado.")
      *         )
      *     ),
      *     @OA\Response(

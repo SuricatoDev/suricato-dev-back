@@ -134,7 +134,7 @@ class CaravanaPassageiroController extends Controller
         $user = Auth::user();
 
         // Verificar se o usuário logado é do tipo passageiro
-        if ($user->tipo !== 'passageiro') {
+        if ($user->passageiro == false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas passageiros podem fazer reservas!'

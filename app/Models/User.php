@@ -26,7 +26,8 @@ class User extends Authenticatable
         'cep',
         'cidade',
         'estado',
-        'tipo',
+        'passageiro',
+        'organizador',
         'ativo',
         'foto_perfil',
     ];

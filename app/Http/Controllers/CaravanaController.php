@@ -53,7 +53,7 @@ class CaravanaController extends Controller
      * )
      */
 
-    public function index()
+    public function listarCaravanas()
     {
         $caravanas = Caravana::with('imagens')->get();
 
@@ -142,11 +142,11 @@ class CaravanaController extends Controller
      */
 
 
-    public function store(Request $request)
+    public function cadastrarCaravana(Request $request)
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user(); // Obtém o usuário autenticado
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem criar caravanas.',
@@ -290,11 +290,11 @@ class CaravanaController extends Controller
      */
 
 
-    public function update(Request $request, $id)
+    public function editarCaravana(Request $request, $id)
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem editar caravanas.',
@@ -426,11 +426,11 @@ class CaravanaController extends Controller
      */
 
 
-    public function destroy($id)
+    public function excluirCaravana($id)
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem excluir caravanas.',

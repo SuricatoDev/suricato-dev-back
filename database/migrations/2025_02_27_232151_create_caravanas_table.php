@@ -25,10 +25,7 @@ return new class extends Migration
             $table->foreign('organizador_id')
                 ->references('id')
                 ->on('organizadores');
-            $table->integer('evento_id')->unsigned();
-            $table->foreign('evento_id')
-                ->references('id')
-                ->on('eventos');
+            $table->string('categoria');
             $table->timestamps();
         });
     }

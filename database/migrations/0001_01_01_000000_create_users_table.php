@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('cidade')->nullable();
             $table->string('estado', 2)->nullable();
             $table->string('telefone')->nullable();
-            $table->enum('tipo', ['passageiro', 'organizador'])->nullable();
+            $table->boolean('passageiro')->default(false);
+            $table->boolean('organizador')->default(false);
             $table->string('foto_perfil')->nullable(); // Caminho da imagem (URL S3)
             $table->boolean('ativo')->default(true);
             $table->rememberToken();

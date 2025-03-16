@@ -15,7 +15,7 @@ class VeiculoController extends Controller
         $user = Auth::user();
 
         // Verifica se o usuário é um organizador
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas organizadores podem cadastrar veículos!'
@@ -72,7 +72,7 @@ class VeiculoController extends Controller
         $user = Auth::user();
 
         // Verifica se o usuário é um organizador
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas organizadores podem atualizar veículos!'
@@ -132,7 +132,7 @@ class VeiculoController extends Controller
         $user = Auth::user();
 
         // Verifica se o usuário é um organizador
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas organizadores podem excluir veículos!'

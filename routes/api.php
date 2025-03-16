@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CaravanaController;
 use App\Http\Controllers\CaravanaPassageiroController;
 use App\Http\Controllers\CepController;
+use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
 use App\Models\User;
@@ -35,7 +36,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 
 // Rota para visualizar todas as caravanas (não é necessário estar logado)
-Route::get('caravanas', [CaravanaController::class, 'index']);
+Route::get('caravanas', [CaravanaController::class, 'listarCaravanas']);
 
 //Rotas Forgot Password
 Route::post('forgot-password-code', [RecoverPasswordCodeController::class, 'forgotPasswordCode']);
@@ -47,9 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
 
     //Rotas Caravanas
-    Route::post('caravanas', [CaravanaController::class, 'store']);
-    Route::put('caravanas/{id}', [CaravanaController::class, 'update']);
-    Route::delete('caravanas/{id}', [CaravanaController::class, 'destroy']);
+    Route::post('caravanas', [CaravanaController::class, 'cadastrarCaravana']);
+    Route::put('caravanas/{id}', [CaravanaController::class, 'editarCaravana']);
+    Route::delete('caravanas/{id}', [CaravanaController::class, 'excluirCaravana']);
 
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
@@ -66,4 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'visualizarReserva']);
     Route::put('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
     Route::delete('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
+
+    //Rotas para gerenciar Denuncias
+    Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
 });

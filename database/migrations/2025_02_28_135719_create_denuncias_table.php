@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('denuncias', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('descricao');
+            $table->enum('topico', ['Pagamento', 'Cancelamento', 'Inconsistência', 'Segurança', 'Outro']);
             $table->enum('status', ['Pendente', 'Em andamento', 'Concluído']);
             $table->integer('denunciante_id')->unsigned();
             $table->foreign('denunciante_id')

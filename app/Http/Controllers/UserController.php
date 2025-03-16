@@ -115,7 +115,7 @@ class UserController extends Controller
      *             @OA\Property(property="cep", type="string", example="98765-432", description="CEP da empresa"),
      *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade da empresa"),
      *             @OA\Property(property="estado", type="string", example="SP", description="Estado da empresa"),
-     *             @OA\Property(property="tipo", type="string", example="organizador", description="Tipo de usuário (passageiro ou organizador)"),
+     *             @OA\Property(property="organizador", type="boolean", example=true, description="Indica se o usuário deve ser registrado como organizador"),
      *         )
      *     ),
      *     @OA\Response(
@@ -155,7 +155,7 @@ class UserController extends Controller
                 'cep' => 'nullable|string|max:9',
                 'cidade' => 'nullable|string|max:255',
                 'estado' => 'nullable|string|max:2',
-                'tipo' => 'nullable|string|in:passageiro,organizador',
+                'organizador' => 'nullable|boolean',
             ]);
 
             DB::beginTransaction(); // Inicia a transação
@@ -178,7 +178,7 @@ class UserController extends Controller
                 'cep' => $request->cep,
                 'cidade' => $request->cidade,
                 'estado' => $request->estado,
-                'tipo' => $request->tipo
+                'organizador' => $request->organizador
             ]);
 
             DB::commit(); // Confirma a transação
@@ -223,7 +223,7 @@ class UserController extends Controller
      *             @OA\Property(property="cep", type="string", example="12345-678", description="CEP do passageiro"),
      *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do passageiro"),
      *             @OA\Property(property="estado", type="string", example="SP", description="Estado do passageiro"),
-     *             @OA\Property(property="tipo", type="string", example="passageiro", description="Tipo de usuário (passageiro ou organizador)"),
+     *             @OA\Property(property="passageiro", type="boolean", example=true, description="Indica se o usuário é passageiro"),
      *         )
      *     ),
      *     @OA\Response(
@@ -251,8 +251,8 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'cpf' => 'required|string|unique:passageiros,cpf',
-                'rg' => 'required|string|max:20',
+                'cpf' => 'required|string|unique:passageiros,cpf|max:11',
+                'rg' => 'required|string|max:14',
                 'endereco' => 'nullable|string|max:255',
                 'numero' => 'nullable|string|max:20',
                 'complemento' => 'nullable|string|max:255',
@@ -260,7 +260,7 @@ class UserController extends Controller
                 'cep' => 'nullable|string|max:20',
                 'cidade' => 'nullable|string|max:255',
                 'estado' => 'nullable|string|max:2',
-                'tipo' => 'nullable|string|in:passageiro,organizador',
+                'passageiro' => 'nullable|boolean',
             ]);
 
             DB::beginTransaction(); // Inicia a transação
@@ -280,7 +280,7 @@ class UserController extends Controller
                 'cep' => $request->cep,
                 'cidade' => $request->cidade,
                 'estado' => $request->estado,
-                'tipo' => $request->tipo
+                'passageiro' => $request->passageiro
             ]);
 
             DB::commit(); // Confirma a transação
@@ -458,6 +458,7 @@ class UserController extends Controller
 
             // Validações dinâmicas com base no tipo do usuário passageiro
             'rg' => 'sometimes|string',
+            'numero_emergencia' => 'sometimes|string|max:11',
             'razao_social' => 'sometimes|string',
             'inscricao_estadual' => 'sometimes|string',
             'inscricao_municipal' => 'sometimes|string',
@@ -476,19 +477,20 @@ class UserController extends Controller
         $tipoUsuario = null;
 
         // Atualiza as informações específicas, dependendo do tipo de usuário
-        if ($user->tipo == 'passageiro') {
+        if ($user->passageiro == true) {
             // Verifica se o passageiro existe antes de atualizar
             $passageiro = $user->passageiro; // Relação entre 'users' e 'passageiro'
             if ($passageiro) {
                 $passageiro->update([
                     'rg' => $validated['rg'] ?? $passageiro->rg,
+                    'numero_emergencia' => $validated['numero_emergencia'] ?? $passageiro->numero_emergencia
                 ]);
                 $tipoUsuario = 'passageiro';
             } else {
                 // Caso o passageiro não exista, pode-se lançar um erro ou apenas retornar como tipo 'passageiro' mas sem dados.
                 $tipoUsuario = 'passageiro';
             }
-        } elseif ($user->tipo == 'organizador') {
+        } elseif ($user->organizador == true) {
             // Verifica se o organizador existe antes de atualizar
             $organizador = $user->organizador; // Relação entre 'users' e 'organizador'
             if ($organizador) {

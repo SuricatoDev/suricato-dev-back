@@ -14,10 +14,10 @@ return new class extends Migration
             $table->primary('id'); // Define como chave primária
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); // Chave estrangeira vinculada a users
             $table->string('razao_social');
-            $table->string('cnpj')->unique();
+            $table->string('cnpj', 14)->unique()->notNull();
             $table->boolean('cadastur')->default(false);
-            $table->string('inscricao_estadual');
-            $table->string('inscricao_municipal');
+            $table->string('inscricao_estadual', 14);
+            $table->string('inscricao_municipal', 14);
             $table->timestamps();
         });
     }

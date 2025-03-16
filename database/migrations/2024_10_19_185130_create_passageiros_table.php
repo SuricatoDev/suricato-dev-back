@@ -11,9 +11,13 @@ return new class extends Migration
         Schema::create('passageiros', function (Blueprint $table) {
             $table->unsignedInteger('id'); // Usa o mesmo ID do user
             $table->primary('id'); // Define como chave primária
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); // Chave estrangeira vinculada a users
-            $table->string('cpf')->unique();
-            $table->string('rg');
+            $table->foreign('id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade'); // Chave estrangeira vinculada a users
+            $table->string('cpf', 11)->unique()->notNull();
+            $table->string('rg', 14);
+            $table->string('contato_emergencia', 11);
             $table->timestamps();
         });
     }

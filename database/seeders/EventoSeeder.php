@@ -16,12 +16,22 @@ class EventoSeeder extends Seeder
     {
         // Inserindo dados na tabela 'eventos'
         $eventos = [
-            'Shows',
+            'Cafés',
+            'Carnaval',
+            'Cidades',
+            'Chácaras',
+            'Fazendas',
             'Festivais',
-            'Concertos',
-            'Exposições',
             'Jogos',
-            'Trilhas'
+            'Montanhas',
+            'Museus',
+            'Parques Aquáticos',
+            'Parques de Diversão',
+            'Parques Naturais',
+            'Praias',
+            'Resortes',
+            'Shows',
+            'Trilhas',
         ];
 
         foreach ($eventos as $evento) {

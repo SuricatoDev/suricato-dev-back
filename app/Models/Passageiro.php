@@ -15,6 +15,7 @@ class Passageiro extends Model
         'id',
         'cpf',
         'rg',
+        'contato_emergencia',
     ];
 
 /************************* RELACIONAMENTOS ************************ */

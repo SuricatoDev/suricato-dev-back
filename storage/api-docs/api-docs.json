@@ -2021,6 +2021,11 @@
                                         "type": "string",
                                         "example": "11987654321"
                                     },
+                                    "foto_perfil": {
+                                        "description": "URL da foto de perfil do usuário",
+                                        "type": "string",
+                                        "example": "https://exemplo-servidor-s3.com/foto.jpg"
+                                    },
                                     "razao_social": {
                                         "description": "Razão social do organizador (opcional)",
                                         "type": "string",
@@ -2060,12 +2065,28 @@
                                         },
                                         "data": {
                                             "description": "Dados atualizados do usuário",
-                                            "type": "object"
+                                            "type": "object",
+                                            "example": {
+                                                "nome": "João Silva",
+                                                "data_nascimento": "1990-05-15",
+                                                "endereco": "Rua Exemplo, 123",
+                                                "numero": "123",
+                                                "complemento": "Apto 202",
+                                                "bairro": "Bairro Exemplo",
+                                                "cep": "98765-432",
+                                                "cidade": "Cidade Exemplo",
+                                                "estado": "SP",
+                                                "telefone": "11987654321",
+                                                "foto_perfil": "https://exemplo-servidor-s3.com/foto.jpg",
+                                                "razao_social": "Empresa Exemplo LTDA",
+                                                "inscricao_estadual": "123456789",
+                                                "inscricao_municipal": "987654321"
+                                            }
                                         },
                                         "tipo_usuario": {
                                             "description": "Tipo de usuário (passageiro ou organizador)",
                                             "type": "string",
-                                            "example": "passageiro"
+                                            "example": "organizador"
                                         }
                                     },
                                     "type": "object"

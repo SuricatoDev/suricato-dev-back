@@ -393,6 +393,7 @@ class UserController extends Controller
      *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do usuário"),
      *             @OA\Property(property="estado", type="string", example="SP", description="Estado do usuário"),
      *             @OA\Property(property="telefone", type="string", example="11987654321", description="Telefone do usuário"),
+     *             @OA\Property(property="foto_perfil", type="string", example="https://exemplo-servidor-s3.com/foto.jpg", description="URL da foto de perfil do usuário"),
      *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do organizador (opcional)"),
      *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do organizador (opcional)"),
      *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal do organizador (opcional)"),
@@ -404,8 +405,8 @@ class UserController extends Controller
      *         description="Perfil do usuário atualizado com sucesso.",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Perfil atualizado com sucesso!"),
-     *             @OA\Property(property="data", type="object", description="Dados atualizados do usuário"),
-     *             @OA\Property(property="tipo_usuario", type="string", example="passageiro", description="Tipo de usuário (passageiro ou organizador)")
+     *             @OA\Property(property="data", type="object", example={"nome": "João Silva", "data_nascimento": "1990-05-15", "endereco": "Rua Exemplo, 123", "numero": "123", "complemento": "Apto 202", "bairro": "Bairro Exemplo", "cep": "98765-432", "cidade": "Cidade Exemplo", "estado": "SP", "telefone": "11987654321", "foto_perfil": "https://exemplo-servidor-s3.com/foto.jpg", "razao_social": "Empresa Exemplo LTDA", "inscricao_estadual": "123456789", "inscricao_municipal": "987654321"}, description="Dados atualizados do usuário"),
+     *             @OA\Property(property="tipo_usuario", type="string", example="organizador", description="Tipo de usuário (passageiro ou organizador)")
      *         )
      *     ),
      *     @OA\Response(
@@ -453,6 +454,7 @@ class UserController extends Controller
             'cidade' => 'sometimes|string',
             'estado' => 'sometimes|string|min:2|max:2',
             'telefone' => 'sometimes|string|min:10|max:11',
+            'foto_perfil' => 'sometimes|string',
 
             // Validações dinâmicas com base no tipo do usuário passageiro
             'rg' => 'sometimes|string',

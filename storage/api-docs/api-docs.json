@@ -147,7 +147,7 @@
                 ],
                 "summary": "Listar todas as caravanas",
                 "description": "Retorna uma lista de todas as caravanas cadastradas, incluindo suas imagens.",
-                "operationId": "35e6d06a3ebfd3d18ef37f3441311b52",
+                "operationId": "a67d113aa0696a264ff6ed3defed5bab",
                 "responses": {
                     "200": {
                         "description": "Lista de caravanas retornada com sucesso",
@@ -225,7 +225,7 @@
                 ],
                 "summary": "Criar uma nova caravana",
                 "description": "Permite que um organizador crie uma nova caravana.",
-                "operationId": "245b79bd92aed8487a367121f0e3d4cd",
+                "operationId": "d5ede3e81d6f77605dba5e55ea4e71b9",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -439,7 +439,7 @@
                 ],
                 "summary": "Atualizar uma caravana existente",
                 "description": "Permite que um organizador edite uma caravana que ele criou.",
-                "operationId": "cc03fe1cc296a2abab22785ab5e1d8db",
+                "operationId": "41fae82512ace5c3f73a03186f148c3f",
                 "parameters": [
                     {
                         "name": "id",
@@ -662,7 +662,7 @@
                 ],
                 "summary": "Excluir uma caravana",
                 "description": "Permite que um organizador exclua uma caravana que ele criou, desde que não tenha passageiros confirmados.",
-                "operationId": "8f01d88e080f8bee4b644dee982f2393",
+                "operationId": "7c4bce5495da18e265327d153d2b3a91",
                 "parameters": [
                     {
                         "name": "id",
@@ -1465,6 +1465,366 @@
                 }
             }
         },
+        "/api/denuncias": {
+            "post": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Registrar uma nova denúncia",
+                "description": "Registra uma denúncia com base no tipo de usuário (passageiro ou organizador).",
+                "operationId": "6f27675ace1640fa0086c81a59ee5663",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "denunciante_id",
+                                    "topico",
+                                    "descricao"
+                                ],
+                                "properties": {
+                                    "denunciante_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "topico": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pagamento",
+                                            "Cancelamento",
+                                            "Inconsistência",
+                                            "Segurança",
+                                            "Outro"
+                                        ],
+                                        "example": "Pagamento"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "O pagamento não foi processado corretamente."
+                                    },
+                                    "caravana_id": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "organizador_id": {
+                                        "type": "integer",
+                                        "example": 3,
+                                        "nullable": true
+                                    },
+                                    "passageiro_id": {
+                                        "type": "integer",
+                                        "example": 4,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Denúncia registrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Denúncia registrada com sucesso!"
+                                        },
+                                        "denuncia": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 10,
+                                                "denunciante_id": 1,
+                                                "topico": "Pagamento",
+                                                "descricao": "O pagamento não foi processado corretamente.",
+                                                "status": "Pendente"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "topico": [
+                                                    "O campo tópico é obrigatório."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao registrar denúncia.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao registrar denúncia."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/denuncias/{id}": {
+            "put": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Editar uma denúncia",
+                "description": "Permite ao usuário editar sua própria denúncia.",
+                "operationId": "a6aeb21ba9ca8692e4fd7a2397309e17",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da denúncia a ser editada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "topico": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Inconsistência"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "A caravana foi alterada sem aviso prévio."
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pendente",
+                                            "Em andamento",
+                                            "Concluído"
+                                        ],
+                                        "example": "Em andamento"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Denúncia atualizada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Denúncia atualizada com sucesso!"
+                                        },
+                                        "denuncia": {
+                                            "type": "object",
+                                            "example": {
+                                                "id": 10,
+                                                "denunciante_id": 1,
+                                                "topico": "Inconsistência",
+                                                "descricao": "A caravana foi alterada sem aviso prévio.",
+                                                "status": "Em andamento"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário não tem permissão para editar.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você não tem permissão para editar esta denúncia."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao atualizar denúncia.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao atualizar denúncia."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Excluir uma denúncia",
+                "description": "Permite ao usuário excluir sua própria denúncia.",
+                "operationId": "d9a54ca4d36b74cfc64aa969f3cc3c0a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da denúncia a ser excluída",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Denúncia excluída com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Denúncia excluída com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário não tem permissão para excluir.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você não tem permissão para excluir esta denúncia."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao excluir denúncia.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao excluir denúncia."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -1648,10 +2008,10 @@
                                         "type": "string",
                                         "example": "SP"
                                     },
-                                    "tipo": {
-                                        "description": "Tipo de usuário (passageiro ou organizador)",
-                                        "type": "string",
-                                        "example": "organizador"
+                                    "organizador": {
+                                        "description": "Indica se o usuário deve ser registrado como organizador",
+                                        "type": "boolean",
+                                        "example": true
                                     }
                                 },
                                 "type": "object"
@@ -1782,10 +2142,10 @@
                                         "type": "string",
                                         "example": "SP"
                                     },
-                                    "tipo": {
-                                        "description": "Tipo de usuário (passageiro ou organizador)",
-                                        "type": "string",
-                                        "example": "passageiro"
+                                    "passageiro": {
+                                        "description": "Indica se o usuário é passageiro",
+                                        "type": "boolean",
+                                        "example": true
                                     }
                                 },
                                 "type": "object"
@@ -1944,7 +2304,7 @@
                 ],
                 "summary": "Atualizar perfil de usuário",
                 "description": "Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
-                "operationId": "7bc446ec56fee5b08c575b930697a5f9",
+                "operationId": "7c77399a04ec813ac486de84e60951dd",
                 "parameters": [
                     {
                         "name": "id",
@@ -2138,7 +2498,7 @@
                 ],
                 "summary": "Excluir o próprio perfil",
                 "description": "Permite que um usuário autenticado exclua seu próprio perfil. Exclui também os dados associados de passageiro ou organizador.",
-                "operationId": "7fa713aab598a149659eb2db9703636d",
+                "operationId": "93b802ea6e89c85463b027b31c629b38",
                 "parameters": [
                     {
                         "name": "id",
@@ -2253,6 +2613,10 @@
         {
             "name": "CEP",
             "description": "CEP"
+        },
+        {
+            "name": "Denúncias",
+            "description": "Denúncias"
         },
         {
             "name": "Organizador",

@@ -55,8 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
     Route::post('register-passageiro/{id}', [UserController::class, 'registerPassageiro']);
-    Route::put('users/{id}', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'destroy']);
+    Route::put('users/{id}', [UserController::class, 'editarUsuario']);
+    Route::delete('users/{id}', [UserController::class, 'excluirUsuario']);
 
     //Rota via CEP
     Route::get('/cep/{cep}', [CepController::class, 'buscarCep']);
@@ -70,4 +70,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Rotas para gerenciar Denuncias
     Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
+    Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
 });

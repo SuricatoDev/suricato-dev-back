@@ -428,7 +428,7 @@ class UserController extends Controller
      */
 
 
-    public function update(Request $request, $id)
+    public function editarUsuario(Request $request, $id)
     {
         /** @var User $user */
         $user = Auth::user(); // Obtém o usuário autenticado
@@ -437,7 +437,7 @@ class UserController extends Controller
         if ($user->id != $id) {
             return response()->json([
                 'status' => false,
-                'message' => 'Você só pode editar seu próprio perfil.'
+                'message' => 'Pefil diferente do usuário autenticado.'
             ], 403);
         }
 
@@ -456,7 +456,7 @@ class UserController extends Controller
             'telefone' => 'sometimes|string|min:10|max:11',
             'foto_perfil' => 'sometimes|string',
 
-            // Validações dinâmicas com base no tipo do usuário passageiro
+            // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
             'rg' => 'sometimes|string',
             'numero_emergencia' => 'sometimes|string|max:11',
             'razao_social' => 'sometimes|string',
@@ -465,9 +465,9 @@ class UserController extends Controller
             'cadastur' => 'sometimes|boolean',
         ]);
 
-        // Atualiza a senha se fornecida
+        // Atualiza a senha se fornecida com criptografia hash
         if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']); // Criptografa a senha usando Hash
+            $validated['password'] = Hash::make($validated['password']);
         }
 
         // Atualiza os dados na tabela users (informações comuns)
@@ -477,9 +477,9 @@ class UserController extends Controller
         $tipoUsuario = null;
 
         // Atualiza as informações específicas, dependendo do tipo de usuário
-        if ($user->passageiro == true) {
+        if ($user->passageiro) {
             // Verifica se o passageiro existe antes de atualizar
-            $passageiro = $user->passageiro; // Relação entre 'users' e 'passageiro'
+            $passageiro = Passageiro::where('id', $user->id)->first(); // Relação entre 'users' e 'passageiro'
             if ($passageiro) {
                 $passageiro->update([
                     'rg' => $validated['rg'] ?? $passageiro->rg,
@@ -492,7 +492,7 @@ class UserController extends Controller
             }
         } elseif ($user->organizador == true) {
             // Verifica se o organizador existe antes de atualizar
-            $organizador = $user->organizador; // Relação entre 'users' e 'organizador'
+            $organizador = Organizador::where('id', $user->id)->first(); // Relação entre 'users' e 'organizador'
             if ($organizador) {
                 $organizador->update([
                     'razao_social' => $validated['razao_social'] ?? $organizador->razao_social,
@@ -559,7 +559,7 @@ class UserController extends Controller
      * )
      */
 
-    public function destroy($id)
+    public function excluirUsuario($id)
     {
         /** @var User $user */
         $user = Auth::user(); // Obtém o usuário autenticado

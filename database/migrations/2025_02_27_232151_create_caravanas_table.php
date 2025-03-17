@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id')->unsigned();
             $table->string('titulo');
             $table->text('descricao');
+            $table->string('categoria');
             $table->dateTime('data_partida');
             $table->dateTime('data_retorno');
             $table->string('origem');

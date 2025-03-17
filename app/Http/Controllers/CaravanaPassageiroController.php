@@ -134,7 +134,7 @@ class CaravanaPassageiroController extends Controller
         $user = Auth::user();
 
         // Verificar se o usuário logado é do tipo passageiro
-        if ($user->passageiro == false) {
+        if ($user->organizador) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas passageiros podem fazer reservas!'
@@ -272,7 +272,7 @@ class CaravanaPassageiroController extends Controller
         $user = Auth::user();
 
         // Verifica se o usuário do tipo organizador
-        if ($user->tipo !== 'organizador') {
+        if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas os organizadores podem editar uma reserva!'

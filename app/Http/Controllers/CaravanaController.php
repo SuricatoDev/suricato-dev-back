@@ -146,7 +146,7 @@ class CaravanaController extends Controller
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user(); // Obtém o usuário autenticado
-        if ($user->organizador === false) {
+        if (!$user->organizador) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem criar caravanas.',
@@ -157,6 +157,7 @@ class CaravanaController extends Controller
         $validated = $request->validate([
             'titulo' => 'required|string',
             'descricao' => 'required|string',
+            'categoria' => 'required|string',
             'data_partida' => 'required|date',
             'data_retorno' => 'required|date',
             'origem' => 'required|string',
@@ -164,7 +165,6 @@ class CaravanaController extends Controller
             'numero_vagas' => 'required|integer',
             'valor' => 'required|numeric',
             'organizador_id' => 'required|integer',
-            'evento_id' => 'required|integer',
             'imagens' => 'required|array',
             'imagens.*.path' => 'required|string|url',
         ]);
@@ -174,6 +174,7 @@ class CaravanaController extends Controller
             $caravana = Caravana::create([
                 'titulo' => $validated['titulo'],
                 'descricao' => $validated['descricao'],
+                'categoria' => $validated['categoria'],
                 'data_partida' => $validated['data_partida'],
                 'data_retorno' => $validated['data_retorno'],
                 'origem' => $validated['origem'],
@@ -181,7 +182,6 @@ class CaravanaController extends Controller
                 'numero_vagas' => $validated['numero_vagas'],
                 'valor' => $validated['valor'],
                 'organizador_id' => $validated['organizador_id'],
-                'evento_id' => $validated['evento_id'],
             ]);
 
             // Criação das imagens associadas à caravana
@@ -294,7 +294,7 @@ class CaravanaController extends Controller
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
-        if ($user->organizador === false) {
+        if (!$user->organizador) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem editar caravanas.',
@@ -430,7 +430,7 @@ class CaravanaController extends Controller
     {
         // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
-        if ($user->organizador === false) {
+        if (!$user->organizador) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas usuários do tipo organizador podem excluir caravanas.',

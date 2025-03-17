@@ -14,6 +14,7 @@ class Caravana extends Model
     protected $fillable = [
         'titulo',
         'descricao',
+        'categoria',
         'data_partida',
         'data_retorno',
         'origem',
@@ -21,7 +22,6 @@ class Caravana extends Model
         'numero_vagas',
         'valor',
         'organizador_id',
-        'evento_id',
     ];
 
     /************* RELACIONAMENTOS *************/

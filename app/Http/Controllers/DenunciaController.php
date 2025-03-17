@@ -15,7 +15,7 @@ class DenunciaController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/denuncias",
+     *     path="/api/registrar-denuncia",
      *     summary="Registrar uma nova denúncia",
      *     description="Registra uma denúncia com base no tipo de usuário (passageiro ou organizador).",
      *     tags={"Denúncias"},
@@ -126,7 +126,7 @@ class DenunciaController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/denuncias/{id}",
+     *     path="/api/editar-denuncia/{id}",
      *     summary="Editar uma denúncia",
      *     description="Permite ao usuário editar sua própria denúncia.",
      *     tags={"Denúncias"},
@@ -216,7 +216,7 @@ class DenunciaController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/denuncias/{id}",
+     *     path="/api/excluir-denuncia/{id}",
      *     summary="Excluir uma denúncia",
      *     description="Permite ao usuário excluir sua própria denúncia.",
      *     tags={"Denúncias"},

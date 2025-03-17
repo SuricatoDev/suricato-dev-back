@@ -71,4 +71,5 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rotas para gerenciar Denuncias
     Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
     Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
+    Route::delete('excluir-denuncia/{id}', [DenunciaController::class, 'excluirDenuncia']);
 });

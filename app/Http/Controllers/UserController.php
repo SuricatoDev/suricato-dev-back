@@ -367,7 +367,7 @@ class UserController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/usuarios/{id}",
+     *     path="/api/users/{id}",
      *     summary="Atualizar perfil de usuário",
      *     description="Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
      *     tags={"Usuários"},
@@ -519,7 +519,7 @@ class UserController extends Controller
     // Método para excluir um usuário
     /**
      * @OA\Delete(
-     *     path="/api/usuarios/{id}",
+     *     path="/api/users/{id}",
      *     summary="Excluir o próprio perfil",
      *     description="Permite que um usuário autenticado exclua seu próprio perfil. Exclui também os dados associados de passageiro ou organizador.",
      *     tags={"Usuários"},

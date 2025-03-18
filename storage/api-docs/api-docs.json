@@ -140,6 +140,566 @@
                 }
             }
         },
+        "/registrar-avaliacao": {
+            "post": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Registrar uma nova avaliação",
+                "description": "Esse endpoint permite que um passageiro avalie uma caravana ou um organizador, ou que um organizador avalie um passageiro.",
+                "operationId": "registrarAvaliacao",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nota"
+                                ],
+                                "properties": {
+                                    "caravana_id": {
+                                        "description": "ID da caravana (opcional)",
+                                        "type": "integer"
+                                    },
+                                    "organizador_id": {
+                                        "description": "ID do organizador (opcional)",
+                                        "type": "integer"
+                                    },
+                                    "passageiro_id": {
+                                        "description": "ID do passageiro (opcional, necessário para organizador avaliar passageiro)",
+                                        "type": "integer"
+                                    },
+                                    "nota": {
+                                        "description": "Nota da avaliação (1 a 5)",
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "comentario": {
+                                        "description": "Comentário adicional sobre a avaliação",
+                                        "type": "string",
+                                        "example": "Excelente viagem!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avaliação registrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avaliação registrada com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação dos dados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "nota": "Este campo é obrigatório."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao registrar avaliação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao registrar avaliação: erro interno."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/listar-avaliacoes/caravana/{id}": {
+            "get": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Listar avaliações de uma caravana",
+                "description": "Esse endpoint permite listar as avaliações feitas para uma caravana específica.",
+                "operationId": "listarAvaliacoesCaravana",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da caravana",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avaliações da caravana obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "avaliacoes": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "nota": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "comentario": {
+                                                        "type": "string",
+                                                        "example": "Ótima viagem!"
+                                                    },
+                                                    "caravana_id": {
+                                                        "type": "integer",
+                                                        "example": 123
+                                                    },
+                                                    "organizador_id": {
+                                                        "type": "integer",
+                                                        "example": 456
+                                                    },
+                                                    "passageiro_id": {
+                                                        "type": "integer",
+                                                        "example": 789
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao listar avaliações da caravana",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao obter avaliações da caravana."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/listar-avaliacoes/organizador/{id}": {
+            "get": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Listar avaliações de um organizador",
+                "description": "Esse endpoint permite listar as avaliações feitas para um organizador específico.",
+                "operationId": "listarAvaliacoesOrganizador",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do organizador",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avaliações do organizador obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "avaliacoes": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "nota": {
+                                                        "type": "integer",
+                                                        "example": 4
+                                                    },
+                                                    "comentario": {
+                                                        "type": "string",
+                                                        "example": "Muito atencioso!"
+                                                    },
+                                                    "caravana_id": {
+                                                        "type": "integer",
+                                                        "example": 123
+                                                    },
+                                                    "organizador_id": {
+                                                        "type": "integer",
+                                                        "example": 456
+                                                    },
+                                                    "passageiro_id": {
+                                                        "type": "integer",
+                                                        "example": 789
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao listar avaliações do organizador",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao obter avaliações do organizador."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/listar-avaliacoes/passageiro/{id}": {
+            "get": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Listar avaliações feitas por um organizador a um passageiro",
+                "description": "Esse endpoint permite listar as avaliações feitas por um organizador a um passageiro específico.",
+                "operationId": "listarAvaliacoesPassageiro",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do passageiro",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avaliações do passageiro obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "avaliacoes": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "nota": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "comentario": {
+                                                        "type": "string",
+                                                        "example": "Passageiro muito educado."
+                                                    },
+                                                    "caravana_id": {
+                                                        "type": "integer",
+                                                        "example": 123
+                                                    },
+                                                    "organizador_id": {
+                                                        "type": "integer",
+                                                        "example": 456
+                                                    },
+                                                    "passageiro_id": {
+                                                        "type": "integer",
+                                                        "example": 789
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao listar avaliações do passageiro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao obter avaliações do passageiro."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/editar-avaliacao/{id}": {
+            "put": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Editar uma avaliação existente",
+                "description": "Esse endpoint permite editar uma avaliação já registrada.",
+                "operationId": "editarAvaliacao",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da avaliação",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nota": {
+                                        "description": "Nova nota da avaliação",
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "comentario": {
+                                        "description": "Novo comentário da avaliação",
+                                        "type": "string",
+                                        "example": "Excelente! Melhorou muito."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avaliação editada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avaliação editada com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Erro ao editar avaliação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": " Vocé não tem permissão para editar esta avaliação."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao editar avaliação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao editar avaliação."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/excluir-avaliacao/{id}": {
+            "delete": {
+                "tags": [
+                    "Avaliação"
+                ],
+                "summary": "Excluir uma avaliação",
+                "description": "Esse endpoint permite excluir uma avaliação existente.",
+                "operationId": "excluirAvaliacao",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da avaliação",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avaliação excluída com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avaliação excluída com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Erro ao excluir avaliação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": " Vocé não tem permissão para excluir esta avaliação."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao excluir avaliação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao excluir avaliação."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/caravanas": {
             "get": {
                 "tags": [
@@ -786,6 +1346,142 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/filtrar-caravanas": {
+            "get": {
+                "tags": [
+                    "Caravanas"
+                ],
+                "summary": "Filtrar caravanas por cidade de origem, destino, evento ou categoria",
+                "description": "Permite buscar caravanas com base nos filtros fornecidos. As pesquisas podem ser independentes ou conjuntas.",
+                "operationId": "5e2d27b7b21d3e2c91ade29d0df43451",
+                "parameters": [
+                    {
+                        "name": "origem",
+                        "in": "query",
+                        "description": "Cidade de origem da caravana",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Curitiba"
+                        }
+                    },
+                    {
+                        "name": "destino",
+                        "in": "query",
+                        "description": "Cidade de destino da caravana",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "São Paulo"
+                        }
+                    },
+                    {
+                        "name": "titulo",
+                        "in": "query",
+                        "description": "Nome do evento",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Rock in Rio"
+                        }
+                    },
+                    {
+                        "name": "categoria",
+                        "in": "query",
+                        "description": "Categoria do evento",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Shows"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de caravanas filtradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "caravanas": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "cidade_origem": {
+                                                        "type": "string",
+                                                        "example": "Curitiba"
+                                                    },
+                                                    "cidade_destino": {
+                                                        "type": "string",
+                                                        "example": "São Paulo"
+                                                    },
+                                                    "titulo": {
+                                                        "type": "string",
+                                                        "example": "Rock in Rio"
+                                                    },
+                                                    "categoria": {
+                                                        "type": "string",
+                                                        "example": "Shows"
+                                                    },
+                                                    "data_saida": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-05-15"
+                                                    },
+                                                    "data_retorno": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-05-20"
+                                                    },
+                                                    "vagas_disponiveis": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao processar a solicitação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao buscar caravanas."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/caravanas/{id}/reservas": {
@@ -1465,14 +2161,14 @@
                 }
             }
         },
-        "/api/denuncias": {
+        "/api/registrar-denuncia": {
             "post": {
                 "tags": [
                     "Denúncias"
                 ],
                 "summary": "Registrar uma nova denúncia",
                 "description": "Registra uma denúncia com base no tipo de usuário (passageiro ou organizador).",
-                "operationId": "6f27675ace1640fa0086c81a59ee5663",
+                "operationId": "f57d4978d6cdbcc87ec97a2adc59fb2c",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1603,14 +2299,14 @@
                 ]
             }
         },
-        "/api/denuncias/{id}": {
+        "/api/editar-denuncia/{id}": {
             "put": {
                 "tags": [
                     "Denúncias"
                 ],
                 "summary": "Editar uma denúncia",
                 "description": "Permite ao usuário editar sua própria denúncia.",
-                "operationId": "a6aeb21ba9ca8692e4fd7a2397309e17",
+                "operationId": "440eb4342b77e4a7aba69c39eae45343",
                 "parameters": [
                     {
                         "name": "id",
@@ -1733,14 +2429,16 @@
                         "bearerAuth": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/excluir-denuncia/{id}": {
             "delete": {
                 "tags": [
                     "Denúncias"
                 ],
                 "summary": "Excluir uma denúncia",
                 "description": "Permite ao usuário excluir sua própria denúncia.",
-                "operationId": "d9a54ca4d36b74cfc64aa969f3cc3c0a",
+                "operationId": "b31d83af42ae846815e6f90f4fbc53a4",
                 "parameters": [
                     {
                         "name": "id",
@@ -1823,6 +2521,295 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/registrar-suporte": {
+            "post": {
+                "tags": [
+                    "Suporte"
+                ],
+                "summary": "Registrar um novo suporte",
+                "description": "Esse endpoint permite que um user registre um suporte.",
+                "operationId": "registrarSuporte",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "descricao",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Problema ao acessar a caravana"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pendente",
+                                            "Em andamento",
+                                            "Concluido"
+                                        ],
+                                        "example": "Pendente"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Suporte registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Suporte registrado com sucesso!"
+                                        },
+                                        "suporte": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao registrar suporte"
+                    }
+                }
+            }
+        },
+        "/api/listar-suportes": {
+            "get": {
+                "tags": [
+                    "Suporte"
+                ],
+                "summary": "Listar todos os suportes",
+                "description": "Esse endpoint permite listar todos os suportes.",
+                "operationId": "listarSuportes",
+                "responses": {
+                    "200": {
+                        "description": "Lista de suportes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "suportes": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao obter suportes"
+                    }
+                }
+            }
+        },
+        "/api/visualizar-suporte/{id}": {
+            "get": {
+                "tags": [
+                    "Suporte"
+                ],
+                "summary": "Visualizar um suporte específico",
+                "description": "Esse endpoint permite visualizar um suporte especifico.",
+                "operationId": "visualizarSuporte",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do suporte",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do suporte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "suporte": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao obter suporte"
+                    }
+                }
+            }
+        },
+        "/api/editar-suporte/{id}": {
+            "put": {
+                "tags": [
+                    "Suporte"
+                ],
+                "summary": "Editar um suporte",
+                "description": "Esse endpoint permite editar um suporte.",
+                "operationId": "editarSuporte",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do suporte",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "descricao",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Atualização na descrição do suporte"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pendente",
+                                            "Em andamento",
+                                            "Concluido"
+                                        ],
+                                        "example": "Concluido"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Suporte atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Suporte atualizado com sucesso!"
+                                        },
+                                        "suporte": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permissão negada"
+                    },
+                    "500": {
+                        "description": "Erro ao atualizar suporte"
+                    }
+                }
+            }
+        },
+        "/api/excluir-suporte/{id}": {
+            "delete": {
+                "tags": [
+                    "Suporte"
+                ],
+                "summary": "Excluir um suporte",
+                "description": "Esse endpoint permite excluir um suporte.",
+                "operationId": "excluirSuporte",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do suporte",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Suporte excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Suporte excluído com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permissão negada"
+                    },
+                    "500": {
+                        "description": "Erro ao excluir suporte"
+                    }
+                }
             }
         },
         "/api/register": {
@@ -2297,14 +3284,14 @@
                 }
             }
         },
-        "/api/usuarios/{id}": {
+        "/api/users/{id}": {
             "put": {
                 "tags": [
                     "Usuários"
                 ],
                 "summary": "Atualizar perfil de usuário",
                 "description": "Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
-                "operationId": "7c77399a04ec813ac486de84e60951dd",
+                "operationId": "03c3bff0c999a3ad9413da4087203fc8",
                 "parameters": [
                     {
                         "name": "id",
@@ -2498,7 +3485,7 @@
                 ],
                 "summary": "Excluir o próprio perfil",
                 "description": "Permite que um usuário autenticado exclua seu próprio perfil. Exclui também os dados associados de passageiro ou organizador.",
-                "operationId": "93b802ea6e89c85463b027b31c629b38",
+                "operationId": "985bb282da3efff90a9b5212b3c8e7ef",
                 "parameters": [
                     {
                         "name": "id",
@@ -2611,12 +3598,20 @@
             "description": "Autenticação"
         },
         {
+            "name": "Avaliação",
+            "description": "Avaliação"
+        },
+        {
             "name": "CEP",
             "description": "CEP"
         },
         {
             "name": "Denúncias",
             "description": "Denúncias"
+        },
+        {
+            "name": "Suporte",
+            "description": "Suporte"
         },
         {
             "name": "Organizador",

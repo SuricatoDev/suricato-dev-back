@@ -480,4 +480,102 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/filtrar-caravanas",
+     *     summary="Filtrar caravanas por cidade de origem, destino, evento ou categoria",
+     *     description="Permite buscar caravanas com base nos filtros fornecidos. As pesquisas podem ser independentes ou conjuntas.",
+     *     tags={"Caravanas"},
+     *     @OA\Parameter(
+     *         name="origem",
+     *         in="query",
+     *         description="Cidade de origem da caravana",
+     *         required=false,
+     *         @OA\Schema(type="string", example="Curitiba")
+     *     ),
+     *     @OA\Parameter(
+     *         name="destino",
+     *         in="query",
+     *         description="Cidade de destino da caravana",
+     *         required=false,
+     *         @OA\Schema(type="string", example="São Paulo")
+     *     ),
+     *     @OA\Parameter(
+     *         name="titulo",
+     *         in="query",
+     *         description="Nome do evento",
+     *         required=false,
+     *         @OA\Schema(type="string", example="Rock in Rio")
+     *     ),
+     *     @OA\Parameter(
+     *         name="categoria",
+     *         in="query",
+     *         description="Categoria do evento",
+     *         required=false,
+     *         @OA\Schema(type="string", example="Shows")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de caravanas filtradas",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="caravanas",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="cidade_origem", type="string", example="Curitiba"),
+     *                     @OA\Property(property="cidade_destino", type="string", example="São Paulo"),
+     *                     @OA\Property(property="titulo", type="string", example="Rock in Rio"),
+     *                     @OA\Property(property="categoria", type="string", example="Shows"),
+     *                     @OA\Property(property="data_saida", type="string", format="date", example="2025-05-15"),
+     *                     @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-20"),
+     *                     @OA\Property(property="vagas_disponiveis", type="integer", example=10)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno ao processar a solicitação",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro ao buscar caravanas."),
+     *             @OA\Property(property="error", type="string", example="Detalhes do erro.")
+     *         )
+     *     )
+     * )
+     */
+
+    public function filtrarCaravanas(Request $request)
+    {
+        $query = Caravana::query();
+
+        if ($request->has('origem')) {
+            $query->where('cidade_origem', 'like', '%' . $request->origem . '%');
+        }
+
+        if ($request->has('destino')) {
+            $query->where('cidade_destino', 'like', '%' . $request->destino . '%');
+        }
+
+        if ($request->has('titulo')) {
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
+        }
+
+        if ($request->has('categoria')) {
+            $query->where('categoria', 'like', '%' . $request->categoria . '%');
+        }
+
+        $caravanas = $query->get();
+
+        return response()->json([
+            'status' => true,
+            'caravanas' => $caravanas
+        ]);
+    }
 }

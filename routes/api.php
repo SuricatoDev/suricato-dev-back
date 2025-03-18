@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvaliacaoController;
 use App\Http\Controllers\CaravanaController;
 use App\Http\Controllers\CaravanaPassageiroController;
 use App\Http\Controllers\CepController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
+use App\Http\Controllers\SuporteController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,9 +69,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'visualizarReserva']);
     Route::put('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
     Route::delete('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
+    Route::get('filtrar-caravanas', [CaravanaController::class, 'filtrarCaravanas']);
 
     //Rotas para gerenciar Denuncias
     Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
     Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
     Route::delete('excluir-denuncia/{id}', [DenunciaController::class, 'excluirDenuncia']);
+
+    //Rotas para gerenciar Suporte
+    Route::post('registrar-suporte', [SuporteController::class, 'registrarSuporte']);
+    Route::get('listar-suporte', [SuporteController::class, 'listarSuporte']);
+    Route::get('visualizar-suporte/{id}', [SuporteController::class, 'visualizarSuporte']);
+    Route::put('editar-suporte/{id}', [SuporteController::class, 'editarSuporte']);
+    Route::delete('excluir-suporte/{id}', [SuporteController::class, 'excluirSuporte']);
+
+    //Rotas para gerenciar Avaliações
+    Route::post('registrar-avaliacao', [AvaliacaoController::class, 'registrarAvaliacao']);
+    Route::get('listar-avaliacoes/caravana/{caravana_id}', [AvaliacaoController::class, 'listarAvaliacoesCaravana']);
+    Route::get('listar-avaliacoes/organizador/{organizador_id}', [AvaliacaoController::class, 'listarAvaliacoesOrganizador']);
+    Route::get('listar-avaliacoes/passageiro/{passageiro_id}', [AvaliacaoController::class, 'listarAvaliacoesPassageiro']);
+    Route::delete('excluir-avaliacao/{id}', [AvaliacaoController::class, 'excluirAvaliacao']);
+
 });

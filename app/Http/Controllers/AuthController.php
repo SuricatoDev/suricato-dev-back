@@ -72,6 +72,20 @@ class AuthController extends Controller
      *                 @OA\Property(property="name", type="string", example="João da Silva"),
      *                 @OA\Property(property="email", type="string", format="email", example="usuario@email.com"),
      *             ),
+     *             @OA\Property(property="passageiro", type="object",
+     *                 @OA\Property(property="id", type="integer", nullable=true, example=null),
+     *                 @OA\Property(property="cpf", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="rg", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="contato_emergencia", type="string", nullable=true, example=null),
+     *             ),
+     *             @OA\Property(property="organizador", type="object",
+     *                 @OA\Property(property="id", type="integer", nullable=true, example=null),
+     *                 @OA\Property(property="razao_social", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="cnpj", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="cadastur", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="inscricao_estadual", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="inscricao_municipal", type="string", nullable=true, example=null),
+     *             ),
      *             @OA\Property(property="access_token", type="string", example="1|abcde12345"),
      *             @OA\Property(property="token_type", type="string", example="Bearer")
      *         )
@@ -80,12 +94,11 @@ class AuthController extends Controller
      *         response=401,
      *         description="Erro ao realizar login, usuário ou senha incorretos",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Erro ao realizar login. Verifique suas credenciais.")
+     *             @OA\Property(property="message", type="string", example="Erro ao realizar login. Usuário ou senha incorretos.")
      *         )
      *     ),
      * )
      */
-
 
     public function login(Request $request)
     {
@@ -109,7 +122,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            // Verifica se o usuário já está cadastrado como passageiro
+            // Armazena os dados do passageiro e organizador
             $passageiro = Passageiro::where('id', $user->id)->first();
             $organizador = Organizador::where('id', $user->id)->first();
 

@@ -127,7 +127,6 @@ class CaravanaPassageiroController extends Controller
         // Validação dos dados
         $request->validate([
             'passageiro_id' => 'required|exists:users,id',
-            'status' => 'required|in:pendente,confirmada,cancelada'
         ]);
 
         $caravana = Caravana::findOrFail($id);

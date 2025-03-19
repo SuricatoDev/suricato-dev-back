@@ -113,32 +113,14 @@ class AuthController extends Controller
             $passageiro = Passageiro::where('id', $user->id)->first();
             $organizador = Organizador::where('id', $user->id)->first();
 
-            if ($user->passageiro) {
-                
-                return response()->json([
-                    'message' => 'Usuário logado com sucesso!',
-                    'user' => $user, // Retorna os dados do usuário logado
-                    'passageiro' => $passageiro,
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                ]);
-
-            } else if ($user->organizador) {
-                return response()->json([
-                    'message' => 'Usuário logado com sucesso!',
-                    'user' => $user, // Retorna os dados do usuário logado
-                    'organizador' => $organizador,
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                ]);
-            } else {
-                return response()->json([
-                    'message' => 'Usuário logado com sucesso!',
-                    'user' => $user, // Retorna os dados do usuário logado
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                ], 200);
-            }
+            return response()->json([
+                'message' => 'Usuário logado com sucesso!',
+                'user' => $user, // Retorna os dados do usuário logado
+                'passageiro' => $passageiro,
+                'organizador' => $organizador,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ], 200);
         }
 
         // Se o login falhar, retorna uma mensagem de erro

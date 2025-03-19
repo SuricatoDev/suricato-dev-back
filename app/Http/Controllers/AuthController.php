@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organizador;
+use App\Models\Passageiro;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,12 +109,36 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json([
-                'message' => 'Usuário logado com sucesso!',
-                'user' => $user, // Retorna os dados do usuário logado
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ], 200);
+            // Verifica se o usuário já está cadastrado como passageiro
+            $passageiro = Passageiro::where('id', $user->id)->first();
+            $organizador = Organizador::where('id', $user->id)->first();
+
+            if ($user->passageiro) {
+                
+                return response()->json([
+                    'message' => 'Usuário logado com sucesso!',
+                    'user' => $user, // Retorna os dados do usuário logado
+                    'passageiro' => $passageiro,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+
+            } else if ($user->organizador) {
+                return response()->json([
+                    'message' => 'Usuário logado com sucesso!',
+                    'user' => $user, // Retorna os dados do usuário logado
+                    'organizador' => $organizador,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Usuário logado com sucesso!',
+                    'user' => $user, // Retorna os dados do usuário logado
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ], 200);
+            }
         }
 
         // Se o login falhar, retorna uma mensagem de erro

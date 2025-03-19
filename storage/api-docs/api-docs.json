@@ -76,6 +76,66 @@
                                             },
                                             "type": "object"
                                         },
+                                        "passageiro": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "cpf": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "rg": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "contato_emergencia": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "organizador": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "razao_social": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "cnpj": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "cadastur": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "inscricao_estadual": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "inscricao_municipal": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
                                         "access_token": {
                                             "type": "string",
                                             "example": "1|abcde12345"
@@ -98,7 +158,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Erro ao realizar login. Verifique suas credenciais."
+                                            "example": "Erro ao realizar login. Usuário ou senha incorretos."
                                         }
                                     },
                                     "type": "object"

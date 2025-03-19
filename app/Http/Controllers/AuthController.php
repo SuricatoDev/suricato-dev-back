@@ -129,8 +129,8 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Usuário logado com sucesso!',
                 'user' => $user, // Retorna os dados do usuário logado
-                'passageiro' => $passageiro,
-                'organizador' => $organizador,
+                'passageiro' => $passageiro, // Retorna os dados do passageiro, mesmo que seja nulo
+                'organizador' => $organizador, // Retorna os dados do organizador, mesmo que seja nulo
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ], 200);

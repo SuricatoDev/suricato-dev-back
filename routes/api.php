@@ -57,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
     Route::post('register-passageiro/{id}', [UserController::class, 'registerPassageiro']);
+    Route::get('user-data/{id}', [UserController::class, 'userData']);
     Route::put('users/{id}', [UserController::class, 'editarUsuario']);
     Route::delete('users/{id}', [UserController::class, 'excluirUsuario']);
 

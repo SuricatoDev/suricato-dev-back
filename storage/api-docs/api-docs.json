@@ -3344,6 +3344,119 @@
                 }
             }
         },
+        "/api/user-data/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Obtém os dados de um usuário, incluindo informações de passageiro e organizador se aplicável.",
+                "operationId": "c06844c5bc463001c342513a809ec241",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário retornados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João da Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "usuario@email.com"
+                                                },
+                                                "passageiro": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "organizador": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "passageiro": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "documento": {
+                                                    "type": "string",
+                                                    "example": "123.456.789-00"
+                                                },
+                                                "telefone": {
+                                                    "type": "string",
+                                                    "example": "+55 11 98765-4321"
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "organizador": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "empresa": {
+                                                    "type": "string",
+                                                    "example": "Eventos XYZ"
+                                                },
+                                                "cnpj": {
+                                                    "type": "string",
+                                                    "example": "12.345.678/0001-99"
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/{id}": {
             "put": {
                 "tags": [

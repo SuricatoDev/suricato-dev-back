@@ -366,6 +366,69 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/user-data/{id}",
+     *     summary="Obtém os dados de um usuário, incluindo informações de passageiro e organizador se aplicável.",
+     *     tags={"Usuários"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do usuário",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Dados do usuário retornados com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="user", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="João da Silva"),
+     *                 @OA\Property(property="email", type="string", format="email", example="usuario@email.com"),
+     *                 @OA\Property(property="passageiro", type="boolean", example=true),
+     *                 @OA\Property(property="organizador", type="boolean", example=false)
+     *             ),
+     *             @OA\Property(property="passageiro", type="object", nullable=true,
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="documento", type="string", example="123.456.789-00"),
+     *                 @OA\Property(property="telefone", type="string", example="+55 11 98765-4321")
+     *             ),
+     *             @OA\Property(property="organizador", type="object", nullable=true,
+     *                 @OA\Property(property="id", type="integer", example=2),
+     *                 @OA\Property(property="empresa", type="string", example="Eventos XYZ"),
+     *                 @OA\Property(property="cnpj", type="string", example="12.345.678/0001-99")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuário não encontrado.")
+     *         )
+     *     )
+     * )
+     */
+
+
+    public function userData($id)
+    {
+        // Buscar o usuário pelo ID
+        $user = User::findOrFail($id);
+
+        // Buscar dados de passageiro e organizador, se existirem
+        $passageiro = $user->passageiro ? Passageiro::where('id', $user->id)->first() : null;
+        $organizador = $user->organizador ? Organizador::where('id', $user->id)->first() : null;
+
+        return response()->json([
+            'user' => $user,
+            'passageiro' => $passageiro,
+            'organizador' => $organizador,
+        ], 200);
+    }
+
+
+    /**
      * @OA\Put(
      *     path="/api/users/{id}",
      *     summary="Atualizar perfil de usuário",

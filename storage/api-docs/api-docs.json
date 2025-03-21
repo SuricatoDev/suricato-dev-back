@@ -3402,11 +3402,15 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "documento": {
+                                                "cpf": {
                                                     "type": "string",
                                                     "example": "123.456.789-00"
                                                 },
-                                                "telefone": {
+                                                "rg": {
+                                                    "type": "string",
+                                                    "example": "12.345.678-9"
+                                                },
+                                                "contato_emergencia": {
                                                     "type": "string",
                                                     "example": "+55 11 98765-4321"
                                                 }
@@ -3416,17 +3420,70 @@
                                         },
                                         "organizador": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "empresa": {
+                                                "razao_social": {
+                                                    "description": "Razão social da empresa organizadora",
                                                     "type": "string",
-                                                    "example": "Eventos XYZ"
+                                                    "example": "Empresa Exemplo LTDA"
                                                 },
                                                 "cnpj": {
+                                                    "description": "CNPJ da empresa organizadora",
                                                     "type": "string",
-                                                    "example": "12.345.678/0001-99"
+                                                    "example": "12.345.678/0001-90"
+                                                },
+                                                "inscricao_estadual": {
+                                                    "description": "Inscrição estadual da empresa (opcional)",
+                                                    "type": "string",
+                                                    "example": "123456789"
+                                                },
+                                                "inscricao_municipal": {
+                                                    "description": "Inscrição municipal da empresa (opcional)",
+                                                    "type": "string",
+                                                    "example": "987654321"
+                                                },
+                                                "cadastur": {
+                                                    "description": "Cadastro no Cadastur (opcional)",
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "endereco": {
+                                                    "description": "Endereço da empresa",
+                                                    "type": "string",
+                                                    "example": "Avenida Exemplo, 456"
+                                                },
+                                                "numero": {
+                                                    "description": "Número do endereço",
+                                                    "type": "string",
+                                                    "example": "456"
+                                                },
+                                                "complemento": {
+                                                    "description": "Complemento do endereço",
+                                                    "type": "string",
+                                                    "example": "Sala 202"
+                                                },
+                                                "bairro": {
+                                                    "description": "Bairro da empresa",
+                                                    "type": "string",
+                                                    "example": "Bairro Exemplo"
+                                                },
+                                                "cep": {
+                                                    "description": "CEP da empresa",
+                                                    "type": "string",
+                                                    "example": "98765-432"
+                                                },
+                                                "cidade": {
+                                                    "description": "Cidade da empresa",
+                                                    "type": "string",
+                                                    "example": "Cidade Exemplo"
+                                                },
+                                                "estado": {
+                                                    "description": "Estado da empresa",
+                                                    "type": "string",
+                                                    "example": "SP"
+                                                },
+                                                "organizador": {
+                                                    "description": "Indica se o usuário deve ser registrado como organizador",
+                                                    "type": "boolean",
+                                                    "example": true
                                                 }
                                             },
                                             "type": "object",

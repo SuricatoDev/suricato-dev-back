@@ -390,13 +390,24 @@ class UserController extends Controller
      *             ),
      *             @OA\Property(property="passageiro", type="object", nullable=true,
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="documento", type="string", example="123.456.789-00"),
-     *                 @OA\Property(property="telefone", type="string", example="+55 11 98765-4321")
+     *                 @OA\Property(property="cpf", type="string", example="123.456.789-00"),
+     *                 @OA\Property(property="rg", type="string", example="12.345.678-9"),
+     *                 @OA\Property(property="contato_emergencia", type="string", example="+55 11 98765-4321")
      *             ),
      *             @OA\Property(property="organizador", type="object", nullable=true,
-     *                 @OA\Property(property="id", type="integer", example=2),
-     *                 @OA\Property(property="empresa", type="string", example="Eventos XYZ"),
-     *                 @OA\Property(property="cnpj", type="string", example="12.345.678/0001-99")
+     *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social da empresa organizadora"),
+     *             @OA\Property(property="cnpj", type="string", example="12.345.678/0001-90", description="CNPJ da empresa organizadora"),
+     *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual da empresa (opcional)"),
+     *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal da empresa (opcional)"),
+     *             @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur (opcional)"),
+     *             @OA\Property(property="endereco", type="string", example="Avenida Exemplo, 456", description="Endereço da empresa"),
+     *             @OA\Property(property="numero", type="string", example="456", description="Número do endereço"),
+     *             @OA\Property(property="complemento", type="string", example="Sala 202", description="Complemento do endereço"),
+     *             @OA\Property(property="bairro", type="string", example="Bairro Exemplo", description="Bairro da empresa"),
+     *             @OA\Property(property="cep", type="string", example="98765-432", description="CEP da empresa"),
+     *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade da empresa"),
+     *             @OA\Property(property="estado", type="string", example="SP", description="Estado da empresa"),
+     *             @OA\Property(property="organizador", type="boolean", example=true, description="Indica se o usuário deve ser registrado como organizador"),
      *             )
      *         )
      *     ),

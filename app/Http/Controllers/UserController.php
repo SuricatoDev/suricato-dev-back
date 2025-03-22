@@ -532,7 +532,7 @@ class UserController extends Controller
 
             // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
             'rg' => 'sometimes|string',
-            'numero_emergencia' => 'sometimes|string|max:11',
+            'contato_emergencia' => 'sometimes|string|max:11',
             'razao_social' => 'sometimes|string',
             'inscricao_estadual' => 'sometimes|string',
             'inscricao_municipal' => 'sometimes|string',
@@ -557,7 +557,7 @@ class UserController extends Controller
             if ($passageiro) {
                 $passageiro->update([
                     'rg' => $validated['rg'] ?? $passageiro->rg,
-                    'numero_emergencia' => $validated['numero_emergencia'] ?? $passageiro->numero_emergencia
+                    'contato_emergencia' => $validated['contato_emergencia'] ?? $passageiro->contato_emergencia
                 ]);
                 $tipoUsuario = 'passageiro';
             } else {

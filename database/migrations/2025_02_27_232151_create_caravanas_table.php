@@ -36,7 +36,6 @@ return new class extends Migration
             $table->foreign('organizador_id')
                 ->references('id')
                 ->on('organizadores');
-            $table->string('categoria');
             $table->timestamps();
         });
     }

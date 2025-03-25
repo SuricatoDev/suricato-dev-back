@@ -24,3 +24,22 @@ DROP TABLE eventos;
 
 ALTER TABLE caravanas
 ADD COLUMN categoria VARCHAR(255) NOT NULL AFTER descricao;
+
+ALTER TABLE caravanas
+DROP COLUMN origem,
+DROP COLUMN destino;
+
+ALTER TABLE caravanas
+ADD COLUMN endereco_origem VARCHAR(255) AFTER data_retorno,
+ADD COLUMN numero_origem VARCHAR(255) NULL AFTER endereco_origem,
+ADD COLUMN bairro_origem VARCHAR(255) AFTER numero_origem,
+ADD COLUMN cep_origem VARCHAR(255) AFTER bairro_origem,
+ADD COLUMN cidade_origem VARCHAR(255) AFTER cep_origem,
+ADD COLUMN estado_origem VARCHAR(255) AFTER cidade_origem,
+ADD COLUMN endereco_destino VARCHAR(255) AFTER estado_origem,
+ADD COLUMN numero_destino VARCHAR(255) NULL AFTER endereco_destino,
+ADD COLUMN bairro_destino VARCHAR(255) AFTER numero_destino,
+ADD COLUMN cep_destino VARCHAR(255) AFTER bairro_destino,
+ADD COLUMN cidade_destino VARCHAR(255) AFTER cep_destino,
+ADD COLUMN estado_destino VARCHAR(255) AFTER cidade_destino;
+

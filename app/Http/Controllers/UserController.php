@@ -530,7 +530,6 @@ class UserController extends Controller
             'cidade' => 'sometimes|string',
             'estado' => 'sometimes|string|min:2|max:2',
             'telefone' => 'sometimes|string|min:10|max:11',
-            'foto_perfil' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif',
 
             // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
             'rg' => 'sometimes|string',
@@ -549,8 +548,15 @@ class UserController extends Controller
         // Verifica se foi enviada uma nova foto de perfil
         if ($request->hasFile('foto_perfil')) {
             $file = $request->file('foto_perfil');
+
+            // Armazena a foto no S3
             $path = $file->store("usuarios/{$user->id}", 's3');
-            $validated['foto_perfil'] = Storage::disk('s3')->url($path);
+
+            // Verifica se o caminho foi gerado corretamente
+            $url = Storage::disk('s3')->url($path);
+
+            // Atribui a URL da foto ao campo foto_perfil
+            $validated['foto_perfil'] = $url;
         }
 
         // Atualiza os dados na tabela users (informações comuns)
@@ -589,6 +595,7 @@ class UserController extends Controller
             'tipo_usuario' => $tipoUsuario,
         ]);
     }
+
 
 
     // Método para excluir um usuário

@@ -64,6 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('users/{id}', [UserController::class, 'editarUsuario']);
     Route::delete('users/{id}', [UserController::class, 'excluirUsuario']);
 
+    //Rotas para atualizar a foto de perfil
+    Route::post('update-foto-perfil/{id}', [UserController::class, 'updateFotoPerfil']);
+
     //Rota via CEP
     Route::get('cep/{cep}', [CepController::class, 'buscarCep']);
 

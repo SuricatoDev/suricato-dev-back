@@ -545,27 +545,13 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
-        // Verifica se foi enviada uma nova foto de perfil
-        if ($request->hasFile('foto_perfil')) {
-            $file = $request->file('foto_perfil');
-
-            // Armazena a foto no S3
-            $path = $file->store("usuarios/{$user->id}", 's3');
-
-            // Verifica se o caminho foi gerado corretamente
-            $url = Storage::disk('s3')->url($path);
-
-            // Atribui a URL da foto ao campo foto_perfil
-            $validated['foto_perfil'] = $url;
-        }
-
         // Atualiza os dados na tabela users (informações comuns)
         $user->update($validated);
 
         // Variável para armazenar o tipo de usuário atualizado
         $tipoUsuario = null;
 
-        // Atualiza as informações específicas, dependendo do tipo de usuário
+        // Atualiza as informações específicas, dependendo do tipo do usuário
         if ($user->passageiro) {
             $passageiro = Passageiro::where('id', $user->id)->first();
             if ($passageiro) {
@@ -596,6 +582,102 @@ class UserController extends Controller
         ]);
     }
 
+    // Método para fazer upload de foto de perfil
+    /**
+     * @OA\Post(
+     *     path="/api/update-foto-perfil/{id}",
+     *     summary="Atualizar foto de perfil",
+     *     description="Permite que um usuário autenticado atualize sua foto de perfil.",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Property(
+     *                 property="foto_perfil",
+     *                 type="file",
+     *                 format="binary",
+     *                 description="Foto de perfil em formato JPEG ou PNG",
+     *                 required=true
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Foto de perfil atualizada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Foto de perfil atualizada com sucesso!"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Usuário não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Usuário não autenticado"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro de validação"),
+     *             @OA\Property(property="errors", type="object"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno no servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro interno no servidor"),
+     *         )
+     *     )
+     * )
+     */
+
+
+    public function updateFotoPerfil(Request $request)
+    {
+        // Valida a imagem
+        $request->validate([
+            'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Limites de tamanho e tipo de imagem
+        ]);
+
+        // Obtém o usuário autenticado
+        $user = Auth::user();
+
+        // Verifica se o arquivo de imagem foi enviado
+        if ($request->hasFile('foto_perfil')) {
+            $file = $request->file('foto_perfil'); // Obtém o arquivo de imagem
+
+            // Armazena a imagem no S3 com o caminho baseado no ID do usuário
+            $path = $file->store("usuarios/{$user->id}", 's3');
+
+            // Verifica a URL da imagem armazenada no S3
+            $url = Storage::disk('s3')->url($path);
+
+            // Atualiza o campo foto_perfil no banco de dados
+            $user->foto_perfil = $url;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Foto de perfil atualizada com sucesso!',
+                'data' => $user, // Retorna os dados atualizados do usuário
+            ]);
+        }
+
+        // Caso nenhum arquivo tenha sido enviado
+        return response()->json([
+            'status' => false,
+            'message' => 'Nenhuma foto foi enviada.',
+        ], 400);
+    }
 
 
     // Método para excluir um usuário

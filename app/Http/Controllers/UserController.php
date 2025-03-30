@@ -643,6 +643,11 @@ class UserController extends Controller
 
     public function updateFotoPerfil(Request $request)
     {
+        // Valida a imagem
+        $request->validate([
+            'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif', // Limites de tipo de imagem
+        ]);
+
         // Obtém o usuário autenticado
         $user = Auth::user();
 

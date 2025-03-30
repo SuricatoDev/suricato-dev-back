@@ -37,6 +37,9 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 
+//Rota de teste upload
+Route::post('teste-upload', [CaravanaController::class, 'testeUploadS3']);
+
 // Rota para visualizar todas as caravanas (não é necessário estar logado)
 Route::get('caravanas', [CaravanaController::class, 'listarCaravanas']);
 
@@ -62,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('users/{id}', [UserController::class, 'excluirUsuario']);
 
     //Rota via CEP
-    Route::get('/cep/{cep}', [CepController::class, 'buscarCep']);
+    Route::get('cep/{cep}', [CepController::class, 'buscarCep']);
 
     //Rotas para gerenciar reservas
     Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);

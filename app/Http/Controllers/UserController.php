@@ -530,7 +530,7 @@ class UserController extends Controller
             'cidade' => 'sometimes|string',
             'estado' => 'sometimes|string|min:2|max:2',
             'telefone' => 'sometimes|string|min:10|max:11',
-            'foto_perfil' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_perfil' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif',
 
             // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
             'rg' => 'sometimes|string',

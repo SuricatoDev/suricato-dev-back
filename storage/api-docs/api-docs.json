@@ -817,7 +817,7 @@
                             }
                         }
                     },
-                    "400": {
+                    "404": {
                         "description": "Nenhuma caravana encontrada",
                         "content": {
                             "application/json": {
@@ -854,14 +854,23 @@
                                 "required": [
                                     "titulo",
                                     "descricao",
+                                    "categoria",
                                     "data_partida",
                                     "data_retorno",
-                                    "origem",
-                                    "destino",
+                                    "endereco_origem",
+                                    "numero_origem",
+                                    "bairro_origem",
+                                    "cep_origem",
+                                    "cidade_origem",
+                                    "estado_origem",
+                                    "endereco_destino",
+                                    "numero_destino",
+                                    "bairro_destino",
+                                    "cep_destino",
+                                    "cidade_destino",
+                                    "estado_destino",
                                     "numero_vagas",
                                     "valor",
-                                    "organizador_id",
-                                    "evento_id",
                                     "imagens"
                                 ],
                                 "properties": {
@@ -873,6 +882,10 @@
                                         "type": "string",
                                         "example": "Viagem para o show de uma banda famosa"
                                     },
+                                    "categoria": {
+                                        "type": "string",
+                                        "example": "Shows"
+                                    },
                                     "data_partida": {
                                         "type": "string",
                                         "format": "date",
@@ -883,13 +896,53 @@
                                         "format": "date",
                                         "example": "2025-06-16"
                                     },
-                                    "origem": {
+                                    "endereco_origem": {
+                                        "type": "string",
+                                        "example": "Avenida Paulista"
+                                    },
+                                    "numero_origem": {
+                                        "type": "string",
+                                        "example": "1000"
+                                    },
+                                    "bairro_origem": {
+                                        "type": "string",
+                                        "example": "Bela Vista"
+                                    },
+                                    "cep_origem": {
+                                        "type": "string",
+                                        "example": "01310-100"
+                                    },
+                                    "cidade_origem": {
                                         "type": "string",
                                         "example": "São Paulo"
                                     },
-                                    "destino": {
+                                    "estado_origem": {
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "endereco_destino": {
+                                        "type": "string",
+                                        "example": "Praia de Copacabana"
+                                    },
+                                    "numero_destino": {
+                                        "type": "string",
+                                        "example": "200"
+                                    },
+                                    "bairro_destino": {
+                                        "type": "string",
+                                        "example": "Copacabana"
+                                    },
+                                    "cep_destino": {
+                                        "type": "string",
+                                        "example": "22060-001"
+                                    },
+                                    "cidade_destino": {
                                         "type": "string",
                                         "example": "Rio de Janeiro"
+                                    },
+                                    "estado_destino": {
+                                        "type": "string",
+                                        "example": "RJ"
                                     },
                                     "numero_vagas": {
                                         "type": "integer",
@@ -900,25 +953,11 @@
                                         "format": "float",
                                         "example": 250
                                     },
-                                    "organizador_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "evento_id": {
-                                        "type": "integer",
-                                        "example": 10
-                                    },
                                     "imagens": {
                                         "type": "array",
                                         "items": {
-                                            "properties": {
-                                                "path": {
-                                                    "type": "string",
-                                                    "format": "url",
-                                                    "example": "https://meusite.com/imagem.jpg"
-                                                }
-                                            },
-                                            "type": "object"
+                                            "type": "string",
+                                            "format": "binary"
                                         }
                                     }
                                 },
@@ -956,6 +995,10 @@
                                                     "type": "string",
                                                     "example": "Viagem para o show de uma banda famosa"
                                                 },
+                                                "categoria": {
+                                                    "type": "string",
+                                                    "example": "Shows"
+                                                },
                                                 "data_partida": {
                                                     "type": "string",
                                                     "format": "date",
@@ -966,14 +1009,6 @@
                                                     "format": "date",
                                                     "example": "2025-06-16"
                                                 },
-                                                "origem": {
-                                                    "type": "string",
-                                                    "example": "São Paulo"
-                                                },
-                                                "destino": {
-                                                    "type": "string",
-                                                    "example": "Rio de Janeiro"
-                                                },
                                                 "numero_vagas": {
                                                     "type": "integer",
                                                     "example": 50
@@ -982,17 +1017,22 @@
                                                     "type": "number",
                                                     "format": "float",
                                                     "example": 250
-                                                },
-                                                "organizador_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "evento_id": {
-                                                    "type": "integer",
-                                                    "example": 10
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "imagens": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "url",
+                                                        "example": "https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -1013,6 +1053,29 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Apenas usuários do tipo organizador podem criar caravanas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação."
+                                        },
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1096,13 +1159,53 @@
                                         "format": "date",
                                         "example": "2025-07-21"
                                     },
-                                    "origem": {
+                                    "endereco_origem": {
+                                        "type": "string",
+                                        "example": "Rua A"
+                                    },
+                                    "numero_origem": {
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "bairro_origem": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "cep_origem": {
+                                        "type": "string",
+                                        "example": "30123-456"
+                                    },
+                                    "cidade_origem": {
                                         "type": "string",
                                         "example": "Belo Horizonte"
                                     },
-                                    "destino": {
+                                    "estado_origem": {
+                                        "type": "string",
+                                        "example": "MG"
+                                    },
+                                    "endereco_destino": {
+                                        "type": "string",
+                                        "example": "Av. Paulista"
+                                    },
+                                    "numero_destino": {
+                                        "type": "string",
+                                        "example": "1000"
+                                    },
+                                    "bairro_destino": {
+                                        "type": "string",
+                                        "example": "Bela Vista"
+                                    },
+                                    "cep_destino": {
+                                        "type": "string",
+                                        "example": "01311-000"
+                                    },
+                                    "cidade_destino": {
                                         "type": "string",
                                         "example": "São Paulo"
+                                    },
+                                    "estado_destino": {
+                                        "type": "string",
+                                        "example": "SP"
                                     },
                                     "numero_vagas": {
                                         "type": "integer",
@@ -1120,14 +1223,9 @@
                                     "imagens": {
                                         "type": "array",
                                         "items": {
-                                            "properties": {
-                                                "path": {
-                                                    "type": "string",
-                                                    "format": "url",
-                                                    "example": "https://meusite.com/nova-imagem.jpg"
-                                                }
-                                            },
-                                            "type": "object"
+                                            "type": "string",
+                                            "format": "url",
+                                            "example": "https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg"
                                         }
                                     }
                                 },
@@ -1175,14 +1273,6 @@
                                                     "format": "date",
                                                     "example": "2025-07-21"
                                                 },
-                                                "origem": {
-                                                    "type": "string",
-                                                    "example": "Belo Horizonte"
-                                                },
-                                                "destino": {
-                                                    "type": "string",
-                                                    "example": "São Paulo"
-                                                },
                                                 "numero_vagas": {
                                                     "type": "integer",
                                                     "example": 40
@@ -1206,7 +1296,7 @@
                         }
                     },
                     "403": {
-                        "description": "Apenas organizadores podem editar caravanas",
+                        "description": "Usuário sem permissão para editar a caravana",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1217,7 +1307,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Apenas usuários do tipo organizador podem editar caravanas."
+                                            "example": "Apenas organizadores podem editar caravanas."
                                         }
                                     },
                                     "type": "object"
@@ -1245,8 +1335,36 @@
                             }
                         }
                     },
+                    "422": {
+                        "description": "Erro de validação nos dados enviados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "titulo": [
+                                                    "O campo título é obrigatório."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "500": {
-                        "description": "Erro ao atualizar a caravana",
+                        "description": "Erro interno ao atualizar a caravana",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3622,6 +3740,16 @@
                                         "description": "Cadastro no Cadastur do organizador (opcional)",
                                         "type": "boolean",
                                         "example": true
+                                    },
+                                    "rg": {
+                                        "description": "RG do passageiro (opcional)",
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "contato_emergencia": {
+                                        "description": "Contato de emergência do passageiro (opcional)",
+                                        "type": "string",
+                                        "example": "11987654321"
                                     }
                                 },
                                 "type": "object"
@@ -3679,7 +3807,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Acesso não autorizado."
+                                            "example": "Perfil diferente do usuário autenticado."
                                         }
                                     },
                                     "type": "object"

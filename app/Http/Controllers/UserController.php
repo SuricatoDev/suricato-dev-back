@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  *
@@ -471,7 +472,9 @@ class UserController extends Controller
      *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do organizador (opcional)"),
      *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do organizador (opcional)"),
      *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal do organizador (opcional)"),
-     *             @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur do organizador (opcional)")
+     *             @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur do organizador (opcional)"),
+     *             @OA\Property(property="rg", type="string", example="123456789", description="RG do passageiro (opcional)"),
+     *             @OA\Property(property="contato_emergencia", type="string", example="11987654321", description="Contato de emergência do passageiro (opcional)")
      *         )
      *     ),
      *     @OA\Response(
@@ -487,7 +490,7 @@ class UserController extends Controller
      *         response=403,
      *         description="Acesso não autorizado.",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Acesso não autorizado.")
+     *             @OA\Property(property="message", type="string", example="Perfil diferente do usuário autenticado.")
      *         )
      *     ),
      *     @OA\Response(
@@ -501,7 +504,6 @@ class UserController extends Controller
      * )
      */
 
-
     public function editarUsuario(Request $request, $id)
     {
         /** @var User $user */
@@ -511,7 +513,7 @@ class UserController extends Controller
         if ($user->id != $id) {
             return response()->json([
                 'status' => false,
-                'message' => 'Pefil diferente do usuário autenticado.'
+                'message' => 'Perfil diferente do usuário autenticado.'
             ], 403);
         }
 
@@ -528,7 +530,7 @@ class UserController extends Controller
             'cidade' => 'sometimes|string',
             'estado' => 'sometimes|string|min:2|max:2',
             'telefone' => 'sometimes|string|min:10|max:11',
-            'foto_perfil' => 'sometimes|string',
+            'foto_perfil' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif|max:2048',
 
             // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
             'rg' => 'sometimes|string',
@@ -544,6 +546,13 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
+        // Verifica se foi enviada uma nova foto de perfil
+        if ($request->hasFile('foto_perfil')) {
+            $file = $request->file('foto_perfil');
+            $path = $file->store("usuarios/{$user->id}", 's3');
+            $validated['foto_perfil'] = Storage::disk('s3')->url($path);
+        }
+
         // Atualiza os dados na tabela users (informações comuns)
         $user->update($validated);
 
@@ -552,21 +561,16 @@ class UserController extends Controller
 
         // Atualiza as informações específicas, dependendo do tipo de usuário
         if ($user->passageiro) {
-            // Verifica se o passageiro existe antes de atualizar
-            $passageiro = Passageiro::where('id', $user->id)->first(); // Relação entre 'users' e 'passageiro'
+            $passageiro = Passageiro::where('id', $user->id)->first();
             if ($passageiro) {
                 $passageiro->update([
                     'rg' => $validated['rg'] ?? $passageiro->rg,
                     'contato_emergencia' => $validated['contato_emergencia'] ?? $passageiro->contato_emergencia
                 ]);
-                $tipoUsuario = 'passageiro';
-            } else {
-                // Caso o passageiro não exista, pode-se lançar um erro ou apenas retornar como tipo 'passageiro' mas sem dados.
-                $tipoUsuario = 'passageiro';
             }
-        } elseif ($user->organizador == true) {
-            // Verifica se o organizador existe antes de atualizar
-            $organizador = Organizador::where('id', $user->id)->first(); // Relação entre 'users' e 'organizador'
+            $tipoUsuario = 'passageiro';
+        } elseif ($user->organizador) {
+            $organizador = Organizador::where('id', $user->id)->first();
             if ($organizador) {
                 $organizador->update([
                     'razao_social' => $validated['razao_social'] ?? $organizador->razao_social,
@@ -574,10 +578,8 @@ class UserController extends Controller
                     'inscricao_municipal' => $validated['inscricao_municipal'] ?? $organizador->inscricao_municipal,
                     'cadastur' => $validated['cadastur'] ?? $organizador->cadastur
                 ]);
-                $tipoUsuario = 'organizador';
-            } else {
-                $tipoUsuario = 'organizador';
             }
+            $tipoUsuario = 'organizador';
         }
 
         return response()->json([
@@ -587,7 +589,6 @@ class UserController extends Controller
             'tipo_usuario' => $tipoUsuario,
         ]);
     }
-
 
 
     // Método para excluir um usuário

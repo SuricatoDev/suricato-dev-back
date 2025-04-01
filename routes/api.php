@@ -5,6 +5,7 @@ use App\Http\Controllers\AvaliacaoController;
 use App\Http\Controllers\CaravanaController;
 use App\Http\Controllers\CaravanaPassageiroController;
 use App\Http\Controllers\CepController;
+use App\Http\Controllers\CNPJController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
@@ -69,6 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Rota via CEP
     Route::get('cep/{cep}', [CepController::class, 'buscarCep']);
+
+    //Rota Brasil API
+    Route::get('cnpj/{cnpj}', [CNPJController::class, 'buscarCnpj']);
 
     //Rotas para gerenciar reservas
     Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);

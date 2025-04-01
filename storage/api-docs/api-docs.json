@@ -760,6 +760,85 @@
                 }
             }
         },
+        "/api/cnpj/{cnpj}": {
+            "get": {
+                "tags": [
+                    "CNPJ"
+                ],
+                "summary": "Buscar informações de um CNPJ",
+                "operationId": "9d0312424e73f297dbdf17c491cb6b58",
+                "parameters": [
+                    {
+                        "name": "cnpj",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "description": "CNPJ a ser consultado",
+                            "type": "string",
+                            "example": "61084018000103"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informações do CNPJ encontradas com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "cnpj": {
+                                            "description": "CNPJ encontrado",
+                                            "type": "string",
+                                            "example": "61084018000103"
+                                        },
+                                        "message": {
+                                            "description": "Mensagem de sucesso",
+                                            "type": "string",
+                                            "example": "CNPJ encontrado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "CNPJ não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Mensagem de erro",
+                                            "type": "string",
+                                            "example": "CNPJ não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao buscar o CNPJ.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Mensagem de erro",
+                                            "type": "string",
+                                            "example": "Erro ao buscar o CNPJ. Tente novamente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/caravanas": {
             "get": {
                 "tags": [
@@ -4067,6 +4146,10 @@
         {
             "name": "Avaliação",
             "description": "Avaliação"
+        },
+        {
+            "name": "CNPJ",
+            "description": "CNPJ"
         },
         {
             "name": "CEP",

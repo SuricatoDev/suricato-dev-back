@@ -43,3 +43,32 @@ ADD COLUMN cep_destino VARCHAR(255) AFTER bairro_destino,
 ADD COLUMN cidade_destino VARCHAR(255) AFTER cep_destino,
 ADD COLUMN estado_destino VARCHAR(255) AFTER cidade_destino;
 
+ALTER TABLE users
+DROP COLUMN endereco,
+DROP COLUMN numero,
+DROP COLUMN bairro,
+DROP COLUMN cep,
+DROP COLUMN cidade,
+DROP COLUMN estado;
+
+ALTER TABLE passageiros
+ADD COLUMN endereco VARCHAR(255) NOT NULL AFTER contato_emergencia,
+ADD COLUMN numero VARCHAR(255) NOT NULL AFTER endereco,
+ADD COLUMN complemento VARCHAR(255) NOT NULL AFTER numero,
+ADD COLUMN bairro VARCHAR(255) NOT NULL AFTER complemento,
+ADD COLUMN cep VARCHAR(255) NOT NULL AFTER bairro,
+ADD COLUMN cidade VARCHAR(255) NOT NULL AFTER cep,
+ADD COLUMN estado VARCHAR(255) NOT NULL AFTER cidade;
+
+ALTER TABLE organizadores
+ADD COLUMN telefone_comercial VARCHAR(255) NOT NULL AFTER inscricao_municipal;
+ADD COLUMN endereco VARCHAR(255) NOT NULL AFTER telefone_comercial,
+ADD COLUMN numero VARCHAR(255) NOT NULL AFTER endereco,
+ADD COLUMN complemento VARCHAR(255) NOT NULL AFTER numero,
+ADD COLUMN bairro VARCHAR(255) NOT NULL AFTER complemento,
+ADD COLUMN cep VARCHAR(255) NOT NULL AFTER bairro,
+ADD COLUMN cidade VARCHAR(255) NOT NULL AFTER cep,
+ADD COLUMN estado VARCHAR(255) NOT NULL AFTER cidade;
+
+
+

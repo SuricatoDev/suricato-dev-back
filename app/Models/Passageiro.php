@@ -16,6 +16,13 @@ class Passageiro extends Model
         'cpf',
         'rg',
         'contato_emergencia',
+        'endereco',
+        'numero',
+        'complemento',
+        'bairro',
+        'cep',
+        'cidade',
+        'estado',
     ];
 
 /************************* RELACIONAMENTOS ************************ */

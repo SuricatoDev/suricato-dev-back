@@ -18,6 +18,13 @@ class Organizador extends Model
         'cadastur',
         'inscricao_estadual',
         'inscricao_municipal',
+        'endereco',
+        'numero',
+        'complemento',
+        'bairro',
+        'cep',
+        'cidade',
+        'estado',
     ];
 
     /************************* RELACIONAMENTOS ************************ */

@@ -786,10 +786,40 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "cnpj": {
-                                            "description": "CNPJ encontrado",
+                                        "razao_social": {
+                                            "description": "Razão social do CNPJ",
                                             "type": "string",
-                                            "example": "61084018000103"
+                                            "example": "Empresa Exemplo LTDA"
+                                        },
+                                        "nome_fantasia": {
+                                            "description": "Nome fantasia do CNPJ",
+                                            "type": "string",
+                                            "example": "Empresa Exemplo"
+                                        },
+                                        "inscricao_estadual": {
+                                            "description": "Inscrição estadual do CNPJ",
+                                            "type": "string",
+                                            "example": "123456789"
+                                        },
+                                        "inscricao_municipal": {
+                                            "description": "Inscrição municipal do CNPJ",
+                                            "type": "string",
+                                            "example": "987654321"
+                                        },
+                                        "cep": {
+                                            "description": "CEP do CNPJ",
+                                            "type": "string",
+                                            "example": "12345-678"
+                                        },
+                                        "endereco": {
+                                            "description": "Endereço do CNPJ",
+                                            "type": "string",
+                                            "example": "Rua Exemplo, 123"
+                                        },
+                                        "numero": {
+                                            "description": "Número do endereço do CNPJ",
+                                            "type": "string",
+                                            "example": "123"
                                         },
                                         "message": {
                                             "description": "Mensagem de sucesso",

@@ -26,7 +26,13 @@ class CNPJController extends Controller
      *         response=200,
      *         description="Informações do CNPJ encontradas com sucesso.",
      *         @OA\JsonContent(
-     *             @OA\Property(property="cnpj", type="string", example="61084018000103", description="CNPJ encontrado"),
+     *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do CNPJ"),
+     *             @OA\Property(property="nome_fantasia", type="string", example="Empresa Exemplo", description="Nome fantasia do CNPJ"),
+     *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do CNPJ"),
+     *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal do CNPJ"),
+     *             @OA\Property(property="cep", type="string", example="12345-678", description="CEP do CNPJ"),
+     *             @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123", description="Endereço do CNPJ"),
+     *             @OA\Property(property="numero", type="string", example="123", description="Número do endereço do CNPJ"),
      *             @OA\Property(property="message", type="string", example="CNPJ encontrado com sucesso.", description="Mensagem de sucesso")
      *         )
      *     ),

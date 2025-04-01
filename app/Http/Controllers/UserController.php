@@ -148,6 +148,7 @@ class UserController extends Controller
                 'cnpj' => 'required|string|unique:organizadores,cnpj',
                 'inscricao_estadual' => 'nullable|string',
                 'inscricao_municipal' => 'nullable|string',
+                'telefone_comercial' => 'nullable|string|max:20',
                 'cadastur' => 'nullable|boolean',
                 'endereco' => 'nullable|string|max:255',
                 'numero' => 'nullable|string|max:20',
@@ -168,19 +169,17 @@ class UserController extends Controller
                 'cadastur' => $request->cadastur,
                 'inscricao_estadual' => $request->inscricao_estadual,
                 'inscricao_municipal' => $request->inscricao_municipal,
-            ]);
-
-            $user = User::findOrFail($id);
-            $user->update([
+                'telefone_comercial' => $request->telefone_comercial,
                 'endereco' => $request->endereco,
                 'numero' => $request->numero,
                 'complemento' => $request->complemento,
                 'bairro' => $request->bairro,
                 'cep' => $request->cep,
                 'cidade' => $request->cidade,
-                'estado' => $request->estado,
-                'organizador' => $request->organizador
+                'estado' => $request->estado
             ]);
+
+            $user = User::findOrFail($id);
 
             DB::commit(); // Confirma a transação
 
@@ -270,19 +269,16 @@ class UserController extends Controller
                 'id' => $id,
                 'cpf' => $request->cpf,
                 'rg' => $request->rg,
-            ]);
-
-            $user = User::findOrFail($id);
-            $user->update([
                 'endereco' => $request->endereco,
                 'numero' => $request->numero,
                 'complemento' => $request->complemento,
                 'bairro' => $request->bairro,
                 'cep' => $request->cep,
                 'cidade' => $request->cidade,
-                'estado' => $request->estado,
-                'passageiro' => $request->passageiro
+                'estado' => $request->estado
             ]);
+
+            $user = User::findOrFail($id);
 
             DB::commit(); // Confirma a transação
 

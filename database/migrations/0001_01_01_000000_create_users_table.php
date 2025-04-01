@@ -17,13 +17,6 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('data_nascimento');
-            $table->string('endereco')->nullable();
-            $table->string('numero')->nullable();
-            $table->string('complemento')->nullable();
-            $table->string('bairro')->nullable();
-            $table->string('cep')->nullable();
-            $table->string('cidade')->nullable();
-            $table->string('estado', 2)->nullable();
             $table->string('telefone')->nullable();
             $table->boolean('passageiro')->default(false);
             $table->boolean('organizador')->default(false);

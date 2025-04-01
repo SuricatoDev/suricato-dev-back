@@ -18,6 +18,13 @@ return new class extends Migration
             $table->boolean('cadastur')->default(false);
             $table->string('inscricao_estadual', 14);
             $table->string('inscricao_municipal', 14);
+            $table->string('endereco')->nullable();
+            $table->string('numero')->nullable();
+            $table->string('complemento')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('cep')->nullable();
+            $table->string('cidade')->nullable();
+            $table->string('estado', 2)->nullable();
             $table->timestamps();
         });
     }

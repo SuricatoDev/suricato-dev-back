@@ -181,6 +181,10 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
 
+            $user->update([
+                'organizador' => true
+            ]);
+
             DB::commit(); // Confirma a transação
 
             return response()->json([
@@ -279,6 +283,10 @@ class UserController extends Controller
             ]);
 
             $user = User::findOrFail($id);
+
+            $user->update([
+                'passageiro' => true
+            ]);
 
             DB::commit(); // Confirma a transação
 

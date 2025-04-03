@@ -511,7 +511,7 @@ class UserController extends Controller
      *         description="Perfil do usuário atualizado com sucesso.",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Perfil atualizado com sucesso!"),
-     *             @OA\Property(property="data", type="object", description="Dados atualizados do usuário"),
+     *             @OA\Property(property="data", type="object", example={"campos do tipo de usuário (passageiro ou organizador)"}, description="Dados atualizados do usuário"),
      *             @OA\Property(property="tipo_usuario", type="string", example="organizador", description="Tipo de usuário atualizado (passageiro ou organizador, se aplicável)")
      *         )
      *     ),

@@ -725,7 +725,6 @@ class UserController extends Controller
      * )
      */
 
-
     public function updateFotoPerfil(Request $request)
     {
         // Valida a imagem

@@ -206,6 +206,7 @@ class CaravanaController extends Controller
             'numero_vagas' => 'required|integer',
             'valor' => 'required|numeric',
             'organizador_id' => 'required|integer',
+            'ordem' => 'required|integer',
         ])->validate();
 
         try {
@@ -233,6 +234,7 @@ class CaravanaController extends Controller
 
                     // Registra a imagem no banco
                     CaravanaImagem::create([
+                        'ordem' => $validated['ordem'],
                         'path' => $url,
                         'caravana_id' => $caravana->id,
                     ]);

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('caravana_imagens', function (Blueprint $table) {
             $table->increments('id')->unsigned();
+            $table->integer('ordem');
             $table->string('path');
             $table->integer('caravana_id')->unsigned();
             $table->foreign('caravana_id')

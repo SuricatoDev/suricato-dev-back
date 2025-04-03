@@ -12,6 +12,7 @@ class CaravanaImagem extends Model
     protected $table = 'caravana_imagens';
 
     protected $fillable = [
+        'ordem',
         'path',
         'caravana_id',
     ];

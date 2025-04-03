@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('cadastur')->default(false);
             $table->string('inscricao_estadual', 14);
             $table->string('inscricao_municipal', 14);
+            $table->string('telefone_comercial', 20);
             $table->string('endereco')->nullable();
             $table->string('numero')->nullable();
             $table->string('complemento')->nullable();

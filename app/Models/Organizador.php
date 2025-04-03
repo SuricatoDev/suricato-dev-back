@@ -14,10 +14,12 @@ class Organizador extends Model
     protected $fillable = [
         'id',
         'razao_social',
+        'nome_fantasia',
         'cnpj',
         'cadastur',
         'inscricao_estadual',
         'inscricao_municipal',
+        'telefone_comercial',
         'endereco',
         'numero',
         'complemento',

@@ -61,6 +61,7 @@ ADD COLUMN cidade VARCHAR(255) NOT NULL AFTER cep,
 ADD COLUMN estado VARCHAR(255) NOT NULL AFTER cidade;
 
 ALTER TABLE organizadores
+ADD COLUMN nome_fantasia VARCHAR(255) NULL AFTER razao_social,
 ADD COLUMN telefone_comercial VARCHAR(255) NOT NULL AFTER inscricao_municipal;
 ADD COLUMN endereco VARCHAR(255) NOT NULL AFTER telefone_comercial,
 ADD COLUMN numero VARCHAR(255) NOT NULL AFTER endereco,

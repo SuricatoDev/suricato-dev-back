@@ -19,7 +19,6 @@ class User extends Authenticatable
         'password',
         'data_nascimento',
         'telefone',
-        'endereco',
         'passageiro',
         'organizador',
         'ativo',

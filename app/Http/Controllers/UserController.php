@@ -105,6 +105,7 @@ class UserController extends Controller
      *         @OA\JsonContent(
      *             required={"razao_social", "cnpj"},
      *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social da empresa organizadora"),
+     *             @OA\Property(property="nome_fantasia", type="string", example="Empresa Exemplo", description="Nome fantasia da empresa organizadora (opcional)"),
      *             @OA\Property(property="cnpj", type="string", example="12.345.678/0001-90", description="CNPJ da empresa organizadora"),
      *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual da empresa (opcional)"),
      *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal da empresa (opcional)"),
@@ -132,7 +133,7 @@ class UserController extends Controller
      *         response=500,
      *         description="Erro ao registrar organizador.",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Usuário já cadastrado como organizador."),
+     *             @OA\Property(property="message", type="string", example="Erro ao registrar organizador."),
      *             @OA\Property(property="error", type="string", example="Descrição do erro")
      *         )
      *     )
@@ -145,6 +146,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'razao_social' => 'required|string|max:255',
+                'nome_fantasia' => 'nullable|string|max:255',
                 'cnpj' => 'required|string|unique:organizadores,cnpj',
                 'inscricao_estadual' => 'nullable|string',
                 'inscricao_municipal' => 'nullable|string',
@@ -154,7 +156,7 @@ class UserController extends Controller
                 'numero' => 'nullable|string|max:20',
                 'complemento' => 'nullable|string|max:255',
                 'bairro' => 'nullable|string|max:255',
-                'cep' => 'nullable|string|max:9',
+                'cep' => 'required|string|max:9',
                 'cidade' => 'nullable|string|max:255',
                 'estado' => 'nullable|string|max:2',
                 'organizador' => 'nullable|boolean',
@@ -165,6 +167,7 @@ class UserController extends Controller
             $organizador = Organizador::create([
                 'id' => $id,
                 'razao_social' => $request->razao_social,
+                'nome_fantasia' => $request->nome_fantasia,
                 'cnpj' => $request->cnpj,
                 'cadastur' => $request->cadastur,
                 'inscricao_estadual' => $request->inscricao_estadual,
@@ -195,7 +198,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack(); // Desfaz a transação em caso de erro
             return response()->json([
-                'message' => 'Usuário já cadastrado como organizador.',
+                'message' => 'Erro ao registrar organizador.',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -261,7 +264,7 @@ class UserController extends Controller
                 'numero' => 'nullable|string|max:20',
                 'complemento' => 'nullable|string|max:255',
                 'bairro' => 'nullable|string|max:255',
-                'cep' => 'nullable|string|max:20',
+                'cep' => 'required|string|max:20',
                 'cidade' => 'nullable|string|max:255',
                 'estado' => 'nullable|string|max:2',
                 'passageiro' => 'nullable|boolean',

@@ -452,7 +452,8 @@ class UserController extends Controller
      * @OA\Put(
      *     path="/api/users/{id}",
      *     summary="Atualizar perfil de usuário",
-     *     description="Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
+     *     description="Atualiza os dados do usuário autenticado. Apenas os campos enviados serão modificados.
+     *                  O usuário pode atualizar seus dados gerais e, se aplicável, os dados específicos de passageiro ou organizador.",
      *     tags={"Usuários"},
      *     @OA\Parameter(
      *         name="id",
@@ -464,25 +465,38 @@ class UserController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"nome"},
      *             @OA\Property(property="nome", type="string", example="João Silva", description="Nome do usuário"),
      *             @OA\Property(property="password", type="string", example="senha123", description="Nova senha do usuário (opcional)"),
      *             @OA\Property(property="data_nascimento", type="string", example="1990-05-15", description="Data de nascimento do usuário"),
-     *             @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123", description="Endereço do usuário"),
-     *             @OA\Property(property="numero", type="string", example="123", description="Número do endereço"),
-     *             @OA\Property(property="complemento", type="string", example="Apto 202", description="Complemento do endereço"),
-     *             @OA\Property(property="bairro", type="string", example="Bairro Exemplo", description="Bairro do usuário"),
-     *             @OA\Property(property="cep", type="string", example="98765-432", description="CEP do usuário"),
-     *             @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do usuário"),
-     *             @OA\Property(property="estado", type="string", example="SP", description="Estado do usuário"),
      *             @OA\Property(property="telefone", type="string", example="11987654321", description="Telefone do usuário"),
      *             @OA\Property(property="foto_perfil", type="string", example="https://exemplo-servidor-s3.com/foto.jpg", description="URL da foto de perfil do usuário"),
-     *             @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do organizador (opcional)"),
-     *             @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do organizador (opcional)"),
-     *             @OA\Property(property="inscricao_municipal", type="string", example="987654321", description="Inscrição municipal do organizador (opcional)"),
-     *             @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur do organizador (opcional)"),
-     *             @OA\Property(property="rg", type="string", example="123456789", description="RG do passageiro (opcional)"),
-     *             @OA\Property(property="contato_emergencia", type="string", example="11987654321", description="Contato de emergência do passageiro (opcional)")
+     *
+     *             @OA\Property(
+     *                 property="passageiro",
+     *                 type="object",
+     *                 nullable=true,
+     *                 description="Dados do passageiro (opcional, enviado apenas se o usuário quiser atualizar informações de passageiro).",
+     *                 @OA\Property(property="rg", type="string", example="123456789", description="RG do passageiro"),
+     *                 @OA\Property(property="contato_emergencia", type="string", example="11987654321", description="Contato de emergência"),
+     *                 @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123", description="Endereço do passageiro"),
+     *                 @OA\Property(property="cep", type="string", example="98765-432", description="CEP do passageiro"),
+     *                 @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do passageiro"),
+     *                 @OA\Property(property="estado", type="string", example="SP", description="Estado do passageiro")
+     *             ),
+     *
+     *             @OA\Property(
+     *                 property="organizador",
+     *                 type="object",
+     *                 nullable=true,
+     *                 description="Dados do organizador (opcional, enviado apenas se o usuário quiser atualizar informações de organizador).",
+     *                 @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do organizador"),
+     *                 @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do organizador"),
+     *                 @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur do organizador"),
+     *                 @OA\Property(property="endereco", type="string", example="Av. Paulista, 2000", description="Endereço do organizador"),
+     *                 @OA\Property(property="cep", type="string", example="01310-000", description="CEP do organizador"),
+     *                 @OA\Property(property="cidade", type="string", example="São Paulo", description="Cidade do organizador"),
+     *                 @OA\Property(property="estado", type="string", example="SP", description="Estado do organizador")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -490,8 +504,8 @@ class UserController extends Controller
      *         description="Perfil do usuário atualizado com sucesso.",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Perfil atualizado com sucesso!"),
-     *             @OA\Property(property="data", type="object", example={"nome": "João Silva", "data_nascimento": "1990-05-15", "endereco": "Rua Exemplo, 123", "numero": "123", "complemento": "Apto 202", "bairro": "Bairro Exemplo", "cep": "98765-432", "cidade": "Cidade Exemplo", "estado": "SP", "telefone": "11987654321", "foto_perfil": "https://exemplo-servidor-s3.com/foto.jpg", "razao_social": "Empresa Exemplo LTDA", "inscricao_estadual": "123456789", "inscricao_municipal": "987654321"}, description="Dados atualizados do usuário"),
-     *             @OA\Property(property="tipo_usuario", type="string", example="organizador", description="Tipo de usuário (passageiro ou organizador)")
+     *             @OA\Property(property="data", type="object", description="Dados atualizados do usuário"),
+     *             @OA\Property(property="tipo_usuario", type="string", example="organizador", description="Tipo de usuário atualizado (passageiro ou organizador, se aplicável)")
      *         )
      *     ),
      *     @OA\Response(
@@ -512,81 +526,108 @@ class UserController extends Controller
      * )
      */
 
+
     public function editarUsuario(Request $request, $id)
     {
-        /** @var User $user */
-        $user = Auth::user(); // Obtém o usuário autenticado
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
 
-        // Verifica se o usuário está tentando editar outro usuário
-        if ($user->id != $id) {
+        if ($user->id !== $id) {
             return response()->json([
-                'status' => false,
                 'message' => 'Perfil diferente do usuário autenticado.'
             ], 403);
         }
 
-        // Validação dos dados de entrada
+        // Validação dos dados comuns da tabela users
         $validated = $request->validate([
             'nome' => 'sometimes|string|max:255',
             'password' => 'sometimes|string|min:6',
             'data_nascimento' => 'sometimes|date',
-            'endereco' => 'sometimes|string',
-            'numero' => 'sometimes|string',
-            'complemento' => 'sometimes|string',
-            'bairro' => 'sometimes|string',
-            'cep' => 'sometimes|string|min:8|max:8',
-            'cidade' => 'sometimes|string',
-            'estado' => 'sometimes|string|min:2|max:2',
             'telefone' => 'sometimes|string|min:10|max:11',
-
-            // Validações dinâmicas com base no tipo do usuário passageiro ou organizador
-            'rg' => 'sometimes|string',
-            'contato_emergencia' => 'sometimes|string|max:11',
-            'razao_social' => 'sometimes|string',
-            'inscricao_estadual' => 'sometimes|string',
-            'inscricao_municipal' => 'sometimes|string',
-            'cadastur' => 'sometimes|boolean',
         ]);
 
-        // Atualiza a senha se fornecida com criptografia hash
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
+        // Atualiza os dados comuns do usuário
+        if (!empty($validated)) {
+            if (isset($validated['password'])) {
+                $validated['password'] = Hash::make($validated['password']);
+            }
+            $user->update($validated);
         }
 
-        // Atualiza os dados na tabela users (informações comuns)
-        $user->update($validated);
-
-        // Variável para armazenar o tipo de usuário atualizado
         $tipoUsuario = null;
 
-        // Atualiza as informações específicas, dependendo do tipo do usuário
-        if ($user->passageiro) {
-            $passageiro = Passageiro::where('id', $user->id)->first();
-            if ($passageiro) {
-                $passageiro->update([
-                    'rg' => $validated['rg'] ?? $passageiro->rg,
-                    'contato_emergencia' => $validated['contato_emergencia'] ?? $passageiro->contato_emergencia
-                ]);
-            }
+        // Atualiza os dados de passageiro se enviados
+        if ($user->passageiro && $request->has('passageiro')) {
+            $this->updatePassageiro($user, $request);
             $tipoUsuario = 'passageiro';
-        } elseif ($user->organizador) {
-            $organizador = Organizador::where('id', $user->id)->first();
-            if ($organizador) {
-                $organizador->update([
-                    'razao_social' => $validated['razao_social'] ?? $organizador->razao_social,
-                    'inscricao_estadual' => $validated['inscricao_estadual'] ?? $organizador->inscricao_estadual,
-                    'inscricao_municipal' => $validated['inscricao_municipal'] ?? $organizador->inscricao_municipal,
-                    'cadastur' => $validated['cadastur'] ?? $organizador->cadastur
-                ]);
-            }
+        }
+
+        // Atualiza os dados de organizador se enviados
+        if ($user->organizador && $request->has('organizador')) {
+            $this->updateOrganizador($user, $request);
             $tipoUsuario = 'organizador';
         }
 
         return response()->json([
             'status' => true,
-            'message' => 'Perfil atualizado com sucesso!',
             'data' => $user,
             'tipo_usuario' => $tipoUsuario,
+        ]);
+    }
+
+    private function updatePassageiro($user, $request)
+    {
+        $validated = $request->validate([
+            'rg' => 'sometimes|string|max:20',
+            'contato_emergencia' => 'sometimes|string|max:20',
+            'endereco' => 'sometimes|string|max:255',
+            'numero' => 'sometimes|string|max:10',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'sometimes|string|max:100',
+            'cep' => 'sometimes|string|max:9',
+            'cidade' => 'sometimes|string|max:100',
+            'estado' => 'sometimes|string|max:2',
+        ]);
+
+        $passageiro = Passageiro::where('id', $user->id)->first();
+        if ($passageiro) {
+            $passageiro->update($validated);
+
+            return response()->json([
+                'message' => 'Perfil de passageiro atualizado com sucesso!',
+                'data' => $passageiro,
+                'user' => $user
+            ]);
+        }
+    }
+
+    private function updateOrganizador($user, $request)
+    {
+        $validated = $request->validate([
+            'razao_social' => 'sometimes|string|max:255',
+            'inscricao_estadual' => 'nullable|string|max:20',
+            'inscricao_municipal' => 'nullable|string|max:20',
+            'cadastur' => 'nullable|string|max:50',
+            'telefone_comercial' => 'sometimes|string|max:20',
+            'endereco' => 'sometimes|string|max:255',
+            'numero' => 'sometimes|string|max:10',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'sometimes|string|max:100',
+            'cep' => 'sometimes|string|max:9',
+            'cidade' => 'sometimes|string|max:100',
+            'estado' => 'sometimes|string|max:2',
+        ]);
+
+        $organizador = Organizador::where('id', $user->id)->first();
+        if ($organizador) {
+            $organizador->update($validated);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Perfil de organizador atualizado com sucesso!',
+            'data' => $organizador,
+            'user' => $user
         ]);
     }
 
@@ -656,7 +697,8 @@ class UserController extends Controller
             'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif', // Limites de tipo de imagem
         ]);
 
-        // Obtém o usuário autenticado
+
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         // Verifica se o arquivo de imagem foi enviado

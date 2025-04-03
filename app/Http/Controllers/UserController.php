@@ -261,6 +261,7 @@ class UserController extends Controller
             $request->validate([
                 'cpf' => 'required|string|unique:passageiros,cpf|max:11',
                 'rg' => 'required|string|max:14',
+                'contato_emergencia' => 'nullable|string|max:20',
                 'endereco' => 'nullable|string|max:255',
                 'numero' => 'nullable|string|max:20',
                 'complemento' => 'nullable|string|max:255',
@@ -277,6 +278,7 @@ class UserController extends Controller
                 'id' => $id,
                 'cpf' => $request->cpf,
                 'rg' => $request->rg,
+                'contato_emergencia' => $request->contato_emergencia,
                 'endereco' => $request->endereco,
                 'numero' => $request->numero,
                 'complemento' => $request->complemento,
@@ -539,7 +541,7 @@ class UserController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        if ($user->id !== $id) {
+        if ($user->id != $id) {
             return response()->json([
                 'message' => 'Perfil diferente do usuário autenticado.'
             ], 403);
@@ -562,43 +564,57 @@ class UserController extends Controller
         }
 
         $tipoUsuario = null;
+        $detalhes = null;
 
         // Atualiza os dados de passageiro se enviados
-        if ($user->passageiro && $request->has('passageiro')) {
+        if ($request->has('passageiro')) {
             $this->updatePassageiro($user, $request);
             $tipoUsuario = 'passageiro';
+            $detalhes = Passageiro::where('id', $user->id)->first();
         }
 
         // Atualiza os dados de organizador se enviados
-        if ($user->organizador && $request->has('organizador')) {
+        if ($request->has('organizador')) {
             $this->updateOrganizador($user, $request);
             $tipoUsuario = 'organizador';
+            $detalhes = Organizador::where('id', $user->id)->first();
         }
 
         return response()->json([
             'status' => true,
             'data' => $user,
             'tipo_usuario' => $tipoUsuario,
+            'detalhes' => $detalhes
         ]);
     }
 
     private function updatePassageiro($user, $request)
     {
         $validated = $request->validate([
-            'rg' => 'sometimes|string|max:20',
-            'contato_emergencia' => 'sometimes|string|max:20',
-            'endereco' => 'sometimes|string|max:255',
-            'numero' => 'sometimes|string|max:10',
-            'complemento' => 'nullable|string|max:255',
-            'bairro' => 'sometimes|string|max:100',
-            'cep' => 'sometimes|string|max:9',
-            'cidade' => 'sometimes|string|max:100',
-            'estado' => 'sometimes|string|max:2',
+            'passageiro.rg' => 'sometimes|string|max:20',
+            'passageiro.contato_emergencia' => 'sometimes|string|max:20',
+            'passageiro.endereco' => 'sometimes|string|max:255',
+            'passageiro.numero' => 'sometimes|string|max:10',
+            'passageiro.complemento' => 'nullable|string|max:255',
+            'passageiro.bairro' => 'sometimes|string|max:100',
+            'passageiro.cep' => 'sometimes|string|max:9',
+            'passageiro.cidade' => 'sometimes|string|max:100',
+            'passageiro.estado' => 'sometimes|string|max:2',
         ]);
 
         $passageiro = Passageiro::where('id', $user->id)->first();
         if ($passageiro) {
-            $passageiro->update($validated);
+            $passageiro->update([
+                'rg' => $validated['passageiro']['rg'] ?? $passageiro->rg,
+                'contato_emergencia' => $validated['passageiro']['contato_emergencia'] ?? $passageiro->contato_emergencia,
+                'endereco' => $validated['passageiro']['endereco'] ?? $passageiro->endereco,
+                'numero' => $validated['passageiro']['numero'] ?? $passageiro->numero,
+                'complemento' => $validated['passageiro']['complemento'] ?? $passageiro->complemento,
+                'bairro' => $validated['passageiro']['bairro'] ?? $passageiro->bairro,
+                'cep' => $validated['passageiro']['cep'] ?? $passageiro->cep,
+                'cidade' => $validated['passageiro']['cidade'] ?? $passageiro->cidade,
+                'estado' => $validated['passageiro']['estado'] ?? $passageiro->estado
+            ]);
 
             return response()->json([
                 'message' => 'Perfil de passageiro atualizado com sucesso!',
@@ -611,23 +627,36 @@ class UserController extends Controller
     private function updateOrganizador($user, $request)
     {
         $validated = $request->validate([
-            'razao_social' => 'sometimes|string|max:255',
-            'inscricao_estadual' => 'nullable|string|max:20',
-            'inscricao_municipal' => 'nullable|string|max:20',
-            'cadastur' => 'nullable|string|max:50',
-            'telefone_comercial' => 'sometimes|string|max:20',
-            'endereco' => 'sometimes|string|max:255',
-            'numero' => 'sometimes|string|max:10',
-            'complemento' => 'nullable|string|max:255',
-            'bairro' => 'sometimes|string|max:100',
-            'cep' => 'sometimes|string|max:9',
-            'cidade' => 'sometimes|string|max:100',
-            'estado' => 'sometimes|string|max:2',
+            'organizador.razao_social' => 'sometimes|string|max:255',
+            'organizador.inscricao_estadual' => 'nullable|string|max:20',
+            'organizador.inscricao_municipal' => 'nullable|string|max:20',
+            'organizador.cadastur' => 'nullable|string|max:50',
+            'organizador.telefone_comercial' => 'sometimes|string|max:20',
+            'organizador.endereco' => 'sometimes|string|max:255',
+            'organizador.numero' => 'sometimes|string|max:10',
+            'organizador.complemento' => 'nullable|string|max:255',
+            'organizador.bairro' => 'sometimes|string|max:100',
+            'organizador.cep' => 'sometimes|string|max:9',
+            'organizador.cidade' => 'sometimes|string|max:100',
+            'organizador.estado' => 'sometimes|string|max:2',
         ]);
 
         $organizador = Organizador::where('id', $user->id)->first();
         if ($organizador) {
-            $organizador->update($validated);
+            $organizador->update([
+                'razao_social' => $validated['organizador']['razao_social'] ?? $organizador->razao_social,
+                'inscricao_estadual' => $validated['organizador']['inscricao_estadual'] ?? $organizador->inscricao_estadual,
+                'inscricao_municipal' => $validated['organizador']['inscricao_municipal'] ?? $organizador->inscricao_municipal,
+                'cadastur' => $validated['organizador']['cadastur'] ?? $organizador->cadastur,
+                'telefone_comercial' => $validated['organizador']['telefone_comercial'] ?? $organizador->telefone_comercial,
+                'endereco' => $validated['organizador']['endereco'] ?? $organizador->endereco,
+                'numero' => $validated['organizador']['numero'] ?? $organizador->numero,
+                'complemento' => $validated['organizador']['complemento'] ?? $organizador->complemento,
+                'bairro' => $validated['organizador']['bairro'] ?? $organizador->bairro,
+                'cep' => $validated['organizador']['cep'] ?? $organizador->cep,
+                'cidade' => $validated['organizador']['cidade'] ?? $organizador->cidade,
+                'estado' => $validated['organizador']['estado'] ?? $organizador->estado
+            ]);
         }
 
         return response()->json([

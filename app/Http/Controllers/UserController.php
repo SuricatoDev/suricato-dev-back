@@ -479,6 +479,9 @@ class UserController extends Controller
      *                 @OA\Property(property="rg", type="string", example="123456789", description="RG do passageiro"),
      *                 @OA\Property(property="contato_emergencia", type="string", example="11987654321", description="Contato de emergência"),
      *                 @OA\Property(property="endereco", type="string", example="Rua Exemplo, 123", description="Endereço do passageiro"),
+     *                 @OA\Property(property="numero", type="string", example="123", description="Número do endereço do passageiro"),
+     *                 @OA\Property(property="complemento", type="string", example="Apto 101", description="Complemento do endereço do passageiro"),
+     *                 @OA\Property(property="bairro", type="string", example="Bairro Exemplo", description="Bairro do passageiro"),
      *                 @OA\Property(property="cep", type="string", example="98765-432", description="CEP do passageiro"),
      *                 @OA\Property(property="cidade", type="string", example="Cidade Exemplo", description="Cidade do passageiro"),
      *                 @OA\Property(property="estado", type="string", example="SP", description="Estado do passageiro")
@@ -492,7 +495,11 @@ class UserController extends Controller
      *                 @OA\Property(property="razao_social", type="string", example="Empresa Exemplo LTDA", description="Razão social do organizador"),
      *                 @OA\Property(property="inscricao_estadual", type="string", example="123456789", description="Inscrição estadual do organizador"),
      *                 @OA\Property(property="cadastur", type="boolean", example=true, description="Cadastro no Cadastur do organizador"),
+     *                 @OA\Property(property="telefone_comercial", type="string", example="11234567890", description="Telefone comercial do organizador"),
      *                 @OA\Property(property="endereco", type="string", example="Av. Paulista, 2000", description="Endereço do organizador"),
+     *                 @OA\Property(property="numero", type="string", example="2000", description="Número do endereço do organizador"),
+     *                 @OA\Property(property="complemento", type="string", example="Apto 101", description="Complemento do endereço do organizador"),
+     *                 @OA\Property(property="bairro", type="string", example="Bairro Exemplo", description="Bairro do organizador"),
      *                 @OA\Property(property="cep", type="string", example="01310-000", description="CEP do organizador"),
      *                 @OA\Property(property="cidade", type="string", example="São Paulo", description="Cidade do organizador"),
      *                 @OA\Property(property="estado", type="string", example="SP", description="Estado do organizador")

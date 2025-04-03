@@ -3227,6 +3227,11 @@
                                         "type": "string",
                                         "example": "Empresa Exemplo LTDA"
                                     },
+                                    "nome_fantasia": {
+                                        "description": "Nome fantasia da empresa organizadora (opcional)",
+                                        "type": "string",
+                                        "example": "Empresa Exemplo"
+                                    },
                                     "cnpj": {
                                         "description": "CNPJ da empresa organizadora",
                                         "type": "string",
@@ -3246,6 +3251,11 @@
                                         "description": "Cadastro no Cadastur (opcional)",
                                         "type": "boolean",
                                         "example": true
+                                    },
+                                    "telefone_comercial": {
+                                        "description": "Telefone comercial da empresa (opcional)",
+                                        "type": "string",
+                                        "example": "1234567890"
                                     },
                                     "endereco": {
                                         "description": "Endereço da empresa",
@@ -3326,7 +3336,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Usuário já cadastrado como organizador."
+                                            "example": "Erro ao registrar organizador."
                                         },
                                         "error": {
                                             "type": "string",
@@ -3747,7 +3757,7 @@
                     "Usuários"
                 ],
                 "summary": "Atualizar perfil de usuário",
-                "description": "Atualiza os dados do usuário, incluindo informações pessoais e específicas, dependendo do tipo de usuário (passageiro ou organizador).",
+                "description": "Atualiza os dados do usuário autenticado. Apenas os campos enviados serão modificados.\n     *                  O usuário pode atualizar seus dados gerais e, se aplicável, os dados específicos de passageiro ou organizador.",
                 "operationId": "03c3bff0c999a3ad9413da4087203fc8",
                 "parameters": [
                     {
@@ -3766,9 +3776,6 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "nome"
-                                ],
                                 "properties": {
                                     "nome": {
                                         "description": "Nome do usuário",
@@ -3785,41 +3792,6 @@
                                         "type": "string",
                                         "example": "1990-05-15"
                                     },
-                                    "endereco": {
-                                        "description": "Endereço do usuário",
-                                        "type": "string",
-                                        "example": "Rua Exemplo, 123"
-                                    },
-                                    "numero": {
-                                        "description": "Número do endereço",
-                                        "type": "string",
-                                        "example": "123"
-                                    },
-                                    "complemento": {
-                                        "description": "Complemento do endereço",
-                                        "type": "string",
-                                        "example": "Apto 202"
-                                    },
-                                    "bairro": {
-                                        "description": "Bairro do usuário",
-                                        "type": "string",
-                                        "example": "Bairro Exemplo"
-                                    },
-                                    "cep": {
-                                        "description": "CEP do usuário",
-                                        "type": "string",
-                                        "example": "98765-432"
-                                    },
-                                    "cidade": {
-                                        "description": "Cidade do usuário",
-                                        "type": "string",
-                                        "example": "Cidade Exemplo"
-                                    },
-                                    "estado": {
-                                        "description": "Estado do usuário",
-                                        "type": "string",
-                                        "example": "SP"
-                                    },
                                     "telefone": {
                                         "description": "Telefone do usuário",
                                         "type": "string",
@@ -3830,35 +3802,84 @@
                                         "type": "string",
                                         "example": "https://exemplo-servidor-s3.com/foto.jpg"
                                     },
-                                    "razao_social": {
-                                        "description": "Razão social do organizador (opcional)",
-                                        "type": "string",
-                                        "example": "Empresa Exemplo LTDA"
+                                    "passageiro": {
+                                        "description": "Dados do passageiro (opcional, enviado apenas se o usuário quiser atualizar informações de passageiro).",
+                                        "properties": {
+                                            "rg": {
+                                                "description": "RG do passageiro",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "contato_emergencia": {
+                                                "description": "Contato de emergência",
+                                                "type": "string",
+                                                "example": "11987654321"
+                                            },
+                                            "endereco": {
+                                                "description": "Endereço do passageiro",
+                                                "type": "string",
+                                                "example": "Rua Exemplo, 123"
+                                            },
+                                            "cep": {
+                                                "description": "CEP do passageiro",
+                                                "type": "string",
+                                                "example": "98765-432"
+                                            },
+                                            "cidade": {
+                                                "description": "Cidade do passageiro",
+                                                "type": "string",
+                                                "example": "Cidade Exemplo"
+                                            },
+                                            "estado": {
+                                                "description": "Estado do passageiro",
+                                                "type": "string",
+                                                "example": "SP"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "nullable": true
                                     },
-                                    "inscricao_estadual": {
-                                        "description": "Inscrição estadual do organizador (opcional)",
-                                        "type": "string",
-                                        "example": "123456789"
-                                    },
-                                    "inscricao_municipal": {
-                                        "description": "Inscrição municipal do organizador (opcional)",
-                                        "type": "string",
-                                        "example": "987654321"
-                                    },
-                                    "cadastur": {
-                                        "description": "Cadastro no Cadastur do organizador (opcional)",
-                                        "type": "boolean",
-                                        "example": true
-                                    },
-                                    "rg": {
-                                        "description": "RG do passageiro (opcional)",
-                                        "type": "string",
-                                        "example": "123456789"
-                                    },
-                                    "contato_emergencia": {
-                                        "description": "Contato de emergência do passageiro (opcional)",
-                                        "type": "string",
-                                        "example": "11987654321"
+                                    "organizador": {
+                                        "description": "Dados do organizador (opcional, enviado apenas se o usuário quiser atualizar informações de organizador).",
+                                        "properties": {
+                                            "razao_social": {
+                                                "description": "Razão social do organizador",
+                                                "type": "string",
+                                                "example": "Empresa Exemplo LTDA"
+                                            },
+                                            "inscricao_estadual": {
+                                                "description": "Inscrição estadual do organizador",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "cadastur": {
+                                                "description": "Cadastro no Cadastur do organizador",
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "endereco": {
+                                                "description": "Endereço do organizador",
+                                                "type": "string",
+                                                "example": "Av. Paulista, 2000"
+                                            },
+                                            "cep": {
+                                                "description": "CEP do organizador",
+                                                "type": "string",
+                                                "example": "01310-000"
+                                            },
+                                            "cidade": {
+                                                "description": "Cidade do organizador",
+                                                "type": "string",
+                                                "example": "São Paulo"
+                                            },
+                                            "estado": {
+                                                "description": "Estado do organizador",
+                                                "type": "string",
+                                                "example": "SP"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -3879,26 +3900,10 @@
                                         },
                                         "data": {
                                             "description": "Dados atualizados do usuário",
-                                            "type": "object",
-                                            "example": {
-                                                "nome": "João Silva",
-                                                "data_nascimento": "1990-05-15",
-                                                "endereco": "Rua Exemplo, 123",
-                                                "numero": "123",
-                                                "complemento": "Apto 202",
-                                                "bairro": "Bairro Exemplo",
-                                                "cep": "98765-432",
-                                                "cidade": "Cidade Exemplo",
-                                                "estado": "SP",
-                                                "telefone": "11987654321",
-                                                "foto_perfil": "https://exemplo-servidor-s3.com/foto.jpg",
-                                                "razao_social": "Empresa Exemplo LTDA",
-                                                "inscricao_estadual": "123456789",
-                                                "inscricao_municipal": "987654321"
-                                            }
+                                            "type": "object"
                                         },
                                         "tipo_usuario": {
-                                            "description": "Tipo de usuário (passageiro ou organizador)",
+                                            "description": "Tipo de usuário atualizado (passageiro ou organizador, se aplicável)",
                                             "type": "string",
                                             "example": "organizador"
                                         }

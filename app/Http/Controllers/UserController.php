@@ -563,28 +563,28 @@ class UserController extends Controller
             $user->update($validated);
         }
 
-        $tipoUsuario = null;
         $detalhes = null;
+        $message = '';
 
         // Atualiza os dados de passageiro se enviados
         if ($request->has('passageiro')) {
             $this->updatePassageiro($user, $request);
-            $tipoUsuario = 'passageiro';
             $detalhes = Passageiro::where('id', $user->id)->first();
+            $message = 'Perfil de passageiro atualizado com sucesso!';
         }
 
         // Atualiza os dados de organizador se enviados
         if ($request->has('organizador')) {
             $this->updateOrganizador($user, $request);
-            $tipoUsuario = 'organizador';
             $detalhes = Organizador::where('id', $user->id)->first();
+            $message = 'Perfil de organizador atualizado com sucesso!';
         }
 
         return response()->json([
             'status' => true,
             'data' => $user,
-            'tipo_usuario' => $tipoUsuario,
-            'detalhes' => $detalhes
+            'detalhes' => $detalhes,
+            'message' => $message
         ]);
     }
 

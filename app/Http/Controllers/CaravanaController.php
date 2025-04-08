@@ -189,8 +189,8 @@ class CaravanaController extends Controller
             'titulo' => 'required|string',
             'descricao' => 'required|string',
             'categoria' => 'required|string',
-            'data_partida' => 'required|date',
-            'data_retorno' => 'required|date',
+            'data_partida' => 'sometimes|date',
+            'data_retorno' => 'sometimes|date',
             'endereco_origem' => 'required|string',
             'numero_origem' => 'sometimes|string',
             'bairro_origem' => 'required|string',
@@ -205,8 +205,7 @@ class CaravanaController extends Controller
             'estado_destino' => 'required|string',
             'numero_vagas' => 'required|integer',
             'valor' => 'required|numeric',
-            'organizador_id' => 'required|integer',
-            'ordem' => 'required|integer',
+            'organizador_id' => 'required|integer'
         ])->validate();
 
         try {
@@ -222,7 +221,10 @@ class CaravanaController extends Controller
 
             // Verifica se as imagens foram enviadas
             if ($request->hasFile('imagens')) {
-                foreach ($request->file('imagens') as $imagem) {
+
+                $ordens = $request->input('ordem_imagens');
+
+                foreach ($request->file('imagens') as $index => $imagem) {
                     // Nome original da imagem
                     $fileName = $imagem->getClientOriginalName();
 
@@ -232,9 +234,12 @@ class CaravanaController extends Controller
                     // URL pública da imagem
                     $url = Storage::disk('s3')->url($path);
 
+                    // Converte ordem para inteiro (ou usa índice como fallback)
+                    $ordem = isset($ordens[$index]) ? (int) $ordens[$index] : $index + 1;
+
                     // Registra a imagem no banco
                     CaravanaImagem::create([
-                        'ordem' => $validated['ordem'],
+                        'ordem' => $ordem,
                         'path' => $url,
                         'caravana_id' => $caravana->id,
                     ]);

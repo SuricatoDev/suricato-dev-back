@@ -83,7 +83,7 @@ class CaravanaController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"titulo", "descricao", "categoria", "data_partida", "data_retorno", "endereco_origem", "numero_origem", "bairro_origem", "cep_origem", "cidade_origem", "estado_origem", "endereco_destino", "numero_destino", "bairro_destino", "cep_destino", "cidade_destino", "estado_destino", "numero_vagas", "valor", "imagens"},
+     *             required={"titulo", "descricao", "categoria", "data_partida", "data_retorno", "endereco_origem", "numero_origem", "bairro_origem", "cep_origem", "cidade_origem", "estado_origem", "endereco_destino", "numero_destino", "bairro_destino", "cep_destino", "cidade_destino", "estado_destino", "numero_vagas", "valor"},
      *             @OA\Property(property="titulo", type="string", example="Caravana para Show"),
      *             @OA\Property(property="descricao", type="string", example="Viagem para o show de uma banda famosa"),
      *             @OA\Property(property="categoria", type="string", example="Shows"),
@@ -110,6 +110,15 @@ class CaravanaController extends Controller
      *                     type="string",
      *                     format="binary"
      *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="ordem_imagens",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="integer",
+     *                     example=1
+     *                 ),
+     *                 description="Ordem das imagens, onde cada valor corresponde à posição desejada para cada imagem"
      *             )
      *         )
      *     ),
@@ -162,6 +171,8 @@ class CaravanaController extends Controller
      *     )
      * )
      */
+
+
     public function cadastrarCaravana(Request $request)
     {
         // Verifica se o usuário logado é um organizador
@@ -265,48 +276,45 @@ class CaravanaController extends Controller
         }
     }
 
-
     /**
      * @OA\Put(
      *     path="/api/caravanas/{id}",
-     *     summary="Atualizar uma caravana existente",
-     *     description="Permite que um organizador edite uma caravana que ele criou.",
+     *     summary="Editar uma caravana",
+     *     description="Permite que um organizador edite as informações de uma caravana que ele criou, incluindo a atualização de dados gerais, imagens, ordem das imagens e remoção de imagens.",
      *     tags={"Caravanas"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID da caravana a ser atualizada",
+     *         description="ID da caravana a ser editada",
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\RequestBody(
      *         required=true,
+     *         description="Dados da caravana para atualização (formato JSON)",
      *         @OA\JsonContent(
-     *             @OA\Property(property="titulo", type="string", example="Caravana para Festival"),
-     *             @OA\Property(property="descricao", type="string", example="Viagem para um grande festival de música"),
-     *             @OA\Property(property="data_partida", type="string", format="date", example="2025-07-20"),
-     *             @OA\Property(property="data_retorno", type="string", format="date", example="2025-07-21"),
-     *             @OA\Property(property="endereco_origem", type="string", example="Rua A"),
+     *             @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
+     *             @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
+     *             @OA\Property(property="data_partida", type="string", format="date", example="2025-05-01"),
+     *             @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-02"),
+     *             @OA\Property(property="endereco_origem", type="string", example="Rua A, 123"),
      *             @OA\Property(property="numero_origem", type="string", example="123"),
      *             @OA\Property(property="bairro_origem", type="string", example="Centro"),
-     *             @OA\Property(property="cep_origem", type="string", example="30123-456"),
-     *             @OA\Property(property="cidade_origem", type="string", example="Belo Horizonte"),
-     *             @OA\Property(property="estado_origem", type="string", example="MG"),
-     *             @OA\Property(property="endereco_destino", type="string", example="Av. Paulista"),
-     *             @OA\Property(property="numero_destino", type="string", example="1000"),
-     *             @OA\Property(property="bairro_destino", type="string", example="Bela Vista"),
-     *             @OA\Property(property="cep_destino", type="string", example="01311-000"),
+     *             @OA\Property(property="cep_origem", type="string", example="12345-678"),
+     *             @OA\Property(property="cidade_origem", type="string", example="Sorocaba"),
+     *             @OA\Property(property="estado_origem", type="string", example="SP"),
+     *             @OA\Property(property="endereco_destino", type="string", example="Avenida B, 456"),
+     *             @OA\Property(property="numero_destino", type="string", example="456"),
+     *             @OA\Property(property="bairro_destino", type="string", example="Zona Sul"),
+     *             @OA\Property(property="cep_destino", type="string", example="87654-321"),
      *             @OA\Property(property="cidade_destino", type="string", example="São Paulo"),
      *             @OA\Property(property="estado_destino", type="string", example="SP"),
      *             @OA\Property(property="numero_vagas", type="integer", example=40),
-     *             @OA\Property(property="valor", type="number", format="float", example=300.00),
-     *             @OA\Property(property="evento_id", type="integer", example=15),
-     *             @OA\Property(
-     *                 property="imagens",
-     *                 type="array",
-     *                 @OA\Items(type="string", format="url", example="https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg")
-     *             )
+     *             @OA\Property(property="valor", type="number", format="float", example=100.50),
+     *             @OA\Property(property="evento_id", type="integer", example=1),
+     *             @OA\Property(property="apagar_imagens", type="array", @OA\Items(type="integer", example=1)),
+     *             @OA\Property(property="ordem_imagens", type="array", @OA\Items(type="integer", example=1))
      *         )
      *     ),
      *     @OA\Response(
@@ -315,16 +323,28 @@ class CaravanaController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Caravana atualizada com sucesso!"),
-     *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="titulo", type="string", example="Caravana para Festival"),
-     *                 @OA\Property(property="descricao", type="string", example="Viagem para um grande festival de música"),
-     *                 @OA\Property(property="data_partida", type="string", format="date", example="2025-07-20"),
-     *                 @OA\Property(property="data_retorno", type="string", format="date", example="2025-07-21"),
-     *                 @OA\Property(property="numero_vagas", type="integer", example=40),
-     *                 @OA\Property(property="valor", type="number", format="float", example=300.00),
-     *                 @OA\Property(property="evento_id", type="integer", example=15)
-     *             )
+     *             @OA\Property(property="data", type="object", example={
+     *                 "titulo": "Caravana para o Show X",
+     *                 "descricao": "Descrição da caravana...",
+     *                 "data_partida": "2025-05-01",
+     *                 "data_retorno": "2025-05-02",
+     *                 "endereco_origem": "Rua A, 123",
+     *                 "numero_origem": "123",
+     *                 "bairro_origem": "Centro",
+     *                 "cep_origem": "12345-678",
+     *                 "cidade_origem": "Sorocaba",
+     *                 "estado_origem": "SP",
+     *                 "endereco_destino": "Avenida B, 456",
+     *                 "numero_destino": "456",
+     *                 "bairro_destino": "Zona Sul",
+     *                 "cep_destino": "87654-321",
+     *                 "cidade_destino": "São Paulo",
+     *                 "estado_destino": "SP",
+     *                 "numero_vagas": 40,
+     *                 "valor": 100.50,
+     *                 "evento_id": 1
+     *             }),
+     *             @OA\Property(property="imagens", type="array", @OA\Items(type="string", example="url_da_imagem"))
      *         )
      *     ),
      *     @OA\Response(
@@ -332,7 +352,15 @@ class CaravanaController extends Controller
      *         description="Usuário sem permissão para editar a caravana",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Apenas organizadores podem editar caravanas.")
+     *             @OA\Property(property="message", type="string", example="Você não tem permissão para editar esta caravana.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dados inválidos ou mal formatados",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Os dados da caravana são inválidos ou não foram enviados corretamente.")
      *         )
      *     ),
      *     @OA\Response(
@@ -344,17 +372,8 @@ class CaravanaController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Erro de validação nos dados enviados",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro de validação."),
-     *             @OA\Property(property="errors", type="object", example={"titulo": {"O campo título é obrigatório."}})
-     *         )
-     *     ),
-     *     @OA\Response(
      *         response=500,
-     *         description="Erro interno ao atualizar a caravana",
+     *         description="Erro ao atualizar a caravana",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Erro ao atualizar a caravana."),
@@ -364,9 +383,9 @@ class CaravanaController extends Controller
      * )
      */
 
+
     public function editarCaravana(Request $request, $id)
     {
-        // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
         if (!$user->organizador) {
             return response()->json([
@@ -375,9 +394,7 @@ class CaravanaController extends Controller
             ], 403);
         }
 
-        // Decodifica os dados JSON enviados no campo 'dados'
         $dados = json_decode($request->input('dados'), true);
-
         if (!$dados) {
             return response()->json([
                 'status' => false,
@@ -385,42 +402,31 @@ class CaravanaController extends Controller
             ], 400);
         }
 
-        // Validação dos dados de entrada
-        $validated = Validator::make($dados, [
-            'titulo' => 'sometimes|required|string',
-            'descricao' => 'sometimes|required|string',
-            'data_partida' => 'sometimes|required|date',
-            'data_retorno' => 'sometimes|required|date',
-            'endereco_origem' => 'sometimes|required|string',
-            'numero_origem' => 'sometimes|required|string',
-            'bairro_origem' => 'sometimes|required|string',
-            'cep_origem' => 'sometimes|required|string',
-            'cidade_origem' => 'sometimes|required|string',
-            'estado_origem' => 'sometimes|required|string',
-            'endereco_destino' => 'sometimes|required|string',
-            'numero_destino' => 'sometimes|required|string',
-            'bairro_destino' => 'sometimes|required|string',
-            'cep_destino' => 'sometimes|required|string',
-            'cidade_destino' => 'sometimes|required|string',
-            'estado_destino' => 'sometimes|required|string',
-            'numero_vagas' => 'sometimes|required|integer',
-            'valor' => 'sometimes|required|numeric',
-            'evento_id' => 'sometimes|required|integer',
-        ]);
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro na validação dos dados.',
-                'errors' => $validated->errors(),
-            ], 422);
-        }
-
         try {
-            // Buscar a caravana para editar
+            $validated = Validator::make($dados, [
+                'titulo' => 'sometimes|required|string',
+                'descricao' => 'sometimes|required|string',
+                'data_partida' => 'sometimes|required|date',
+                'data_retorno' => 'sometimes|required|date',
+                'endereco_origem' => 'sometimes|required|string',
+                'numero_origem' => 'sometimes|required|string',
+                'bairro_origem' => 'sometimes|required|string',
+                'cep_origem' => 'sometimes|required|string',
+                'cidade_origem' => 'sometimes|required|string',
+                'estado_origem' => 'sometimes|required|string',
+                'endereco_destino' => 'sometimes|required|string',
+                'numero_destino' => 'sometimes|required|string',
+                'bairro_destino' => 'sometimes|required|string',
+                'cep_destino' => 'sometimes|required|string',
+                'cidade_destino' => 'sometimes|required|string',
+                'estado_destino' => 'sometimes|required|string',
+                'numero_vagas' => 'sometimes|required|integer',
+                'valor' => 'sometimes|required|numeric',
+                'evento_id' => 'sometimes|required|integer',
+            ])->validate();
+
             $caravana = Caravana::findOrFail($id);
 
-            // Verifica se o organizador da caravana é o mesmo que está tentando editar
             if ($caravana->organizador_id !== $user->id) {
                 return response()->json([
                     'status' => false,
@@ -429,30 +435,48 @@ class CaravanaController extends Controller
             }
 
             // Atualizar os dados da caravana
-            $caravana->update($validated->validated());
+            $caravana->update($validated);
 
-            // Atualizar imagens se houver novas enviadas
+            // 1. Apagar imagens específicas se informado
+            $apagarImagens = $request->input('apagar_imagens');
+            if (is_array($apagarImagens)) {
+                foreach ($apagarImagens as $imagemId) {
+                    $imagem = CaravanaImagem::where('id', $imagemId)
+                        ->where('caravana_id', $caravana->id)
+                        ->first();
+
+                    if ($imagem) {
+                        Storage::disk('s3')->delete(str_replace(Storage::disk('s3')->url(''), '', $imagem->path));
+                        $imagem->delete();
+                    }
+                }
+            }
+
+            // 2. Atualizar ordem das imagens se informado
+            $ordens = $request->input('ordem_imagens');
+            if (is_array($ordens)) {
+                foreach ($ordens as $index => $imagemId) {
+                    CaravanaImagem::where('id', $imagemId)
+                        ->where('caravana_id', $caravana->id)
+                        ->update(['ordem' => $index + 1]);
+                }
+            }
+
+            // 3. Adicionar novas imagens se houver
             $imageUrls = [];
             if ($request->hasFile('imagens')) {
-                // Apagar imagens antigas do S3
-                $imagensAntigas = CaravanaImagem::where('caravana_id', $caravana->id)->get();
-                foreach ($imagensAntigas as $imagem) {
-                    Storage::disk('s3')->delete(str_replace(Storage::disk('s3')->url(''), '', $imagem->path));
-                    $imagem->delete();
-                }
-
-                // Diretório base para o upload das novas imagens
                 $folderPath = "caravanas/{$caravana->id}/";
+                $ordemAtual = CaravanaImagem::where('caravana_id', $caravana->id)->max('ordem') ?? 0;
 
                 foreach ($request->file('imagens') as $imagem) {
                     $fileName = $imagem->getClientOriginalName();
                     $path = $imagem->storeAs($folderPath, $fileName, 's3');
                     $url = Storage::disk('s3')->url($path);
 
-                    // Criar nova entrada na tabela 'caravana_imagens'
                     CaravanaImagem::create([
                         'path' => $url,
                         'caravana_id' => $caravana->id,
+                        'ordem' => ++$ordemAtual,
                     ]);
 
                     $imageUrls[] = $url;
@@ -473,7 +497,6 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * @OA\Delete(
@@ -533,10 +556,11 @@ class CaravanaController extends Controller
      * )
      */
 
+
     public function excluirCaravana($id)
     {
-        // Verifica se o usuário logado é do tipo 'organizador'
         $user = Auth::user();
+
         if (!$user->organizador) {
             return response()->json([
                 'status' => false,
@@ -545,11 +569,10 @@ class CaravanaController extends Controller
         }
 
         try {
-            DB::beginTransaction(); // Inicia a transação para garantir atomicidade no banco
+            DB::beginTransaction();
 
             $caravana = Caravana::findOrFail($id);
 
-            // Verifica se o organizador da caravana é o mesmo que está tentando excluir
             if ($caravana->organizador_id !== $user->id) {
                 return response()->json([
                     'status' => false,
@@ -557,41 +580,39 @@ class CaravanaController extends Controller
                 ], 403);
             }
 
-            // Verifica se a caravana tem passageiros confirmados
             $passageirosConfirmados = DB::table('caravana_passageiros')
                 ->where('caravana_id', $caravana->id)
                 ->where('status', 'confirmado')
-                ->whereNotNull('id')
                 ->count();
 
             if ($passageirosConfirmados > 0) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'A caravana não pode ser excluída pois já tem passageiros confirmados.',
+                    'message' => 'A caravana não pode ser excluída pois já possui passageiros confirmados.',
                 ], 400);
             }
 
-            // Buscar todas as imagens associadas à caravana
+            // Apaga as imagens da caravana no banco e no S3
             $imagens = CaravanaImagem::where('caravana_id', $caravana->id)->get();
 
-            // Excluir as imagens do S3
             foreach ($imagens as $imagem) {
-                $path = str_replace(Storage::disk('s3')->url(''), '', $imagem->path);
+                $path = parse_url($imagem->path, PHP_URL_PATH);
+                $path = ltrim($path, '/');
                 Storage::disk('s3')->delete($path);
                 $imagem->delete();
             }
 
-            // Excluir a caravana
+            // Apaga a caravana
             $caravana->delete();
 
-            DB::commit(); // Confirma a transação, apenas se tudo der certo
+            DB::commit();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Caravana excluída com sucesso!',
             ], 200);
         } catch (\Exception $e) {
-            DB::rollBack(); // Desfaz as alterações em caso de erro, garantindo a integridade do banco
+            DB::rollBack();
 
             return response()->json([
                 'status' => false,
@@ -600,6 +621,7 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
+
 
 
     /**
@@ -674,21 +696,28 @@ class CaravanaController extends Controller
 
     public function filtrarCaravanas(Request $request)
     {
+        $validated = $request->validate([
+            'origem' => 'nullable|string|max:100',
+            'destino' => 'nullable|string|max:100',
+            'titulo' => 'nullable|string|max:100',
+            'categoria' => 'nullable|string|max:100',
+        ]);
+
         $query = Caravana::query();
 
-        if ($request->has('origem')) {
+        if ($request->filled('origem')) {
             $query->where('cidade_origem', 'like', '%' . $request->origem . '%');
         }
 
-        if ($request->has('destino')) {
+        if ($request->filled('destino')) {
             $query->where('cidade_destino', 'like', '%' . $request->destino . '%');
         }
 
-        if ($request->has('titulo')) {
+        if ($request->filled('titulo')) {
             $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
-        if ($request->has('categoria')) {
+        if ($request->filled('categoria')) {
             $query->where('categoria', 'like', '%' . $request->categoria . '%');
         }
 
@@ -696,9 +725,11 @@ class CaravanaController extends Controller
 
         return response()->json([
             'status' => true,
-            'caravanas' => $caravanas
+            'message' => 'Caravanas filtradas com sucesso.',
+            'caravanas' => $caravanas,
         ]);
     }
+
 
     public function testeUploadS3()
     {

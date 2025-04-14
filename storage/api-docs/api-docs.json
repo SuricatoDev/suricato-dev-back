@@ -979,8 +979,7 @@
                                     "cidade_destino",
                                     "estado_destino",
                                     "numero_vagas",
-                                    "valor",
-                                    "imagens"
+                                    "valor"
                                 ],
                                 "properties": {
                                     "titulo": {
@@ -1067,6 +1066,14 @@
                                         "items": {
                                             "type": "string",
                                             "format": "binary"
+                                        }
+                                    },
+                                    "ordem_imagens": {
+                                        "description": "Ordem das imagens, onde cada valor corresponde à posição desejada para cada imagem",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
                                         }
                                     }
                                 },
@@ -1229,14 +1236,14 @@
                 "tags": [
                     "Caravanas"
                 ],
-                "summary": "Atualizar uma caravana existente",
-                "description": "Permite que um organizador edite uma caravana que ele criou.",
+                "summary": "Editar uma caravana",
+                "description": "Permite que um organizador edite as informações de uma caravana que ele criou, incluindo a atualização de dados gerais, imagens, ordem das imagens e remoção de imagens.",
                 "operationId": "41fae82512ace5c3f73a03186f148c3f",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da caravana a ser atualizada",
+                        "description": "ID da caravana a ser editada",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1245,6 +1252,7 @@
                     }
                 ],
                 "requestBody": {
+                    "description": "Dados da caravana para atualização (formato JSON)",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -1252,25 +1260,25 @@
                                 "properties": {
                                     "titulo": {
                                         "type": "string",
-                                        "example": "Caravana para Festival"
+                                        "example": "Caravana para o Show X"
                                     },
                                     "descricao": {
                                         "type": "string",
-                                        "example": "Viagem para um grande festival de música"
+                                        "example": "Descrição da caravana..."
                                     },
                                     "data_partida": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "2025-07-20"
+                                        "example": "2025-05-01"
                                     },
                                     "data_retorno": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "2025-07-21"
+                                        "example": "2025-05-02"
                                     },
                                     "endereco_origem": {
                                         "type": "string",
-                                        "example": "Rua A"
+                                        "example": "Rua A, 123"
                                     },
                                     "numero_origem": {
                                         "type": "string",
@@ -1282,31 +1290,31 @@
                                     },
                                     "cep_origem": {
                                         "type": "string",
-                                        "example": "30123-456"
+                                        "example": "12345-678"
                                     },
                                     "cidade_origem": {
                                         "type": "string",
-                                        "example": "Belo Horizonte"
+                                        "example": "Sorocaba"
                                     },
                                     "estado_origem": {
                                         "type": "string",
-                                        "example": "MG"
+                                        "example": "SP"
                                     },
                                     "endereco_destino": {
                                         "type": "string",
-                                        "example": "Av. Paulista"
+                                        "example": "Avenida B, 456"
                                     },
                                     "numero_destino": {
                                         "type": "string",
-                                        "example": "1000"
+                                        "example": "456"
                                     },
                                     "bairro_destino": {
                                         "type": "string",
-                                        "example": "Bela Vista"
+                                        "example": "Zona Sul"
                                     },
                                     "cep_destino": {
                                         "type": "string",
-                                        "example": "01311-000"
+                                        "example": "87654-321"
                                     },
                                     "cidade_destino": {
                                         "type": "string",
@@ -1323,18 +1331,24 @@
                                     "valor": {
                                         "type": "number",
                                         "format": "float",
-                                        "example": 300
+                                        "example": 100.5
                                     },
                                     "evento_id": {
                                         "type": "integer",
-                                        "example": 15
+                                        "example": 1
                                     },
-                                    "imagens": {
+                                    "apagar_imagens": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string",
-                                            "format": "url",
-                                            "example": "https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg"
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "ordem_imagens": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
                                         }
                                     }
                                 },
@@ -1359,44 +1373,35 @@
                                             "example": "Caravana atualizada com sucesso!"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "titulo": {
-                                                    "type": "string",
-                                                    "example": "Caravana para Festival"
-                                                },
-                                                "descricao": {
-                                                    "type": "string",
-                                                    "example": "Viagem para um grande festival de música"
-                                                },
-                                                "data_partida": {
-                                                    "type": "string",
-                                                    "format": "date",
-                                                    "example": "2025-07-20"
-                                                },
-                                                "data_retorno": {
-                                                    "type": "string",
-                                                    "format": "date",
-                                                    "example": "2025-07-21"
-                                                },
-                                                "numero_vagas": {
-                                                    "type": "integer",
-                                                    "example": 40
-                                                },
-                                                "valor": {
-                                                    "type": "number",
-                                                    "format": "float",
-                                                    "example": 300
-                                                },
-                                                "evento_id": {
-                                                    "type": "integer",
-                                                    "example": 15
-                                                }
-                                            },
-                                            "type": "object"
+                                            "type": "object",
+                                            "example": {
+                                                "titulo": "Caravana para o Show X",
+                                                "descricao": "Descrição da caravana...",
+                                                "data_partida": "2025-05-01",
+                                                "data_retorno": "2025-05-02",
+                                                "endereco_origem": "Rua A, 123",
+                                                "numero_origem": "123",
+                                                "bairro_origem": "Centro",
+                                                "cep_origem": "12345-678",
+                                                "cidade_origem": "Sorocaba",
+                                                "estado_origem": "SP",
+                                                "endereco_destino": "Avenida B, 456",
+                                                "numero_destino": "456",
+                                                "bairro_destino": "Zona Sul",
+                                                "cep_destino": "87654-321",
+                                                "cidade_destino": "São Paulo",
+                                                "estado_destino": "SP",
+                                                "numero_vagas": 40,
+                                                "valor": 100.5,
+                                                "evento_id": 1
+                                            }
+                                        },
+                                        "imagens": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "url_da_imagem"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -1416,7 +1421,27 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Apenas organizadores podem editar caravanas."
+                                            "example": "Você não tem permissão para editar esta caravana."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou mal formatados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Os dados da caravana são inválidos ou não foram enviados corretamente."
                                         }
                                     },
                                     "type": "object"
@@ -1444,36 +1469,8 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Erro de validação nos dados enviados",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro de validação."
-                                        },
-                                        "errors": {
-                                            "type": "object",
-                                            "example": {
-                                                "titulo": [
-                                                    "O campo título é obrigatório."
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "500": {
-                        "description": "Erro interno ao atualizar a caravana",
+                        "description": "Erro ao atualizar a caravana",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3820,6 +3817,21 @@
                                                 "type": "string",
                                                 "example": "Rua Exemplo, 123"
                                             },
+                                            "numero": {
+                                                "description": "Número do endereço do passageiro",
+                                                "type": "string",
+                                                "example": "123"
+                                            },
+                                            "complemento": {
+                                                "description": "Complemento do endereço do passageiro",
+                                                "type": "string",
+                                                "example": "Apto 101"
+                                            },
+                                            "bairro": {
+                                                "description": "Bairro do passageiro",
+                                                "type": "string",
+                                                "example": "Bairro Exemplo"
+                                            },
                                             "cep": {
                                                 "description": "CEP do passageiro",
                                                 "type": "string",
@@ -3857,10 +3869,30 @@
                                                 "type": "boolean",
                                                 "example": true
                                             },
+                                            "telefone_comercial": {
+                                                "description": "Telefone comercial do organizador",
+                                                "type": "string",
+                                                "example": "11234567890"
+                                            },
                                             "endereco": {
                                                 "description": "Endereço do organizador",
                                                 "type": "string",
                                                 "example": "Av. Paulista, 2000"
+                                            },
+                                            "numero": {
+                                                "description": "Número do endereço do organizador",
+                                                "type": "string",
+                                                "example": "2000"
+                                            },
+                                            "complemento": {
+                                                "description": "Complemento do endereço do organizador",
+                                                "type": "string",
+                                                "example": "Apto 101"
+                                            },
+                                            "bairro": {
+                                                "description": "Bairro do organizador",
+                                                "type": "string",
+                                                "example": "Bairro Exemplo"
                                             },
                                             "cep": {
                                                 "description": "CEP do organizador",
@@ -3900,7 +3932,10 @@
                                         },
                                         "data": {
                                             "description": "Dados atualizados do usuário",
-                                            "type": "object"
+                                            "type": "object",
+                                            "example": [
+                                                "campos do tipo de usuário (passageiro ou organizador)"
+                                            ]
                                         },
                                         "tipo_usuario": {
                                             "description": "Tipo de usuário atualizado (passageiro ou organizador, se aplicável)",

@@ -74,6 +74,82 @@ class CaravanaController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/minhas-caravanas",
+     *     summary="Listar minhas caravanas",
+     *     description="Retorna a lista de caravanas criadas pelo organizador autenticado.",
+     *     tags={"Caravanas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de caravanas encontradas",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
+     *                     @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
+     *                     @OA\Property(property="data_partida", type="string", format="date", example="2025-05-01"),
+     *                     @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-02"),
+     *                     @OA\Property(property="numero_vagas", type="integer", example=40),
+     *                     @OA\Property(property="valor", type="number", format="float", example=120.50),
+     *                     @OA\Property(property="evento_id", type="integer", example=3),
+     *                     @OA\Property(
+     *                         property="imagens",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="id", type="integer", example=1),
+     *                             @OA\Property(property="url", type="string", example="https://meusite.com/imagens/imagem1.jpg")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhuma caravana encontrada para o organizador",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Você ainda não criou nenhuma caravana.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+
+    public function listarMinhasCaravanas()
+    {
+        $usuario = auth()->user();
+
+        $caravanas = Caravana::with('imagens')
+            ->where('organizador_id', $usuario->id)
+            ->get();
+
+        if ($caravanas->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Você ainda não criou nenhuma caravana.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $caravanas
+        ]);
+    }
+
+
+    /**
      * @OA\Post(
      *     path="/api/caravanas",
      *     summary="Criar uma nova caravana",

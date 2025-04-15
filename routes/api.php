@@ -57,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('caravanas', [CaravanaController::class, 'cadastrarCaravana']);
     Route::put('caravanas/{id}', [CaravanaController::class, 'editarCaravana']);
     Route::delete('caravanas/{id}', [CaravanaController::class, 'excluirCaravana']);
+    Route::get('minhas-caravanas', [CaravanaController::class, 'listarMinhasCaravanas']);
 
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);

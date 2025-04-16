@@ -56,6 +56,7 @@ class CaravanaController extends Controller
      * )
      */
 
+
     public function listarCaravanas()
     {
         $caravanas = Caravana::with('imagens')->get();
@@ -70,6 +71,70 @@ class CaravanaController extends Controller
         return response()->json([
             'status' => true,
             'data' => $caravanas
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/caravanas/{id}",
+     *     summary="Detalhar uma caravana",
+     *     description="Retorna as informações detalhadas de uma caravana específica, incluindo imagens.",
+     *     tags={"Caravanas"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID da caravana a ser detalhada",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes da caravana retornados com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
+     *                 @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
+     *                 @OA\Property(property="data_partida", type="string", format="date", example="2025-05-01"),
+     *                 @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-02"),
+     *                 @OA\Property(property="numero_vagas", type="integer", example=40),
+     *                 @OA\Property(property="valor", type="number", format="float", example=150.00),
+     *                 @OA\Property(property="imagens", type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="url", type="string", example="https://example.com/imagem.jpg")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Caravana não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Caravana nao encontrada!")
+     *         )
+     *     )
+     * )
+     */
+
+    public function detalharCarvana($id)
+    {
+        $caravana = Caravana::with('imagens')->find($id);
+
+        if (!$caravana) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Caravana nao encontrada!'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $caravana
         ]);
     }
 

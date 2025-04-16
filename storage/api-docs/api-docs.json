@@ -1232,6 +1232,116 @@
             }
         },
         "/api/caravanas/{id}": {
+            "get": {
+                "tags": [
+                    "Caravanas"
+                ],
+                "summary": "Detalhar uma caravana",
+                "description": "Retorna as informações detalhadas de uma caravana específica, incluindo imagens.",
+                "operationId": "66585922df9752410debdb28a183aa7a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da caravana a ser detalhada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da caravana retornados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "titulo": {
+                                                    "type": "string",
+                                                    "example": "Caravana para o Show X"
+                                                },
+                                                "descricao": {
+                                                    "type": "string",
+                                                    "example": "Descrição da caravana..."
+                                                },
+                                                "data_partida": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-05-01"
+                                                },
+                                                "data_retorno": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-05-02"
+                                                },
+                                                "numero_vagas": {
+                                                    "type": "integer",
+                                                    "example": 40
+                                                },
+                                                "valor": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 150
+                                                },
+                                                "imagens": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "https://example.com/imagem.jpg"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Caravana não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana nao encontrada!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "Caravanas"
@@ -1617,6 +1727,134 @@
                                         "error": {
                                             "type": "string",
                                             "example": "Mensagem de erro detalhada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/minhas-caravanas": {
+            "get": {
+                "tags": [
+                    "Caravanas"
+                ],
+                "summary": "Listar minhas caravanas",
+                "description": "Retorna a lista de caravanas criadas pelo organizador autenticado.",
+                "operationId": "d37fb4a57913ac8c5651e03c75c0ba48",
+                "responses": {
+                    "200": {
+                        "description": "Lista de caravanas encontradas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "titulo": {
+                                                        "type": "string",
+                                                        "example": "Caravana para o Show X"
+                                                    },
+                                                    "descricao": {
+                                                        "type": "string",
+                                                        "example": "Descrição da caravana..."
+                                                    },
+                                                    "data_partida": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-05-01"
+                                                    },
+                                                    "data_retorno": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-05-02"
+                                                    },
+                                                    "numero_vagas": {
+                                                        "type": "integer",
+                                                        "example": 40
+                                                    },
+                                                    "valor": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 120.5
+                                                    },
+                                                    "evento_id": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "imagens": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "url": {
+                                                                    "type": "string",
+                                                                    "example": "https://meusite.com/imagens/imagem1.jpg"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhuma caravana encontrada para o organizador",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você ainda não criou nenhuma caravana."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"

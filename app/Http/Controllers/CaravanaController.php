@@ -115,6 +115,10 @@ class CaravanaController extends Controller
      *                     @OA\Property(property="cidade", type="string", example="Cidade X"),
      *                     @OA\Property(property="estado", type="string", example="Estado X"),
      *                     @OA\Property(property="created_at", type="string", format="date-time", example="2023-05-01T10:00:00Z")
+     *                 ),
+     *                 @OA\Property(property="user", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="foto_perfil", type="string", example="https://example.com/perfil.jpg")
      *                 )
      *             )
      *         )
@@ -135,7 +139,10 @@ class CaravanaController extends Controller
         $caravana = Caravana::with([
             'imagens',
             'organizador' => function ($query) {
-                $query->select('id', 'nome_fantasia', 'bairro', 'cidade', 'estado', 'created_at');
+                $query->select('id', 'razao_social', 'nome_fantasia', 'bairro', 'cidade', 'estado', 'created_at');
+            },
+            'organizador.user' => function ($query) {
+                $query->select('id', 'foto_perfil');
             }
         ])->find($id);
 

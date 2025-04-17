@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caravana;
 use App\Models\CaravanaImagem;
+use App\Models\Organizador;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -106,6 +107,14 @@ class CaravanaController extends Controller
      *                         @OA\Property(property="id", type="integer", example=1),
      *                         @OA\Property(property="url", type="string", example="https://example.com/imagem.jpg")
      *                     )
+     *                 ),
+     *                 @OA\Property(property="organizador", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="nome_fantasia", type="string", example="Organizador X"),
+     *                     @OA\Property(property="bairro", type="string", example="Bairro X"),
+     *                     @OA\Property(property="cidade", type="string", example="Cidade X"),
+     *                     @OA\Property(property="estado", type="string", example="Estado X"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2023-05-01T10:00:00Z")
      *                 )
      *             )
      *         )
@@ -123,7 +132,12 @@ class CaravanaController extends Controller
 
     public function detalharCarvana($id)
     {
-        $caravana = Caravana::with('imagens')->find($id);
+        $caravana = Caravana::with([
+            'imagens',
+            'organizador' => function ($query) {
+                $query->select('id', 'nome_fantasia', 'bairro', 'cidade', 'estado', 'created_at');
+            }
+        ])->find($id);
 
         if (!$caravana) {
             return response()->json([

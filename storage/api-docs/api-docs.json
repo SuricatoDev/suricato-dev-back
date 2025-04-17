@@ -1310,6 +1310,36 @@
                                                         },
                                                         "type": "object"
                                                     }
+                                                },
+                                                "organizador": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "nome_fantasia": {
+                                                            "type": "string",
+                                                            "example": "Organizador X"
+                                                        },
+                                                        "bairro": {
+                                                            "type": "string",
+                                                            "example": "Bairro X"
+                                                        },
+                                                        "cidade": {
+                                                            "type": "string",
+                                                            "example": "Cidade X"
+                                                        },
+                                                        "estado": {
+                                                            "type": "string",
+                                                            "example": "Estado X"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2023-05-01T10:00:00Z"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"

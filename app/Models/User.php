@@ -40,9 +40,9 @@ class User extends Authenticatable
 
     /************************* RELACIONAMENTOS *************************/
 
-    public function passageiro()
+    public function favoritos()
     {
-        return $this->hasOne(Passageiro::class, 'id', 'id');
+        return $this->hasMany(Favorito::class);
     }
 
     public function organizador()
@@ -50,13 +50,13 @@ class User extends Authenticatable
         return $this->hasOne(Organizador::class, 'id', 'id');
     }
 
+    public function passageiro()
+    {
+        return $this->hasOne(Passageiro::class, 'id', 'id');
+    }
+
     public function suporte()
     {
         return $this->hasMany(Suporte::class);
-    }
-
-    public function denuncia()
-    {
-        return $this->hasMany(Denuncia::class);
     }
 }

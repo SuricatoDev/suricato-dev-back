@@ -7,9 +7,11 @@ use App\Http\Controllers\CaravanaPassageiroController;
 use App\Http\Controllers\CepController;
 use App\Http\Controllers\CNPJController;
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecoverPasswordCodeController;
 use App\Http\Controllers\SuporteController;
+use App\Models\Favorito;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +40,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 Route::get('caravanas/{id}', [CaravanaController::class, 'detalharCarvana']);
+Route::get('filtrar-caravanas', [CaravanaController::class, 'filtrarCaravanas']);
 
 //Rota de teste upload
 Route::post('teste-upload', [CaravanaController::class, 'testeUploadS3']);
@@ -52,6 +55,8 @@ Route::post('reset-password-code', [RecoverPasswordCodeController::class, 'reset
 
 //Rotas Protegidas (Necessita estar logado)
 Route::middleware('auth:sanctum')->group(function () {
+
+    //Rota de teste de autenticação
     Route::get('me', [AuthController::class, 'me']);
 
     //Rotas Caravanas
@@ -59,7 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('caravanas/{id}', [CaravanaController::class, 'editarCaravana']);
     Route::delete('caravanas/{id}', [CaravanaController::class, 'excluirCaravana']);
     Route::get('minhas-caravanas', [CaravanaController::class, 'listarMinhasCaravanas']);
-    Route::get('filtrar-caravanas', [CaravanaController::class, 'filtrarCaravanas']);
 
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
@@ -68,8 +72,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('users/{id}', [UserController::class, 'editarUsuario']);
     Route::delete('users/{id}', [UserController::class, 'excluirUsuario']);
 
-    //Rotas para atualizar a foto de perfil
+    //Rota para atualizar a foto de perfil
     Route::post('update-foto-perfil/{id}', [UserController::class, 'updateFotoPerfil']);
+
+    //Rotas Favoritos
+    Route::get('users/{id}/favoritos', [FavoritoController::class, 'listarMeusFavoritos']);
+    Route::post('caravanas/{id}/favoritar', [FavoritoController::class, 'favoritarCaravana']);
+    Route::delete('caravanas/{id}/desfavoritar', [FavoritoController::class, 'desfavoritarCaravana']);
 
     //Rota via CEP
     Route::get('cep/{cep}', [CepController::class, 'buscarCep']);

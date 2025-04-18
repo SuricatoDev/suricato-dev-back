@@ -37,19 +37,9 @@ class Caravana extends Model
 
     /************* RELACIONAMENTOS *************/
 
-    public function organizador()
+    public function avaliacao()
     {
-        return $this->belongsTo(Organizador::class);
-    }
-
-    public function eventos()
-    {
-        return $this->belongsToMany(Evento::class);
-    }
-
-    public function veiculos()
-    {
-        return $this->hasMany(Veiculo::class);
+        return $this->hasMany(Avaliacao::class);
     }
 
     public function caravanaPassageiros()
@@ -57,18 +47,30 @@ class Caravana extends Model
         return $this->hasMany(CaravanaPassageiro::class);
     }
 
+    public function eventos()
+    {
+        return $this->belongsToMany(Evento::class);
+    }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
+    }
+
     public function imagens()
     {
         return $this->hasMany(CaravanaImagem::class, 'caravana_id', 'id');
     }
 
-    public function avaliacao()
+    public function organizador()
     {
-        return $this->hasMany(Avaliacao::class);
+        return $this->belongsTo(Organizador::class);
     }
 
-    public function denuncia()
+    public function veiculos()
     {
-        return $this->hasMany(Denuncia::class);
+        return $this->hasMany(Veiculo::class);
     }
+
+
 }

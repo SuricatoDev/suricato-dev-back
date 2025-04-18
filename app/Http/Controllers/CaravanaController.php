@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caravana;
 use App\Models\CaravanaImagem;
+use App\Models\Favorito;
 use App\Models\Organizador;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;

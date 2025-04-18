@@ -1340,6 +1340,19 @@
                                                         }
                                                     },
                                                     "type": "object"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "foto_perfil": {
+                                                            "type": "string",
+                                                            "example": "https://example.com/perfil.jpg"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -3075,6 +3088,448 @@
                 ]
             }
         },
+        "/api/caravanas/{id}/favoritar": {
+            "post": {
+                "tags": [
+                    "Favoritos"
+                ],
+                "summary": "Favoritar uma caravana",
+                "description": "Permite que um usuário autenticado (que não seja o organizador da caravana) favorite uma caravana. Um usuário não pode favoritar a mesma caravana mais de uma vez.",
+                "operationId": "d8edd4c574a876a38524dbe7a76f6a0f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da caravana a ser favoritada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Caravana favoritada com sucesso!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana favoritada com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Caravana já foi favoritada pelo usuário.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana já foi favoritada pelo usuário."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Usuário não autenticado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário precisa estar logado para favoritar uma caravana."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Organizador não pode favoritar sua própria caravana.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Organizadores não podem favoritar suas caravanas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Caravana não encontrada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Caravana] 999"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao tentar favoritar a caravana.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao favoritar a caravana."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensagem de erro detalhada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/caravanas/{id}/desfavoritar": {
+            "delete": {
+                "tags": [
+                    "Favoritos"
+                ],
+                "summary": "Desfavoritar uma caravana",
+                "description": "Permite que o usuário autenticado remova uma caravana de seus favoritos.",
+                "operationId": "822a38c97c14d298909aecaa692a9e71",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da caravana a ser desfavoritada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Caravana desfavoritada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana desfavoritada com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Usuário não autenticado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário precisa estar logado para desfavoritar uma caravana."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Organizadores não podem desfavoritar suas próprias caravanas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Organizadores não podem desfavoritar suas caravanas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Caravana não foi favoritada pelo usuário.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana não foi favoritada pelo usuário."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno ao desfavoritar caravana.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao desfavoritar a caravana."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensagem de erro"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{user_id}/favoritos": {
+            "get": {
+                "tags": [
+                    "Favoritos"
+                ],
+                "summary": "Listar minhas caravanas favoritadas",
+                "description": "Retorna uma lista de todas as caravanas que o usuário autenticado marcou como favoritas.",
+                "operationId": "5662e127ca250e0d38b9b9bee20e5791",
+                "responses": {
+                    "200": {
+                        "description": "Lista de caravanas favoritadas pelo usuário retornada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nome": {
+                                                        "type": "string",
+                                                        "example": "Caravana 1"
+                                                    },
+                                                    "cidade_origem": {
+                                                        "type": "string",
+                                                        "example": "Cidade A"
+                                                    },
+                                                    "estado_origem": {
+                                                        "type": "string",
+                                                        "example": "SP"
+                                                    },
+                                                    "cep_origem": {
+                                                        "type": "string",
+                                                        "example": "12345-000"
+                                                    },
+                                                    "bairro_origem": {
+                                                        "type": "string",
+                                                        "example": "Centro"
+                                                    },
+                                                    "rua_origem": {
+                                                        "type": "string",
+                                                        "example": "Rua das Flores"
+                                                    },
+                                                    "numero_origem": {
+                                                        "type": "string",
+                                                        "example": "100"
+                                                    },
+                                                    "complemento_origem": {
+                                                        "type": "string",
+                                                        "example": "Próximo à praça"
+                                                    },
+                                                    "cidade_destino": {
+                                                        "type": "string",
+                                                        "example": "Cidade B"
+                                                    },
+                                                    "estado_destino": {
+                                                        "type": "string",
+                                                        "example": "RJ"
+                                                    },
+                                                    "cep_destino": {
+                                                        "type": "string",
+                                                        "example": "22222-000"
+                                                    },
+                                                    "bairro_destino": {
+                                                        "type": "string",
+                                                        "example": "Bairro Azul"
+                                                    },
+                                                    "rua_destino": {
+                                                        "type": "string",
+                                                        "example": "Av. Principal"
+                                                    },
+                                                    "numero_destino": {
+                                                        "type": "string",
+                                                        "example": "200"
+                                                    },
+                                                    "complemento_destino": {
+                                                        "type": "string",
+                                                        "example": "Em frente ao parque"
+                                                    },
+                                                    "descricao": {
+                                                        "type": "string",
+                                                        "example": "Viagem para show em Cidade B"
+                                                    },
+                                                    "capacidade": {
+                                                        "type": "integer",
+                                                        "example": 45
+                                                    },
+                                                    "organizador_id": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "imagens": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "caravana_id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "url": {
+                                                                    "type": "string",
+                                                                    "example": "https://example.com/imagem.jpg"
+                                                                },
+                                                                "principal": {
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Usuário não autenticado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário precisa estar logado para listar seus favoritos."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/registrar-suporte": {
             "post": {
                 "tags": [
@@ -4496,6 +4951,10 @@
         {
             "name": "Denúncias",
             "description": "Denúncias"
+        },
+        {
+            "name": "Favoritos",
+            "description": "Favoritos"
         },
         {
             "name": "Suporte",

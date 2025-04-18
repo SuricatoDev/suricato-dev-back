@@ -140,11 +140,11 @@ class CaravanaPassageiroController extends Controller
             ], 400);  // Status 400 para requisição mal formulada
         }
 
-        // Verifica se já há vagas disponíveis
-        if ($caravana->numero_vagas <= 0) {
+        // Verifica se ainda há vagas disponíveis
+        if ($caravana->numero_disponiveis <= 0) {
             return response()->json([
                 'status' => false,
-                'message' => 'Número de vagas excedido!'
+                'message' => 'Não há vagas disponíveis!'
             ], 400);  // Status 400 para requisição mal formulada
         }
 
@@ -169,7 +169,7 @@ class CaravanaPassageiroController extends Controller
         ]);
 
         // Reduz o número de vagas da caravana
-        $caravana->decrement('numero_vagas', 1);  // Decrementa 1 vaga
+        $caravana->decrement('vagas_disponiveis', 1);  // Decrementa 1 vaga
 
         return response()->json([
             'status' => true,
@@ -474,7 +474,7 @@ class CaravanaPassageiroController extends Controller
         ]);
 
         // Reverte a quantidade de vagas na caravana
-        $caravana->increment('numero_vagas');
+        $caravana->increment('vagas_disponiveis');
 
         return response()->json([
             'status' => true,

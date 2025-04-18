@@ -381,6 +381,8 @@ class CaravanaController extends Controller
             'organizador_id' => 'required|integer'
         ])->validate();
 
+        $validated['vagas_disponiveis'] = $validated['numero_vagas'];
+
         try {
             // Criação da caravana com dados validados
             $caravana = Caravana::create($validated);

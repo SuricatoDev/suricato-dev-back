@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('cidade_destino');
             $table->string('estado_destino');
             $table->integer('numero_vagas');
+            $table->integer('vagas_disponiveis');
             $table->float('valor');
             $table->integer('organizador_id')->unsigned();
             $table->foreign('organizador_id')

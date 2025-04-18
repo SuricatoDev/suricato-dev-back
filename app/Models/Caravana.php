@@ -30,6 +30,7 @@ class Caravana extends Model
         'cidade_destino',
         'estado_destino',
         'numero_vagas',
+        'vagas_disponiveis',
         'valor',
         'organizador_id',
     ];

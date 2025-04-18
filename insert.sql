@@ -74,5 +74,9 @@ ADD COLUMN estado VARCHAR(255) NOT NULL AFTER cidade;
 ALTER TABLE carava_imagens
 ADD COLUMN ordem INT NULL AFTER path;
 
+ALTER TABLE caravanas
+ADD COLUMN vagas_disponiveis INT NOT NULL
+AFTER numero_vagas;
+
 
 

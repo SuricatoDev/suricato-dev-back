@@ -94,9 +94,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
 
     //Rotas para gerenciar Denuncias
-    Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
-    Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
-    Route::delete('excluir-denuncia/{id}', [DenunciaController::class, 'excluirDenuncia']);
+    // Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
+    // Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
+    // Route::delete('excluir-denuncia/{id}', [DenunciaController::class, 'excluirDenuncia']);
 
     //Rotas para gerenciar Suporte
     Route::post('registrar-suporte', [SuporteController::class, 'registrarSuporte']);

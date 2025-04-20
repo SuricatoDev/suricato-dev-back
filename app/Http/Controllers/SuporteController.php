@@ -13,7 +13,7 @@ class SuporteController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/registrar-suporte",
+     *     path="/api/suporte",
      *     summary="Registrar um novo suporte",
      *     description="Esse endpoint permite que um usuário registre um suporte.",
      *     operationId="registrarSuporte",

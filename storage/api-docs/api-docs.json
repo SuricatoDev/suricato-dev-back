@@ -3132,7 +3132,7 @@
                 ]
             }
         },
-        "/api/registrar-suporte": {
+        "/api/suporte": {
             "post": {
                 "tags": [
                     "Suporte"

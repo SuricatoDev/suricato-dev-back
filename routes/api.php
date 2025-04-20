@@ -40,7 +40,7 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 Route::get('caravanas/{id}', [CaravanaController::class, 'detalharCarvana']);
-Route::get('/caravanas', [CaravanaController::class, 'listarOuFiltrarCaravanas']);
+Route::get('caravanas', [CaravanaController::class, 'listarOuFiltrarCaravanas']);
 
 //Rota de teste upload
 Route::post('teste-upload', [CaravanaController::class, 'testeUploadS3']);

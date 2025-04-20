@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('suporte', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
+            $table->increments('id');
+            $table->string('titulo', 255);
             $table->string('descricao');
-            $table->enum('status', ['Pendente', 'Em andamento', 'Concluído']);
+            $table->enum('status', ['Pendente', 'Em andamento', 'Concluído'])
+                ->default('Pendente');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
                 ->references('id')

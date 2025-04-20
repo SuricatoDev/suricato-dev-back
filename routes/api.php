@@ -77,6 +77,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('caravanas/{id}/favoritar', [FavoritoController::class, 'favoritarCaravana']);
     Route::delete('caravanas/{id}/desfavoritar', [FavoritoController::class, 'desfavoritarCaravana']);
 
+    //Rota para envio de e-mail de suporte
+    Route::post('suporte', [SuporteController::class, 'registrarSuporte']);
+
     //Rota via CEP
     Route::get('cep/{cep}', [CepController::class, 'buscarCep']);
 

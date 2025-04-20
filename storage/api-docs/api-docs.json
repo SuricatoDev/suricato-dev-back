@@ -3138,7 +3138,7 @@
                     "Suporte"
                 ],
                 "summary": "Registrar um novo suporte",
-                "description": "Esse endpoint permite que um user registre um suporte.",
+                "description": "Esse endpoint permite que um usuário registre um suporte.",
                 "operationId": "registrarSuporte",
                 "requestBody": {
                     "required": true,
@@ -3146,15 +3146,10 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id",
                                     "descricao",
                                     "status"
                                 ],
                                 "properties": {
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "descricao": {
                                         "type": "string",
                                         "example": "Problema ao acessar a caravana"
@@ -3187,9 +3182,42 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Suporte registrado com sucesso!"
+                                            "example": "Pedido de suporte enviado com sucesso!"
                                         },
                                         "suporte": {
+                                            "properties": {
+                                                "titulo": {
+                                                    "type": "string",
+                                                    "example": "Problema com a caravana"
+                                                },
+                                                "descricao": {
+                                                    "type": "string",
+                                                    "example": "Problema ao acessar a caravana"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Pendente",
+                                                        "Em andamento",
+                                                        "Concluido"
+                                                    ],
+                                                    "example": "Pendente"
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-04-20T12:34:56"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-04-20T12:34:56"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -3198,164 +3226,19 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Erro ao registrar suporte"
-                    }
-                }
-            }
-        },
-        "/api/listar-suportes": {
-            "get": {
-                "tags": [
-                    "Suporte"
-                ],
-                "summary": "Listar todos os suportes",
-                "description": "Esse endpoint permite listar todos os suportes.",
-                "operationId": "listarSuportes",
-                "responses": {
-                    "200": {
-                        "description": "Lista de suportes",
+                    "401": {
+                        "description": "Usuário não autenticado",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "status": {
                                             "type": "boolean",
-                                            "example": true
-                                        },
-                                        "suportes": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao obter suportes"
-                    }
-                }
-            }
-        },
-        "/api/visualizar-suporte/{id}": {
-            "get": {
-                "tags": [
-                    "Suporte"
-                ],
-                "summary": "Visualizar um suporte específico",
-                "description": "Esse endpoint permite visualizar um suporte especifico.",
-                "operationId": "visualizarSuporte",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do suporte",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Detalhes do suporte",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "suporte": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao obter suporte"
-                    }
-                }
-            }
-        },
-        "/api/editar-suporte/{id}": {
-            "put": {
-                "tags": [
-                    "Suporte"
-                ],
-                "summary": "Editar um suporte",
-                "description": "Esse endpoint permite editar um suporte.",
-                "operationId": "editarSuporte",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do suporte",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "user_id",
-                                    "descricao",
-                                    "status"
-                                ],
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "descricao": {
-                                        "type": "string",
-                                        "example": "Atualização na descrição do suporte"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "Pendente",
-                                            "Em andamento",
-                                            "Concluido"
-                                        ],
-                                        "example": "Concluido"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Suporte atualizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
+                                            "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Suporte atualizado com sucesso!"
-                                        },
-                                        "suporte": {
-                                            "type": "object"
+                                            "example": "Usuário não autenticado!"
                                         }
                                     },
                                     "type": "object"
@@ -3363,60 +3246,25 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Permissão negada"
-                    },
                     "500": {
-                        "description": "Erro ao atualizar suporte"
-                    }
-                }
-            }
-        },
-        "/api/excluir-suporte/{id}": {
-            "delete": {
-                "tags": [
-                    "Suporte"
-                ],
-                "summary": "Excluir um suporte",
-                "description": "Esse endpoint permite excluir um suporte.",
-                "operationId": "excluirSuporte",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do suporte",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Suporte excluído com sucesso",
+                        "description": "Erro ao registrar suporte",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "status": {
                                             "type": "boolean",
-                                            "example": true
+                                            "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Suporte excluído com sucesso!"
+                                            "example": "Erro ao registrar o suporte!"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "Permissão negada"
-                    },
-                    "500": {
-                        "description": "Erro ao excluir suporte"
                     }
                 }
             }

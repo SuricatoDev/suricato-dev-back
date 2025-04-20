@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SuporteRequest;
+use App\Mail\SuporteRequestMail;
 use App\Models\Suporte;
-use Illuminate\Container\Attributes\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SuporteController extends Controller
 {
@@ -13,14 +15,13 @@ class SuporteController extends Controller
      * @OA\Post(
      *     path="/api/registrar-suporte",
      *     summary="Registrar um novo suporte",
-     *     description="Esse endpoint permite que um user registre um suporte.",
+     *     description="Esse endpoint permite que um usuário registre um suporte.",
      *     operationId="registrarSuporte",
      *     tags={"Suporte"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"user_id", "descricao", "status"},
-     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             required={"descricao", "status"},
      *             @OA\Property(property="descricao", type="string", example="Problema ao acessar a caravana"),
      *             @OA\Property(property="status", type="string", enum={"Pendente", "Em andamento", "Concluido"}, example="Pendente")
      *         )
@@ -28,228 +29,58 @@ class SuporteController extends Controller
      *     @OA\Response(response=201, description="Suporte registrado com sucesso",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Suporte registrado com sucesso!"),
-     *             @OA\Property(property="suporte", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(response=500, description="Erro ao registrar suporte")
-     * )
-     */
-    public function registrarSuporte(Request $request)
-    {
-        try {
-            $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'descricao' => 'required|string',
-                'status' => 'required|in:Pendente, Em andamento, Concluido',
-            ]);
-
-            DB::beginTransaction();
-
-            $suporte = Suporte::create([
-                'user_id' => $request->user_id,
-                'descricao' => $request->descricao,
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Suporte registrado com sucesso!',
-                'suporte' => $suporte,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao registrar suporte: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/listar-suportes",
-     *     summary="Listar todos os suportes",
-     *     description="Esse endpoint permite listar todos os suportes.",
-     *     operationId="listarSuportes",
-     *     tags={"Suporte"},
-     *     @OA\Response(response=200, description="Lista de suportes",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="suportes", type="array",
-     *                 @OA\Items(type="object")
+     *             @OA\Property(property="message", type="string", example="Pedido de suporte enviado com sucesso!"),
+     *             @OA\Property(property="suporte", type="object",
+     *                 @OA\Property(property="titulo", type="string", example="Problema com a caravana"),
+     *                 @OA\Property(property="descricao", type="string", example="Problema ao acessar a caravana"),
+     *                 @OA\Property(property="status", type="string", enum={"Pendente", "Em andamento", "Concluido"}, example="Pendente"),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-04-20T12:34:56"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-04-20T12:34:56")
      *             )
      *         )
      *     ),
-     *     @OA\Response(response=500, description="Erro ao obter suportes")
-     * )
-     */
-
-    public function listarSuporte()
-    {
-        try {
-            $suportes = Suporte::all();
-            return response()->json([
-                'status' => true,
-                'suportes' => $suportes,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao obter suportes: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/visualizar-suporte/{id}",
-     *     summary="Visualizar um suporte específico",
-     *     description="Esse endpoint permite visualizar um suporte especifico.",
-     *     operationId="visualizarSuporte",
-     *     tags={"Suporte"},
-     *     @OA\Parameter(name="id", in="path", required=true, description="ID do suporte", @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Detalhes do suporte",
+     *     @OA\Response(response=401, description="Usuário não autenticado",
      *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="suporte", type="object")
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Usuário não autenticado!")
      *         )
      *     ),
-     *     @OA\Response(response=500, description="Erro ao obter suporte")
+     *     @OA\Response(response=500, description="Erro ao registrar suporte",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Erro ao registrar o suporte!")
+     *         )
+     *     )
      * )
      */
-
-    public function visualizarSuporte($id)
+    public function registrarSuporte(SuporteRequest $request)
     {
-        try {
-            $suporte = Suporte::findOrFail($id);
+        // O SuporteRequest já valida os dados automaticamente
+        $user = Auth::user();
+
+        if (!$user) {
+            // Tratar erro, o usuário não está autenticado
             return response()->json([
-                'status' => true,
-                'suporte' => $suporte,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao obter suporte: ' . $e->getMessage()
-            ], 500);
+                'status'  => false,
+                'message' => 'Usuário não autenticado!',
+            ], 401);
         }
-    }
 
-    /**
-     * @OA\Put(
-     *     path="/api/editar-suporte/{id}",
-     *     summary="Editar um suporte",
-     *     description="Esse endpoint permite editar um suporte.",
-     *     operationId="editarSuporte",
-     *     tags={"Suporte"},
-     *     @OA\Parameter(name="id", in="path", required=true, description="ID do suporte", @OA\Schema(type="integer")),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"user_id", "descricao", "status"},
-     *             @OA\Property(property="user_id", type="integer", example=1),
-     *             @OA\Property(property="descricao", type="string", example="Atualização na descrição do suporte"),
-     *             @OA\Property(property="status", type="string", enum={"Pendente", "Em andamento", "Concluido"}, example="Concluido")
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Suporte atualizado com sucesso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Suporte atualizado com sucesso!"),
-     *             @OA\Property(property="suporte", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(response=403, description="Permissão negada"),
-     *     @OA\Response(response=500, description="Erro ao atualizar suporte")
-     * )
-     */
+        // Criar o novo pedido de suporte
+        $suporte = Suporte::create([
+            'titulo'    => $request->titulo,
+            'descricao' => $request->descricao,
+            'status'    => 'Pendente',
+            'user_id'   => $user->id,
+        ]);
 
-    public function editarSuporte(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'descricao' => 'required|string',
-                'status' => 'required|in:Pendente, Em andamento, Concluido',
-            ]);
+        // Enviar o e-mail com os dados do suporte
+        Mail::to('noreply@excursionistas.com.br')->send(new SuporteRequestMail($suporte, $user));
 
-            // Armazena o id do suporte
-            $suporte = Suporte::findOrFail($id);
-
-            // Armazena o usuário autenticado
-            $solicitante = auth()->user();
-
-            //Verifica se o usuário autenticado é proprietário do suporte
-            if ($suporte->user_id != $solicitante->id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Você não tem permissão para editar este suporte.'
-                ], 403);
-            }
-
-            $suporte->update($request->all());
-            return response()->json([
-                'status' => true,
-                'message' => 'Suporte atualizado com sucesso!',
-                'suporte' => $suporte,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao atualizar suporte: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Delete(
-     *     path="/api/excluir-suporte/{id}",
-     *     summary="Excluir um suporte",
-     *     description="Esse endpoint permite excluir um suporte.",
-     *     operationId="excluirSuporte",
-     *     tags={"Suporte"},
-     *     @OA\Parameter(name="id", in="path", required=true, description="ID do suporte", @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="Suporte excluído com sucesso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Suporte excluído com sucesso!")
-     *         )
-     *     ),
-     *     @OA\Response(response=403, description="Permissão negada"),
-     *     @OA\Response(response=500, description="Erro ao excluir suporte")
-     * )
-     */
-
-    public function excluirSuporte($id)
-    {
-        try {
-
-            // Armazena o id do suporte
-            $suporte = Suporte::findOrFail($id);
-
-            // Armazena o usuário autenticado
-            $solicitante = auth()->user();
-
-            //Verifica se o usuário autenticado é proprietário do suporte
-            if ($suporte->user_id != $solicitante->id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Você não tem permissão para excluir este suporte.'
-                ], 403);
-            }
-
-            $suporte->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'Suporte excluido com sucesso!'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao excluir suporte: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'status'  => true,
+            'message' => 'Pedido de suporte enviado com sucesso!',
+        ]);
     }
 }

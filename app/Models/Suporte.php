@@ -12,6 +12,7 @@ class Suporte extends Model
     protected $table = 'suporte';
 
     protected $fillable = [
+        'titulo',
         'descricao',
         'status',
         'user_id',

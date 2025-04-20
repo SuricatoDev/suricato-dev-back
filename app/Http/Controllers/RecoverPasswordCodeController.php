@@ -63,8 +63,7 @@ class RecoverPasswordCodeController extends Controller
                 'created_at' => Carbon::now(),
             ]);
 
-            $currentDate = Carbon::now();
-            $tenMinutesLater = $currentDate->addMinutes(10);
+            $tenMinutesLater = Carbon::now('America/Sao_Paulo')->addMinutes(10);
             $formattedTime = $tenMinutesLater->format('H:i');
             $formattedDate = $tenMinutesLater->format('d/m/Y');
 

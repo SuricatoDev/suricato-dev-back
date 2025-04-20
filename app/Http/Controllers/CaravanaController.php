@@ -390,7 +390,7 @@ class CaravanaController extends Controller
 
             // Diretório base para as imagens
             $caravanaId = $caravana->id;
-            $folderPath = "caravanas/{$caravanaId}/";
+            $folderPath = "caravanas/{$caravanaId}";
 
             // Para armazenar URLs das imagens
             $imageUrls = [];

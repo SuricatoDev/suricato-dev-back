@@ -40,13 +40,10 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 Route::get('caravanas/{id}', [CaravanaController::class, 'detalharCarvana']);
-Route::get('filtrar-caravanas', [CaravanaController::class, 'filtrarCaravanas']);
+Route::get('/caravanas', [CaravanaController::class, 'listarOuFiltrarCaravanas']);
 
 //Rota de teste upload
 Route::post('teste-upload', [CaravanaController::class, 'testeUploadS3']);
-
-// Rota para visualizar todas as caravanas (não é necessário estar logado)
-Route::get('caravanas', [CaravanaController::class, 'listarCaravanas']);
 
 //Rotas Forgot Password
 Route::post('forgot-password-code', [RecoverPasswordCodeController::class, 'forgotPasswordCode']);

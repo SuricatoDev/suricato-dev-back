@@ -25,59 +25,6 @@ class CaravanaController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/caravanas",
-     *     summary="Listar todas as caravanas",
-     *     description="Retorna uma lista de todas as caravanas cadastradas, incluindo suas imagens.",
-     *     tags={"Caravanas"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Lista de caravanas retornada com sucesso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="array",
-     *                 @OA\Items(
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="nome", type="string", example="Caravana para Rock in Rio"),
-     *                     @OA\Property(property="descricao", type="string", example="Viagem organizada para o festival"),
-     *                     @OA\Property(property="data_saida", type="string", format="date", example="2025-08-30"),
-     *                     @OA\Property(property="imagens", type="array", @OA\Items(type="string", example="url_da_imagem.jpg"))
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Nenhuma caravana encontrada",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Nenhuma caravana encontrada!")
-     *         )
-     *     )
-     * )
-     */
-
-
-    public function listarCaravanas()
-    {
-        $caravanas = Caravana::with('imagens')->get();
-
-        if ($caravanas->isEmpty()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Nenhuma caravana encontrada!'
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'data' => $caravanas
-        ]);
-    }
-
-    /**
-     * @OA\Get(
      *     path="/api/caravanas/{id}",
      *     summary="Detalhar uma caravana",
      *     description="Retorna as informações detalhadas de uma caravana específica, incluindo imagens.",
@@ -787,13 +734,11 @@ class CaravanaController extends Controller
         }
     }
 
-
-
     /**
      * @OA\Get(
-     *     path="/api/filtrar-caravanas",
-     *     summary="Filtrar caravanas por cidade de origem, destino, evento ou categoria",
-     *     description="Permite buscar caravanas com base nos filtros fornecidos. As pesquisas podem ser independentes ou conjuntas.",
+     *     path="/api/caravanas",
+     *     summary="Listar ou filtrar caravanas",
+     *     description="Retorna todas as caravanas se nenhum filtro for fornecido. Caso contrário, filtra com base nos parâmetros enviados.",
      *     tags={"Caravanas"},
      *     @OA\Parameter(
      *         name="origem",
@@ -825,12 +770,13 @@ class CaravanaController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de caravanas filtradas",
+     *         description="Lista de caravanas (filtradas ou todas)",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Caravanas listadas com sucesso."),
      *             @OA\Property(
-     *                 property="caravanas",
+     *                 property="data",
      *                 type="array",
      *                 @OA\Items(
      *                     type="object",
@@ -841,34 +787,60 @@ class CaravanaController extends Controller
      *                     @OA\Property(property="categoria", type="string", example="Shows"),
      *                     @OA\Property(property="data_saida", type="string", format="date", example="2025-05-15"),
      *                     @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-20"),
-     *                     @OA\Property(property="vagas_disponiveis", type="integer", example=10)
+     *                     @OA\Property(property="vagas_disponiveis", type="integer", example=10),
+     *                     @OA\Property(
+     *                         property="imagens",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer", example=1),
+     *                             @OA\Property(property="url", type="string", example="https://exemplo.com/imagem.jpg")
+     *                         )
+     *                     )
      *                 )
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=500,
-     *         description="Erro interno ao processar a solicitação",
+     *         response=404,
+     *         description="Nenhuma caravana encontrada",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao buscar caravanas."),
-     *             @OA\Property(property="error", type="string", example="Detalhes do erro.")
+     *             @OA\Property(property="message", type="string", example="Nenhuma caravana encontrada.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="origem",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="O campo origem não pode ter mais que 100 caracteres.")
+     *                 )
+     *             )
      *         )
      *     )
      * )
      */
 
-    public function filtrarCaravanas(Request $request)
+
+    public function listarOuFiltrarCaravanas(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'origem' => 'nullable|string|max:100',
             'destino' => 'nullable|string|max:100',
             'titulo' => 'nullable|string|max:100',
             'categoria' => 'nullable|string|max:100',
         ]);
 
-        $query = Caravana::query();
+        $query = Caravana::with('imagens');
 
         if ($request->filled('origem')) {
             $query->where('cidade_origem', 'like', '%' . $request->origem . '%');
@@ -888,13 +860,19 @@ class CaravanaController extends Controller
 
         $caravanas = $query->get();
 
+        if ($caravanas->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Nenhuma caravana encontrada.'
+            ], 404);
+        }
+
         return response()->json([
             'status' => true,
-            'message' => 'Caravanas filtradas com sucesso.',
-            'caravanas' => $caravanas,
+            'message' => 'Caravanas listadas com sucesso.',
+            'data' => $caravanas,
         ]);
     }
-
 
     public function testeUploadS3()
     {

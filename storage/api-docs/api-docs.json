@@ -869,368 +869,6 @@
                 }
             }
         },
-        "/api/caravanas": {
-            "get": {
-                "tags": [
-                    "Caravanas"
-                ],
-                "summary": "Listar todas as caravanas",
-                "description": "Retorna uma lista de todas as caravanas cadastradas, incluindo suas imagens.",
-                "operationId": "a67d113aa0696a264ff6ed3defed5bab",
-                "responses": {
-                    "200": {
-                        "description": "Lista de caravanas retornada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "nome": {
-                                                        "type": "string",
-                                                        "example": "Caravana para Rock in Rio"
-                                                    },
-                                                    "descricao": {
-                                                        "type": "string",
-                                                        "example": "Viagem organizada para o festival"
-                                                    },
-                                                    "data_saida": {
-                                                        "type": "string",
-                                                        "format": "date",
-                                                        "example": "2025-08-30"
-                                                    },
-                                                    "imagens": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "type": "string",
-                                                            "example": "url_da_imagem.jpg"
-                                                        }
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Nenhuma caravana encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Nenhuma caravana encontrada!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Caravanas"
-                ],
-                "summary": "Criar uma nova caravana",
-                "description": "Permite que um organizador crie uma nova caravana.",
-                "operationId": "d5ede3e81d6f77605dba5e55ea4e71b9",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "titulo",
-                                    "descricao",
-                                    "categoria",
-                                    "data_partida",
-                                    "data_retorno",
-                                    "endereco_origem",
-                                    "numero_origem",
-                                    "bairro_origem",
-                                    "cep_origem",
-                                    "cidade_origem",
-                                    "estado_origem",
-                                    "endereco_destino",
-                                    "numero_destino",
-                                    "bairro_destino",
-                                    "cep_destino",
-                                    "cidade_destino",
-                                    "estado_destino",
-                                    "numero_vagas",
-                                    "valor"
-                                ],
-                                "properties": {
-                                    "titulo": {
-                                        "type": "string",
-                                        "example": "Caravana para Show"
-                                    },
-                                    "descricao": {
-                                        "type": "string",
-                                        "example": "Viagem para o show de uma banda famosa"
-                                    },
-                                    "categoria": {
-                                        "type": "string",
-                                        "example": "Shows"
-                                    },
-                                    "data_partida": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2025-06-15"
-                                    },
-                                    "data_retorno": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2025-06-16"
-                                    },
-                                    "endereco_origem": {
-                                        "type": "string",
-                                        "example": "Avenida Paulista"
-                                    },
-                                    "numero_origem": {
-                                        "type": "string",
-                                        "example": "1000"
-                                    },
-                                    "bairro_origem": {
-                                        "type": "string",
-                                        "example": "Bela Vista"
-                                    },
-                                    "cep_origem": {
-                                        "type": "string",
-                                        "example": "01310-100"
-                                    },
-                                    "cidade_origem": {
-                                        "type": "string",
-                                        "example": "São Paulo"
-                                    },
-                                    "estado_origem": {
-                                        "type": "string",
-                                        "example": "SP"
-                                    },
-                                    "endereco_destino": {
-                                        "type": "string",
-                                        "example": "Praia de Copacabana"
-                                    },
-                                    "numero_destino": {
-                                        "type": "string",
-                                        "example": "200"
-                                    },
-                                    "bairro_destino": {
-                                        "type": "string",
-                                        "example": "Copacabana"
-                                    },
-                                    "cep_destino": {
-                                        "type": "string",
-                                        "example": "22060-001"
-                                    },
-                                    "cidade_destino": {
-                                        "type": "string",
-                                        "example": "Rio de Janeiro"
-                                    },
-                                    "estado_destino": {
-                                        "type": "string",
-                                        "example": "RJ"
-                                    },
-                                    "numero_vagas": {
-                                        "type": "integer",
-                                        "example": 50
-                                    },
-                                    "valor": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 250
-                                    },
-                                    "imagens": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    },
-                                    "ordem_imagens": {
-                                        "description": "Ordem das imagens, onde cada valor corresponde à posição desejada para cada imagem",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": 1
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Caravana criada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Caravana criada com sucesso!"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "titulo": {
-                                                    "type": "string",
-                                                    "example": "Caravana para Show"
-                                                },
-                                                "descricao": {
-                                                    "type": "string",
-                                                    "example": "Viagem para o show de uma banda famosa"
-                                                },
-                                                "categoria": {
-                                                    "type": "string",
-                                                    "example": "Shows"
-                                                },
-                                                "data_partida": {
-                                                    "type": "string",
-                                                    "format": "date",
-                                                    "example": "2025-06-15"
-                                                },
-                                                "data_retorno": {
-                                                    "type": "string",
-                                                    "format": "date",
-                                                    "example": "2025-06-16"
-                                                },
-                                                "numero_vagas": {
-                                                    "type": "integer",
-                                                    "example": 50
-                                                },
-                                                "valor": {
-                                                    "type": "number",
-                                                    "format": "float",
-                                                    "example": 250
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "imagens": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "url": {
-                                                        "type": "string",
-                                                        "format": "url",
-                                                        "example": "https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Apenas organizadores podem criar caravanas",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Apenas usuários do tipo organizador podem criar caravanas."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Erro de validação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro de validação."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao criar a caravana",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro ao criar a caravana."
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Mensagem de erro detalhada."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/caravanas/{id}": {
             "get": {
                 "tags": [
@@ -1913,14 +1551,14 @@
                 ]
             }
         },
-        "/api/filtrar-caravanas": {
+        "/api/caravanas": {
             "get": {
                 "tags": [
                     "Caravanas"
                 ],
-                "summary": "Filtrar caravanas por cidade de origem, destino, evento ou categoria",
-                "description": "Permite buscar caravanas com base nos filtros fornecidos. As pesquisas podem ser independentes ou conjuntas.",
-                "operationId": "5e2d27b7b21d3e2c91ade29d0df43451",
+                "summary": "Listar ou filtrar caravanas",
+                "description": "Retorna todas as caravanas se nenhum filtro for fornecido. Caso contrário, filtra com base nos parâmetros enviados.",
+                "operationId": "7189afa11606bf4eadf79c41a544cd27",
                 "parameters": [
                     {
                         "name": "origem",
@@ -1965,7 +1603,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de caravanas filtradas",
+                        "description": "Lista de caravanas (filtradas ou todas)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1974,7 +1612,11 @@
                                             "type": "boolean",
                                             "example": true
                                         },
-                                        "caravanas": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravanas listadas com sucesso."
+                                        },
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "properties": {
@@ -2011,6 +1653,22 @@
                                                     "vagas_disponiveis": {
                                                         "type": "integer",
                                                         "example": 10
+                                                    },
+                                                    "imagens": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "url": {
+                                                                    "type": "string",
+                                                                    "example": "https://exemplo.com/imagem.jpg"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
                                                     }
                                                 },
                                                 "type": "object"
@@ -2022,8 +1680,8 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Erro interno ao processar a solicitação",
+                    "404": {
+                        "description": "Nenhuma caravana encontrada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2034,11 +1692,35 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Erro ao buscar caravanas."
-                                        },
-                                        "error": {
+                                            "example": "Nenhuma caravana encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Detalhes do erro."
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "origem": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O campo origem não pode ter mais que 100 caracteres."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2047,6 +1729,288 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "Caravanas"
+                ],
+                "summary": "Criar uma nova caravana",
+                "description": "Permite que um organizador crie uma nova caravana.",
+                "operationId": "d5ede3e81d6f77605dba5e55ea4e71b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titulo",
+                                    "descricao",
+                                    "categoria",
+                                    "data_partida",
+                                    "data_retorno",
+                                    "endereco_origem",
+                                    "numero_origem",
+                                    "bairro_origem",
+                                    "cep_origem",
+                                    "cidade_origem",
+                                    "estado_origem",
+                                    "endereco_destino",
+                                    "numero_destino",
+                                    "bairro_destino",
+                                    "cep_destino",
+                                    "cidade_destino",
+                                    "estado_destino",
+                                    "numero_vagas",
+                                    "valor"
+                                ],
+                                "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "example": "Caravana para Show"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Viagem para o show de uma banda famosa"
+                                    },
+                                    "categoria": {
+                                        "type": "string",
+                                        "example": "Shows"
+                                    },
+                                    "data_partida": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-15"
+                                    },
+                                    "data_retorno": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-16"
+                                    },
+                                    "endereco_origem": {
+                                        "type": "string",
+                                        "example": "Avenida Paulista"
+                                    },
+                                    "numero_origem": {
+                                        "type": "string",
+                                        "example": "1000"
+                                    },
+                                    "bairro_origem": {
+                                        "type": "string",
+                                        "example": "Bela Vista"
+                                    },
+                                    "cep_origem": {
+                                        "type": "string",
+                                        "example": "01310-100"
+                                    },
+                                    "cidade_origem": {
+                                        "type": "string",
+                                        "example": "São Paulo"
+                                    },
+                                    "estado_origem": {
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "endereco_destino": {
+                                        "type": "string",
+                                        "example": "Praia de Copacabana"
+                                    },
+                                    "numero_destino": {
+                                        "type": "string",
+                                        "example": "200"
+                                    },
+                                    "bairro_destino": {
+                                        "type": "string",
+                                        "example": "Copacabana"
+                                    },
+                                    "cep_destino": {
+                                        "type": "string",
+                                        "example": "22060-001"
+                                    },
+                                    "cidade_destino": {
+                                        "type": "string",
+                                        "example": "Rio de Janeiro"
+                                    },
+                                    "estado_destino": {
+                                        "type": "string",
+                                        "example": "RJ"
+                                    },
+                                    "numero_vagas": {
+                                        "type": "integer",
+                                        "example": 50
+                                    },
+                                    "valor": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 250
+                                    },
+                                    "imagens": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "ordem_imagens": {
+                                        "description": "Ordem das imagens, onde cada valor corresponde à posição desejada para cada imagem",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Caravana criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravana criada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "titulo": {
+                                                    "type": "string",
+                                                    "example": "Caravana para Show"
+                                                },
+                                                "descricao": {
+                                                    "type": "string",
+                                                    "example": "Viagem para o show de uma banda famosa"
+                                                },
+                                                "categoria": {
+                                                    "type": "string",
+                                                    "example": "Shows"
+                                                },
+                                                "data_partida": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-06-15"
+                                                },
+                                                "data_retorno": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-06-16"
+                                                },
+                                                "numero_vagas": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "valor": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 250
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "imagens": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "url",
+                                                        "example": "https://s3.amazonaws.com/suricatodev/caravanas/1/imagem.jpg"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Apenas organizadores podem criar caravanas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Apenas usuários do tipo organizador podem criar caravanas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao criar a caravana",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao criar a caravana."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Mensagem de erro detalhada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/caravanas/{id}/reservas": {

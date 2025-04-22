@@ -175,9 +175,12 @@ class CaravanaPassageiroController extends Controller
         // Obtém o organizador da caravana para enviar o email
         $dadosOrganizador = Organizador::where('id', $caravana->organizador_id)->first();
 
+        // Obtém o telefone do passageiro para posterior formatação
+        $telefonePassageiro = $this->formatarTelefone($user->telefone); // Formata o telefone;
+
         // Envia o email para o organizador
         Mail::to($dadosOrganizador->user->email)->send(
-            new ReservaRequestMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador)
+            new ReservaRequestMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador, $telefonePassageiro)
         );
 
         // Reduz o número de vagas da caravana
@@ -189,6 +192,22 @@ class CaravanaPassageiroController extends Controller
             'data' => $caravanaPassageiro,
         ], 201);  // Status 201 para criado
     }
+
+    private function formatarTelefone($telefone)
+    {
+        $numero = preg_replace('/\D/', '', $telefone);
+
+        if (strlen($numero) === 11) {
+            return "(" . substr($numero, 0, 2) . ") " . substr($numero, 2, 5) . "-" . substr($numero, 7);
+        }
+
+        if (strlen($numero) === 10) {
+            return "(" . substr($numero, 0, 2) . ") " . substr($numero, 2, 4) . "-" . substr($numero, 6);
+        }
+
+        return $telefone;
+    }
+
 
 
     /**

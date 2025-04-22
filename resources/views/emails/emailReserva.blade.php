@@ -10,7 +10,7 @@
             background-color: #ffffff;
             margin: 0;
             padding: 0;
-            color: #333333;
+            color: #222222;
         }
 
         .container {
@@ -27,14 +27,7 @@
             background-color: #FF6D3C;
             padding: 30px 20px;
             text-align: center;
-            /* Isso deve garantir que o conteúdo seja centralizado */
             color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            /* Ajuste conforme necessário */
         }
 
         .header img {
@@ -86,26 +79,38 @@
             text-align: center;
             font-size: 14px;
             color: #888888;
+            padding: 20px;
+            line-height: 1.6;
             width: 100%;
-            position: relative;
-            bottom: 0;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="header">
-            <img src="https://suricatodev.s3.sa-east-1.amazonaws.com/assets/logo.png" alt="Logo" />
-            <h1>Excursionistas</h1>
+        <div class="header" style="background-color: #FF6D3C; padding: 30px 20px; text-align: center; color: white;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                    <td align="center">
+                        <img src="https://suricatodev.s3.sa-east-1.amazonaws.com/assets/logo.png" alt="Logo"
+                            width="128" style="display: block; margin: 0 auto 10px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h1 style="margin: 0; font-size: 24px;">Excursionistas</h1>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="content">
             <p>Olá,
-                @if($dadosOrganizador->nome_fantasia !== '')
-                    <strong>{{$dadosOrganizador->nome_fantasia}}</strong>,</p>
-                @else
-                    <strong>{{$dadosOrganizador->razao_social}}</strong>,</p>
-                @endif
+                @if ($dadosOrganizador->nome_fantasia !== '')
+                    <strong>{{ $dadosOrganizador->nome_fantasia }}</strong>,
+            </p>
+        @else
+            <strong>{{ $dadosOrganizador->razao_social }}</strong>,</p>
+            @endif
 
             <p>Um passageiro solicitou reserva em uma de suas caravanas!</p>
 
@@ -115,15 +120,23 @@
                 <p>Entre em contato com o passageiro para formalizar a reserva.</p>
                 {{-- Informações de contato com o passageiro --}}
                 <p><strong>👤 Passageiro:</strong> {{ $user->nome }}</p>
-                <p><strong>📞 Telefone:</strong> {{ $user->telefone }}</p>
+                <p><strong>📞 Telefone:</strong>
+                    <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $telefonePassageiro) }}" target="_blank">
+                        {{ $telefonePassageiro }}
+                    </a>
+                </p>
                 <p><strong>📧 E-mail:</strong> {{ $user->email }}</p>
             </div>
-
-            <p>Atenciosamente,<br>Sistema Excursionistas</p>
+            <br>
+            <p>Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
-        <div class="footer">
-            &copy; {{ date('Y') }} SuricatoDev | Todos os direitos reservados.
-        </div>
+        <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
+            <tr>
+                <td style="text-align: center; font-size: 14px; color: #888888; line-height: 1.6;">
+                    &copy; {{ date('Y') }} SuricatoDev | Todos os direitos reservados.
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 

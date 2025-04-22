@@ -628,6 +628,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'organizador.razao_social' => 'sometimes|string|max:255',
+            'organizador.nome_fantasia' => 'sometimes|string|max:255',
             'organizador.inscricao_estadual' => 'nullable|string|max:20',
             'organizador.inscricao_municipal' => 'nullable|string|max:20',
             'organizador.cadastur' => 'nullable|string|max:50',
@@ -645,6 +646,7 @@ class UserController extends Controller
         if ($organizador) {
             $organizador->update([
                 'razao_social' => $validated['organizador']['razao_social'] ?? $organizador->razao_social,
+                'nome_fantasia' => $validated['organizador']['nome_fantasia'] ?? $organizador->nome_fantasia,
                 'inscricao_estadual' => $validated['organizador']['inscricao_estadual'] ?? $organizador->inscricao_estadual,
                 'inscricao_municipal' => $validated['organizador']['inscricao_municipal'] ?? $organizador->inscricao_municipal,
                 'cadastur' => $validated['organizador']['cadastur'] ?? $organizador->cadastur,

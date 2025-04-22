@@ -10,7 +10,7 @@
             background-color: #ffffff;
             margin: 0;
             padding: 0;
-            color: #333333;
+            color: #222222;
         }
 
         .container {
@@ -74,9 +74,20 @@
 
 <body>
     <div class="container">
-        <div class="header">
-            <img src="https://suricatodev.s3.sa-east-1.amazonaws.com/assets/logo.png" alt="Logo" />
-            <h1>Excursionistas</h1>
+        <div class="header" style="background-color: #FF6D3C; padding: 30px 20px; text-align: center; color: white;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                    <td align="center">
+                        <img src="https://suricatodev.s3.sa-east-1.amazonaws.com/assets/logo.png" alt="Logo"
+                            width="128" style="display: block; margin: 0 auto 10px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h1 style="margin: 0; font-size: 24px;">Excursionistas</h1>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="content">
             <p>Olá, <strong>{{ $user->nome }}</strong>,</p>
@@ -91,12 +102,16 @@
                 <strong>{{ $formattedDate }}</strong>.</p>
 
             <p>Se você não solicitou esta recuperação, por favor, ignore este e-mail.</p>
-
+            <br>
             <p>Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
-        <div class="footer">
-            &copy; {{ date('Y') }} SuricatoDev | Todos os direitos reservados.
-        </div>
+        <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
+            <tr>
+                <td style="text-align: center; font-size: 14px; color: #888888; line-height: 1.6;">
+                    &copy; {{ date('Y') }} SuricatoDev | Todos os direitos reservados.
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 

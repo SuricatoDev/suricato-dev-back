@@ -22,7 +22,7 @@ class SuporteRequestMail extends Mailable
 
     public function build()
     {
-        return $this->subject('📩 Novo Pedido de Suporte - Excursionistas')
+        return $this->subject('📩 Nova solicitação de Suporte - Excursionistas')
                     ->markdown('emails.emailSuporte');
     }
 }

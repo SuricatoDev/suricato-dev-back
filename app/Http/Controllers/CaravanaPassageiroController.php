@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReservaRequestMail;
 use App\Models\Caravana;
 use App\Models\CaravanaPassageiro;
+use App\Models\Organizador;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 /**
  *
@@ -133,7 +137,7 @@ class CaravanaPassageiroController extends Controller
         $user = Auth::user();
 
         // Verificar se o usuário logado é do tipo passageiro
-        if ($user->organizador) {
+        if (!$user->passageiro) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas passageiros podem fazer reservas!'
@@ -141,7 +145,7 @@ class CaravanaPassageiroController extends Controller
         }
 
         // Verifica se ainda há vagas disponíveis
-        if ($caravana->numero_disponiveis <= 0) {
+        if ($caravana->vagas_disponiveis <= 0) {
             return response()->json([
                 'status' => false,
                 'message' => 'Não há vagas disponíveis!'
@@ -167,6 +171,14 @@ class CaravanaPassageiroController extends Controller
             'passageiro_id' => $user->id,
             'status' => $request->status, // Garantindo que o status seja definido aqui
         ]);
+
+        // Obtém o organizador da caravana para enviar o email
+        $dadosOrganizador = Organizador::where('id', $caravana->organizador_id)->first();
+
+        // Envia o email para o organizador
+        Mail::to($dadosOrganizador->user->email)->send(
+            new ReservaRequestMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador)
+        );
 
         // Reduz o número de vagas da caravana
         $caravana->decrement('vagas_disponiveis', 1);  // Decrementa 1 vaga

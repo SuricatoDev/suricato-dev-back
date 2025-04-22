@@ -6,7 +6,6 @@ use App\Http\Requests\SuporteRequest;
 use App\Mail\SuporteRequestMail;
 use App\Models\Suporte;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class SuporteController extends Controller
@@ -21,7 +20,8 @@ class SuporteController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"descricao", "status"},
+     *             required={"titulo", "descricao", "status"},
+     *             @OA\Property(property="titulo", type="string", example="Problema com a caravana"),
      *             @OA\Property(property="descricao", type="string", example="Problema ao acessar a caravana"),
      *             @OA\Property(property="status", type="string", enum={"Pendente", "Em andamento", "Concluido"}, example="Pendente")
      *         )

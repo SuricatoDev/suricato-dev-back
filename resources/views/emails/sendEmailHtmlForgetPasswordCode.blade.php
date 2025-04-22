@@ -95,7 +95,7 @@
             <p>Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} SuricatoDev. Todos os direitos reservados.
+            &copy; {{ date('Y') }} SuricatoDev | Todos os direitos reservados.
         </div>
     </div>
 </body>

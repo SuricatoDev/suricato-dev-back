@@ -169,7 +169,7 @@ class CaravanaPassageiroController extends Controller
             'data' => $request->input('data', now()), // Define 'data' como a data atual se não for fornecida
             'caravana_id' => $id,
             'passageiro_id' => $user->id,
-            'status' => $request->status, // Garantindo que o status seja definido aqui
+            'status' => 'Pendente'
         ]);
 
         // Obtém o organizador da caravana para enviar o email

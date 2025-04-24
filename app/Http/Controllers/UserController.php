@@ -86,7 +86,7 @@ class UserController extends Controller
         ]);
 
         // Gera o link que será enviado ao passageiro
-        $link = ('https://excursionistas.com.br/confirmar-email?token=' . $user->email_verification_token);
+        $link = ('https://excursionistas.com.br/confirmar-email/' . $user->email_verification_token);
 
         // Envia um email ao passageiro para confirmar o cadastro
         Mail::to($request->email)->send(new VerificarEmail($user, $link));

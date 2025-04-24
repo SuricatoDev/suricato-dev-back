@@ -23,6 +23,9 @@ class User extends Authenticatable
         'organizador',
         'ativo',
         'foto_perfil',
+        'email_verified_at',
+        'verificado',
+        'email_verification_token'
     ];
 
     protected $hidden = [

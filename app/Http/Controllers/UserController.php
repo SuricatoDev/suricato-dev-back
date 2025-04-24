@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerificarEmail;
 use App\Models\Passageiro;
 use App\Models\Organizador;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -79,7 +82,14 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'ativo' => true,
+            'email_verification_token' => Str::random(60)
         ]);
+
+        // Gera o link que será enviado ao passageiro
+        $link = ('https://excursionistas.com.br/confirmar-email?token=' . $user->email_verification_token);
+
+        // Envia um email ao passageiro para confirmar o cadastro
+        Mail::to($request->email)->send(new VerificarEmail($user, $link));
 
         return response()->json([
             'message' => 'Usuário registrado com sucesso!',

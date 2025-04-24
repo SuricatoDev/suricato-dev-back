@@ -173,6 +173,24 @@ class AuthController extends Controller
         );
     }
 
+    public function confirmarEmail($token)
+    {
+        // Procurando o usuário pelo token de verificação
+        $user = User::where('email_verification_token', $token)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Token inválido'], 404);
+        }
+
+        // Atualizando o status do e-mail do usuário para "verificado"
+        $user->email_verified_at = now();
+        $user->verificado = true;
+        $user->email_verification_token = null; // Apagando o token após a verificação
+        $user->save();
+
+        return response()->json(['message' => 'E-mail confirmado com sucesso'], 200);
+    }
+
     public function me()
     {
         return Auth::user();

@@ -42,6 +42,9 @@ Route::post('verificar-email', [UserController::class, 'verificarEmail']);
 Route::get('caravanas/{id}', [CaravanaController::class, 'detalharCarvana']);
 Route::get('caravanas', [CaravanaController::class, 'listarOuFiltrarCaravanas']);
 
+//Rota para confirmar email
+Route::get('confirmar-email/{token}', [AuthController::class, 'confirmarEmail']);
+
 //Rota de teste upload
 Route::post('teste-upload', [CaravanaController::class, 'testeUploadS3']);
 

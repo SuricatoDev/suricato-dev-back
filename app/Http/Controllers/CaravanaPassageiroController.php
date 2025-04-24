@@ -296,7 +296,7 @@ class CaravanaPassageiroController extends Controller
      */
 
 
-    public function editarReserva(Request $request, $id, $id_reserva)
+    public function editarReserva(Request $request, $id, $reserva_id)
     {
         $caravana = Caravana::findOrFail($id);
         $user = Auth::user();
@@ -310,7 +310,7 @@ class CaravanaPassageiroController extends Controller
         }
 
         // Verifica se a reserva não está com status Cancelado
-        $reserva = CaravanaPassageiro::findOrFail($id_reserva);
+        $reserva = CaravanaPassageiro::findOrFail($reserva_id);
         if ($reserva->status === 'Cancelado') {
             return response()->json([
                 'status' => false,
@@ -331,7 +331,7 @@ class CaravanaPassageiroController extends Controller
             ]);
 
             // Atualiza a reserva
-            $reserva = CaravanaPassageiro::findOrFail($id_reserva);
+            $reserva = CaravanaPassageiro::findOrFail($reserva_id);
             $reserva->update([
                 'status' => $validated['status'],
             ]);
@@ -402,13 +402,13 @@ class CaravanaPassageiroController extends Controller
      *     )
      * )
      */
-    public function visualizarReserva($id, $id_reserva)
+    public function visualizarReserva($id, $reserva_id)
     {
         $caravana = Caravana::findOrFail($id);
         $user = Auth::user();
 
         // Verifica se o usuário é o passageiro da reserva ou o organizador da caravana
-        $reserva = CaravanaPassageiro::findOrFail($id_reserva);
+        $reserva = CaravanaPassageiro::findOrFail($reserva_id);
         $isPassageiro = $reserva->passageiro_id === $user->id;
         $isOrganizador = $caravana->organizador_id === $user->id;
 

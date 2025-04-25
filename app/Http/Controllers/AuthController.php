@@ -179,7 +179,7 @@ class AuthController extends Controller
         $user = User::where('email_verification_token', $token)->first();
 
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 404);
+            return response()->json(['message' => 'Token inválido'], 204);
         }
 
         // Atualizando o status do e-mail do usuário para "verificado"

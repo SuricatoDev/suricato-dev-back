@@ -507,16 +507,8 @@ class CaravanaController extends Controller
             ], 403);
         }
 
-        $dados = json_decode($request->input('dados'), true);
-        if (!$dados) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Os dados da caravana são inválidos ou não foram enviados corretamente.',
-            ], 400);
-        }
-
         try {
-            $validated = Validator::make($dados, [
+            $validated = $request->validate([
                 'titulo' => 'sometimes|required|string',
                 'descricao' => 'sometimes|required|string',
                 'categoria' => 'sometimes|required|string',
@@ -536,7 +528,7 @@ class CaravanaController extends Controller
                 'estado_destino' => 'sometimes|required|string',
                 'numero_vagas' => 'sometimes|required|integer',
                 'valor' => 'sometimes|required|numeric',
-            ])->validate();
+            ]);
 
             $caravana = Caravana::findOrFail($id);
 

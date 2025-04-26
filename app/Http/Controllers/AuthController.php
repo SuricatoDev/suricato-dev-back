@@ -173,6 +173,35 @@ class AuthController extends Controller
         );
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/confirmar-email/{token}",
+     *     summary="Confirma o e-mail de um usuário a partir do token de verificação",
+     *     tags={"Autenticação"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="path",
+     *         description="Token de verificação enviado por e-mail",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="E-mail confirmado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="E-mail confirmado com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Token inválido",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Token inválido")
+     *         )
+     *     )
+     * )
+     */
+
     public function confirmarEmail($token)
     {
         // Procurando o usuário pelo token de verificação

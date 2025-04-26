@@ -34,6 +34,38 @@ class RecoverPasswordCodeController extends Controller
      * @return \Illuminate\Http\JsonResponse Resposta indicando sucesso ou falha
      */
 
+    /**
+     * @OA\Post(
+     *     path="/api/forgot-password-code",
+     *     summary="Solicita código para redefinição de senha",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Código enviado para o e-mail",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Enviado e-mail com instruções para recuperar a senha. Acesse a sua caixa de e-mail para recuperar a senha!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro ao recuperar senha ou e-mail não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="E-mail não encontrado!")
+     *         )
+     *     )
+     * )
+     */
+
+
     public function forgotPasswordCode(ForgotPasswordRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)->first();
@@ -98,6 +130,39 @@ class RecoverPasswordCodeController extends Controller
      * @return \Illuminate\Http\JsonResponse Resposta indicando sucesso ou falha na validação do código
      */
 
+    /**
+     * @OA\Post(
+     *     path="/api/reset-password-validate-code",
+     *     summary="Valida o código de recuperação de senha enviado ao e-mail",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "code"},
+     *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com"),
+     *             @OA\Property(property="code", type="string", example="123456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Código de recuperação válido",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Código recuperar senha válido!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Código inválido ou erro na validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Código inválido!")
+     *         )
+     *     )
+     * )
+     */
+
+
     public function resetPasswordValidateCode(ResetPasswordValidateCodeRequest $request, ResetPasswordValidateCodeService $resetPasswordValidateCode): JsonResponse
     {
         try {
@@ -149,6 +214,41 @@ class RecoverPasswordCodeController extends Controller
      * @param ResetPasswordValidateCodeService $resetPasswordValidateCode O serviço utilizado para validar o código de recuperação de senha
      * Injeção de Dependência: o Laravel automaticamente resolve e injeta uma instância dessa classe no método quando é chamado.
      * @return \Illuminate\Http\JsonResponse Resposta indicando sucesso ou falha na resetar da senha do usuário
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/reset-password-code",
+     *     summary="Reseta a senha do usuário após validação do código",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "code", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="usuario@example.com"),
+     *             @OA\Property(property="code", type="string", example="123456"),
+     *             @OA\Property(property="password", type="string", format="password", example="NovaSenha123!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Senha atualizada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="user", type="object", example={"id":1,"name":"Usuário Exemplo","email":"usuario@example.com"}),
+     *             @OA\Property(property="token", type="string", example="1|eyJ0eXAiOiJKV1QiLCJh..."),
+     *             @OA\Property(property="message", type="string", example="Senha atualizada com sucesso!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro ao resetar a senha",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Senha não atualizada!")
+     *         )
+     *     )
+     * )
      */
 
     public function resetPasswordCode(ResetPasswordCodeRequest $request, ResetPasswordValidateCodeService $resetPasswordValidateCode): JsonResponse

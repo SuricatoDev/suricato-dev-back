@@ -500,6 +500,7 @@ class CaravanaController extends Controller
     public function editarCaravana(Request $request, $id)
     {
         $user = Auth::user();
+
         if (!$user->organizador) {
             return response()->json([
                 'status' => false,
@@ -541,40 +542,38 @@ class CaravanaController extends Controller
 
             $caravana->update($validated);
 
-            // Inicia o gerenciamento das imagens enviadas como array
+            // Processamento das imagens
             $entries = $request->all()['imagens'] ?? [];
-            $imageUrls = [];
-            $ordem = 0;
-
+            $order = 0;
             $idsMantidos = [];
 
             foreach ($entries as $entry) {
-                if (is_string($entry)) {
-                    // imagem antiga
-                    $img = CaravanaImagem::where('path', $entry)->where('caravana_id', $caravana->id)->first();
+                if (is_numeric($entry)) {
+                    // ID de imagem já existente
+                    $img = CaravanaImagem::where('id', $entry)
+                        ->where('caravana_id', $caravana->id)
+                        ->first();
+
                     if ($img) {
-                        $img->update(['ordem' => ++$ordem]);
-                        $imageUrls[] = $img->path;
+                        $img->update(['ordem' => ++$order]);
                         $idsMantidos[] = $img->id;
                     }
                 } elseif ($entry instanceof UploadedFile) {
-                    // nova imagem
-                    $fileName = $entry->getClientOriginalName();
-                    $folderPath = "caravanas/{$caravana->id}";
-                    $path = $entry->storeAs($folderPath, $fileName, 's3');
+                    // Novo arquivo
+                    $path = $entry->storeAs("caravanas/{$caravana->id}", $entry->getClientOriginalName(), 's3');
                     $url = Storage::disk('s3')->url($path);
 
-                    $nova = CaravanaImagem::create([
+                    $novaImg = CaravanaImagem::create([
                         'caravana_id' => $caravana->id,
                         'path' => $url,
-                        'ordem' => ++$ordem,
+                        'ordem' => ++$order,
                     ]);
-                    $imageUrls[] = $url;
-                    $idsMantidos[] = $nova->id;
+
+                    $idsMantidos[] = $novaImg->id;
                 }
             }
 
-            // Deletar imagens que foram removidas no front
+            // Remoção de imagens excluídas
             CaravanaImagem::where('caravana_id', $caravana->id)
                 ->whereNotIn('id', $idsMantidos)
                 ->get()
@@ -587,7 +586,6 @@ class CaravanaController extends Controller
                 'status' => true,
                 'message' => 'Caravana atualizada com sucesso!',
                 'data' => $caravana,
-                'imagens' => $imageUrls,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -597,6 +595,7 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
+
 
 
     /**

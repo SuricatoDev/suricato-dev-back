@@ -169,37 +169,6 @@
                 }
             }
         },
-        "/api/logout": {
-            "post": {
-                "tags": [
-                    "Autenticação"
-                ],
-                "summary": "Desloga o usuário autenticado",
-                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
-                "responses": {
-                    "200": {
-                        "description": "Logout realizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Logout realizado com sucesso!"
-                                        },
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/confirmar-email/{token}": {
             "get": {
                 "tags": [
@@ -2066,14 +2035,14 @@
                 ]
             }
         },
-        "/caravanas/{id}/reservas": {
+        "/caravana/{id}/listar-reservas": {
             "get": {
                 "tags": [
                     "Reservas"
                 ],
                 "summary": "Visualizar todas as reservas de uma caravana, somente para o organizador",
                 "description": "Este método permite que o organizador visualize todas as reservas de sua caravana.",
-                "operationId": "exibirMinhasReservas",
+                "operationId": "listarReservas",
                 "parameters": [
                     {
                         "name": "id",
@@ -2094,17 +2063,13 @@
                                     "type": "array",
                                     "items": {
                                         "properties": {
-                                            "id": {
-                                                "description": "ID da reserva",
-                                                "type": "integer"
-                                            },
-                                            "caravana_id": {
-                                                "description": "ID da caravana",
-                                                "type": "integer"
-                                            },
                                             "passageiro_id": {
                                                 "description": "ID do passageiro",
                                                 "type": "integer"
+                                            },
+                                            "nome": {
+                                                "description": "Nome do passageiro",
+                                                "type": "string"
                                             },
                                             "status": {
                                                 "description": "Status da reserva",
@@ -2117,11 +2082,6 @@
                                             },
                                             "created_at": {
                                                 "description": "Data de criação da reserva",
-                                                "type": "string",
-                                                "format": "date-time"
-                                            },
-                                            "updated_at": {
-                                                "description": "Data da última atualização da reserva",
                                                 "type": "string",
                                                 "format": "date-time"
                                             }
@@ -2228,7 +2188,7 @@
                 ]
             }
         },
-        "/caravanas/{id}/reservas/{id_reserva}": {
+        "/caravana/{id}/reserva/{id_reserva}": {
             "put": {
                 "tags": [
                     "Reservas"
@@ -2297,18 +2257,6 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "caravana_id": {
-                                                    "type": "integer",
-                                                    "example": 10
-                                                },
-                                                "passageiro_id": {
-                                                    "type": "integer",
-                                                    "example": 5
-                                                },
                                                 "status": {
                                                     "type": "string",
                                                     "example": "Confirmado"
@@ -2401,132 +2349,6 @@
             }
         },
         "/api/caravanas/{id}/reservas/{id_reserva}": {
-            "get": {
-                "tags": [
-                    "Reservas"
-                ],
-                "summary": "Visualizar uma reserva especifica",
-                "description": "Visualizar os detalhes de uma reserva (passageiro ou organizador)",
-                "operationId": "visualizarReserva",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID da caravana",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "id_reserva",
-                        "in": "path",
-                        "description": "ID da reserva",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Reserva encontrada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Reserva encontrada com sucesso!"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "caravana_id": {
-                                                    "type": "integer",
-                                                    "example": 10
-                                                },
-                                                "passageiro_id": {
-                                                    "type": "integer",
-                                                    "example": 5
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "Confirmado"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2025-03-10T12:00:00Z"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2025-03-10T12:30:00Z"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Acesso não autorizado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Acesso não autorizado!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Reserva não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Reserva não encontrada!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
             "delete": {
                 "tags": [
                     "Reservas"

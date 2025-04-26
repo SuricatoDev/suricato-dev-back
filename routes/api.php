@@ -92,8 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rotas para gerenciar reservas
     Route::post('caravanas/{id}/reservas', [CaravanaPassageiroController::class, 'criarReserva']);
     Route::get('caravana/{id}/listar-reservas', [CaravanaPassageiroController::class, 'listarReservas']);
-    Route::get('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'visualizarReserva']);
-    Route::put('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
+    Route::put('caravana/{id}/reserva/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
     Route::delete('caravanas/{id}/reservas/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
 
     //Rotas para gerenciar Denuncias

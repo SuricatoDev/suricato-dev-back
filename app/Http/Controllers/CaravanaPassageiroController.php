@@ -42,12 +42,10 @@ class CaravanaPassageiroController extends Controller
      *             type="array",
      *             @OA\Items(
      *                 type="object",
-     *                 @OA\Property(property="id", type="integer", description="ID da reserva"),
-     *                 @OA\Property(property="caravana_id", type="integer", description="ID da caravana"),
      *                 @OA\Property(property="passageiro_id", type="integer", description="ID do passageiro"),
+     *                 @OA\Property(property="nome", type="string", description="Nome do passageiro"),
      *                 @OA\Property(property="status", type="string", enum={"pendente", "confirmada", "cancelada"}, description="Status da reserva"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", description="Data de criação da reserva"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", description="Data da última atualização da reserva")
+     *                 @OA\Property(property="created_at", type="string", format="date-time", description="Data de criação da reserva")
      *             )
      *         )
      *     ),
@@ -61,6 +59,7 @@ class CaravanaPassageiroController extends Controller
      *     ),
      * )
      */
+
 
     public function listarReservas($id)
     {
@@ -86,7 +85,7 @@ class CaravanaPassageiroController extends Controller
             $usuario = User::find($reserva->passageiro_id); // Busca o passageiro pelo ID
 
             $passageirosData[] = [
-                'user_id' => $reserva->passageiro_id,
+                'passageiro_id' => $reserva->passageiro_id,
                 'reserva_id' => $reserva->id,
                 'nome' => $usuario ? $usuario->nome : null, // Se não encontrar, deixa como null
                 'status' => $reserva->status,
@@ -222,11 +221,9 @@ class CaravanaPassageiroController extends Controller
         return $telefone;
     }
 
-
-
     /**
      * @OA\Put(
-     *     path="/caravanas/{id}/reservas/{id_reserva}",
+     *     path="/caravana/{id}/reserva/{id_reserva}",
      *     summary="Atualizar status de uma reserva",
      *     description="Permite que o organizador da caravana atualize o status de uma reserva.",
      *     operationId="editarReserva",
@@ -249,7 +246,8 @@ class CaravanaPassageiroController extends Controller
      *     ),
      *
      *     @OA\RequestBody(
-     *         required=true,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
+     *         required=true,
+     *         @OA\JsonContent(
      *             required={"status"},
      *             @OA\Property(
      *                 property="status",
@@ -268,7 +266,7 @@ class CaravanaPassageiroController extends Controller
      *             @OA\Property(property="message", type="string", example="Status da reserva atualizado com sucesso!"),
      *             @OA\Property(
      *                 property="data",
-     *                 type="object",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e=5),
+     *                 type="object",
      *                 @OA\Property(property="status", type="string", example="Confirmado"),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-10T12:00:00Z"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-10T12:30:00Z")
@@ -311,129 +309,51 @@ class CaravanaPassageiroController extends Controller
         $caravana = Caravana::findOrFail($id);
         $user = Auth::user();
 
-        // Verifica se o usuário do tipo organizador
+        // Verifica se o usuário é organizador
         if ($user->organizador === false) {
             return response()->json([
                 'status' => false,
                 'message' => 'Apenas os organizadores podem editar uma reserva!'
-            ], 400);  // Status 400 para requisição mal formulada
+            ], 400);
         }
 
-        // Verifica se a reserva não está com status Cancelado
+        // Busca a reserva
         $reserva = CaravanaPassageiro::findOrFail($reserva_id);
+
+        // Verifica se a reserva já foi cancelada
         if ($reserva->status === 'Cancelado') {
             return response()->json([
                 'status' => false,
                 'message' => 'Reserva cancelada não pode ser alterada!'
-            ], 400);  // Status 400 para requisição mal formulada
-
-            // Verifica se o usuário é o organizador da caravana
-            if ($user->id !== $caravana->organizador_id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Acesso não autorizado!',
-                ], 403);
-            }
-
-            // Validação do status
-            $validated = $request->validate([
-                'status' => 'required|in:Pendente,Confirmado,Cancelado',
-            ]);
-
-            // Atualiza a reserva
-            $reserva = CaravanaPassageiro::findOrFail($reserva_id);
-            $reserva->update([
-                'status' => $validated['status'],
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Status da reserva atualizado com sucesso!',
-                'data' => $reserva,
-            ]);
+            ], 400);
         }
-    }
 
-    /**
-     * Visualizar os detalhes de uma reserva (passageiro ou organizador)
-     * @OA\Get(
-     *     path="/api/caravanas/{id}/reservas/{id_reserva}",
-     *     summary="Visualizar uma reserva especifica",
-     *     operationId="visualizarReserva",
-     *     tags={"Reservas"},
-     *     security={{"bearerAuth": {}}},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID da caravana",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="id_reserva",
-     *         in="path",
-     *         required=true,
-     *         description="ID da reserva",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Reserva encontrada com sucesso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Reserva encontrada com sucesso!"),
-     *             @OA\Property(
-     *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="caravana_id", type="integer", example=10),
-     *                 @OA\Property(property="passageiro_id", type="integer", example=5),
-     *                 @OA\Property(property="status", type="string", example="Confirmado"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-10T12:00:00Z"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-10T12:30:00Z")
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Acesso não autorizado",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Acesso não autorizado!")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Reserva não encontrada",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Reserva não encontrada!")
-     *         )
-     *     )
-     * )
-     */
-    public function visualizarReserva($id, $reserva_id)
-    {
-        $caravana = Caravana::findOrFail($id);
-        $user = Auth::user();
-
-        // Verifica se o usuário é o passageiro da reserva ou o organizador da caravana
-        $reserva = CaravanaPassageiro::findOrFail($reserva_id);
-        $isPassageiro = $reserva->passageiro_id === $user->id;
-        $isOrganizador = $caravana->organizador_id === $user->id;
-
-        // Verifica se o usuário não é o passageiro nem o organizador
-        if (!$isPassageiro && !$isOrganizador) {
+        // Verifica se o usuário é o organizador da caravana
+        if ($user->id !== $caravana->organizador_id) {
             return response()->json([
                 'status' => false,
                 'message' => 'Acesso não autorizado!',
             ], 403);
         }
 
+        // Validação do novo status
+        $validated = $request->validate([
+            'status' => 'required|in:Pendente,Confirmado,Cancelado',
+        ]);
+
+        // Atualiza o status da reserva
+        $reserva->update([
+            'status' => $validated['status'],
+        ]);
+
         return response()->json([
             'status' => true,
-            'message' => 'Reserva encontrada com sucesso!',
-            'data' => $reserva,
+            'message' => 'Status da reserva atualizado com sucesso!',
+            'data' => [
+                'status' => $reserva->status,
+                'created_at' => $reserva->created_at,
+                'updated_at' => $reserva->updated_at,
+            ],
         ]);
     }
 

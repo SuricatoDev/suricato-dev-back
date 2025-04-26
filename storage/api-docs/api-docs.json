@@ -1043,7 +1043,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "Dados da caravana para atualização (formato JSON)",
+                    "description": "Dados da caravana para atualização (Como item de dados no form-data)",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -1128,28 +1128,14 @@
                                         "format": "float",
                                         "example": 100.5
                                     },
-                                    "evento_id": {
+                                    "organizador_id": {
                                         "type": "integer",
                                         "example": 1
-                                    },
-                                    "apagar_imagens": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": 1
-                                        }
-                                    },
-                                    "ordem_imagens": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": 1
-                                        }
                                     },
                                     "imagens": {
                                         "type": "array",
                                         "items": {
-                                            "description": "Imagens para adicionar à caravana",
+                                            "description": "Pode enviar um array ou files",
                                             "type": "string",
                                             "format": "binary"
                                         }
@@ -1180,6 +1166,7 @@
                                             "example": {
                                                 "titulo": "Caravana para o Show X",
                                                 "descricao": "Descrição da caravana...",
+                                                "categoria": "festa",
                                                 "data_partida": "2025-05-01",
                                                 "data_retorno": "2025-05-02",
                                                 "endereco_origem": "Rua A, 123",
@@ -1196,7 +1183,7 @@
                                                 "estado_destino": "SP",
                                                 "numero_vagas": 40,
                                                 "valor": 100.5,
-                                                "evento_id": 1
+                                                "organizador_id": 1
                                             }
                                         },
                                         "imagens": {

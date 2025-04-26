@@ -405,7 +405,7 @@ class CaravanaController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Dados da caravana para atualização (formato JSON)",
+     *         description="Dados da caravana para atualização (Como item de dados no form-data)",
      *         @OA\JsonContent(
      *             @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
      *             @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
@@ -426,11 +426,9 @@ class CaravanaController extends Controller
      *             @OA\Property(property="estado_destino", type="string", example="SP"),
      *             @OA\Property(property="numero_vagas", type="integer", example=40),
      *             @OA\Property(property="valor", type="number", format="float", example=100.50),
-     *             @OA\Property(property="evento_id", type="integer", example=1),
-     *             @OA\Property(property="apagar_imagens", type="array", @OA\Items(type="integer", example=1)),
-     *             @OA\Property(property="ordem_imagens", type="array", @OA\Items(type="integer", example=1)),
+     *             @OA\Property(property="organizador_id", type="integer", example=1),
      *             @OA\Property(property="imagens", type="array",
-     *                 @OA\Items(type="string", format="binary", description="Imagens para adicionar à caravana")
+     *                 @OA\Items(type="string", format="binary", description="Pode enviar um array ou files"),
      *             )
      *         )
      *     ),
@@ -443,6 +441,7 @@ class CaravanaController extends Controller
      *             @OA\Property(property="data", type="object", example={
      *                 "titulo": "Caravana para o Show X",
      *                 "descricao": "Descrição da caravana...",
+     *                 "categoria": "festa",
      *                 "data_partida": "2025-05-01",
      *                 "data_retorno": "2025-05-02",
      *                 "endereco_origem": "Rua A, 123",
@@ -459,7 +458,7 @@ class CaravanaController extends Controller
      *                 "estado_destino": "SP",
      *                 "numero_vagas": 40,
      *                 "valor": 100.50,
-     *                 "evento_id": 1
+     *                 "organizador_id": 1
      *             }),
      *             @OA\Property(property="imagens", type="array", @OA\Items(type="string", example="url_da_imagem"))
      *         )
@@ -512,7 +511,26 @@ class CaravanaController extends Controller
         }
 
         try {
-            $validated = $request->validate([
+
+            $dadosJson = $request->input('dados');
+
+            if(!$dadosJson) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Os dados da caravana são inválidos ou não foram enviados corretamente.',
+                ], 400);
+            }
+
+            $dados = json_decode($dadosJson, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Erro ao decodificar os dados da caravana.',
+                ], 400);
+            }
+
+            $validated = validator($dados, [
                 'titulo' => 'sometimes|required|string',
                 'descricao' => 'sometimes|required|string',
                 'categoria' => 'sometimes|required|string',
@@ -532,7 +550,8 @@ class CaravanaController extends Controller
                 'estado_destino' => 'sometimes|required|string',
                 'numero_vagas' => 'sometimes|required|integer',
                 'valor' => 'sometimes|required|numeric',
-            ]);
+                'organizador_id' => 'sometimes|required|integer',
+            ])->validate();
 
             $caravana = Caravana::findOrFail($id);
 

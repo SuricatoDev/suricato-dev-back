@@ -777,7 +777,6 @@ class UserController extends Controller
     }
 
 
-    // Método para excluir um usuário
     /**
      * @OA\Delete(
      *     path="/api/users/{id}",
@@ -833,17 +832,35 @@ class UserController extends Controller
             ], 403);
         }
 
-        // Inicia uma transação para garantir que todas as exclusões aconteçam com sucesso
+        // Inicia uma transação para garantir Atomicidade
         DB::beginTransaction();
 
         try {
             // Deleta as informações específicas do passageiro ou organizador
             if ($user->tipo == 'passageiro') {
-                // Exclui o registro na tabela passageiros
+                // Exclui o registro na tabela passageiros, pois há uma chave estrangeira
                 $user->passageiro()->delete();
             } elseif ($user->tipo == 'organizador') {
-                // Exclui o registro na tabela organizadores
+                // Exclui o registro na tabela organizadores, pois há uma chave estrangeira
                 $user->organizador()->delete();
+            }
+
+            // Verifica se o usuário possui alguma imagem armazenada no S3
+            if ($user->foto_perfil) {
+                // Remove a pasta do usuário no S3, incluindo a imagem de perfil.
+                Storage::disk('s3')->deleteDirectory("usuarios/{$user->id}");
+            }
+
+            // Verifica se o usuário possui alguma reserva em caravana_passageiro
+            $reservas = DB::table('caravana_passageiro')
+                ->where('passageiro_id', $user->id)
+                ->get();
+
+            if ($reservas->isNotEmpty()) {
+                // Deleta as reservas associadas ao passageiro, pois há uma chave estrangeira na tabela caravana_passageiro
+                DB::table('caravana_passageiro')
+                    ->where('passageiro_id', $user->id)
+                    ->delete();
             }
 
             // Deleta o usuário da tabela users

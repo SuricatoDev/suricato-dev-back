@@ -409,6 +409,7 @@ class CaravanaController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
      *             @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
+     *             @OA\Property(property="categoria", type="string", example="festa"),
      *             @OA\Property(property="data_partida", type="string", format="date", example="2025-05-01"),
      *             @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-02"),
      *             @OA\Property(property="endereco_origem", type="string", example="Rua A, 123"),
@@ -427,7 +428,10 @@ class CaravanaController extends Controller
      *             @OA\Property(property="valor", type="number", format="float", example=100.50),
      *             @OA\Property(property="evento_id", type="integer", example=1),
      *             @OA\Property(property="apagar_imagens", type="array", @OA\Items(type="integer", example=1)),
-     *             @OA\Property(property="ordem_imagens", type="array", @OA\Items(type="integer", example=1))
+     *             @OA\Property(property="ordem_imagens", type="array", @OA\Items(type="integer", example=1)),
+     *             @OA\Property(property="imagens", type="array",
+     *                 @OA\Items(type="string", format="binary", description="Imagens para adicionar à caravana")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -495,7 +499,6 @@ class CaravanaController extends Controller
      *     )
      * )
      */
-
 
     public function editarCaravana(Request $request, $id)
     {
@@ -587,17 +590,16 @@ class CaravanaController extends Controller
                     $img->delete();
                 });
 
-                // Recarrega e ordena as imagens
-                $caravana->load(['imagens' => function ($query) {
-                    $query->orderBy('ordem');
-                }]);
+            // Recarrega e ordena as imagens
+            $caravana->load(['imagens' => function ($query) {
+                $query->orderBy('ordem');
+            }]);
 
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Caravana atualizada com sucesso!',
-                    'data' => $caravana,
-                ], 200);
-                
+            return response()->json([
+                'status' => true,
+                'message' => 'Caravana atualizada com sucesso!',
+                'data' => $caravana,
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

@@ -1057,6 +1057,10 @@
                                         "type": "string",
                                         "example": "Descrição da caravana..."
                                     },
+                                    "categoria": {
+                                        "type": "string",
+                                        "example": "festa"
+                                    },
                                     "data_partida": {
                                         "type": "string",
                                         "format": "date",
@@ -1140,6 +1144,14 @@
                                         "items": {
                                             "type": "integer",
                                             "example": 1
+                                        }
+                                    },
+                                    "imagens": {
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Imagens para adicionar à caravana",
+                                            "type": "string",
+                                            "format": "binary"
                                         }
                                     }
                                 },
@@ -3137,7 +3149,7 @@
                 "tags": [
                     "Suporte"
                 ],
-                "summary": "Registrar um novo suporte",
+                "summary": "Registrar um novo suporte para o sistema",
                 "description": "Esse endpoint permite que um usuário registre um suporte.",
                 "operationId": "registrarSuporte",
                 "requestBody": {
@@ -3146,10 +3158,15 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "titulo",
                                     "descricao",
                                     "status"
                                 ],
                                 "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "example": "Problema com a caravana"
+                                    },
                                     "descricao": {
                                         "type": "string",
                                         "example": "Problema ao acessar a caravana"

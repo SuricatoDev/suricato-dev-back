@@ -2348,7 +2348,7 @@
                 ]
             }
         },
-        "/api/caravanas/{id}/reservas/{id_reserva}": {
+        "/api/caravana/{id}/reserva/{id_reserva}": {
             "delete": {
                 "tags": [
                     "Reservas"

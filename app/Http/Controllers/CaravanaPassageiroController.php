@@ -360,7 +360,7 @@ class CaravanaPassageiroController extends Controller
     /**
      * Cancelar a reserva de uma caravana. O passageiro poderá cancelar sua reserva.
      * @OA\Delete(
-     *     path="/api/caravanas/{id}/reservas/{id_reserva}",
+     *     path="/api/caravana/{id}/reserva/{id_reserva}",
      *     summary="Cancelar uma reserva",
      *     operationId="cancelarReserva",
      *     tags={"Reservas"},

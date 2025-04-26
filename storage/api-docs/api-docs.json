@@ -3188,7 +3188,7 @@
         "/api/forgot-password-code": {
             "post": {
                 "tags": [
-                    "Autenticação"
+                    "Recuperação de Senha"
                 ],
                 "summary": "Solicita código para redefinição de senha",
                 "operationId": "efbb0f49ac0b4b9fb5443a87c47d938f",
@@ -3259,7 +3259,7 @@
         "/api/reset-password-validate-code": {
             "post": {
                 "tags": [
-                    "Autenticação"
+                    "Recuperação de Senha"
                 ],
                 "summary": "Valida o código de recuperação de senha enviado ao e-mail",
                 "operationId": "a1c8260b886c3fb02caab9b577f0da81",
@@ -3335,7 +3335,7 @@
         "/api/reset-password-code": {
             "post": {
                 "tags": [
-                    "Autenticação"
+                    "Recuperação de Senha"
                 ],
                 "summary": "Reseta a senha do usuário após validação do código",
                 "operationId": "2cb22e3354a93c9e47361e9d6b5063bb",
@@ -4700,6 +4700,10 @@
         {
             "name": "Favoritos",
             "description": "Favoritos"
+        },
+        {
+            "name": "Recuperação de Senha",
+            "description": "Recuperação de Senha"
         },
         {
             "name": "Suporte",

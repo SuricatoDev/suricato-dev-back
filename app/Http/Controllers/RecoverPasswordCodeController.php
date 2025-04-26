@@ -38,7 +38,7 @@ class RecoverPasswordCodeController extends Controller
      * @OA\Post(
      *     path="/api/forgot-password-code",
      *     summary="Solicita código para redefinição de senha",
-     *     tags={"Autenticação"},
+     *     tags={"Recuperação de Senha"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -134,7 +134,7 @@ class RecoverPasswordCodeController extends Controller
      * @OA\Post(
      *     path="/api/reset-password-validate-code",
      *     summary="Valida o código de recuperação de senha enviado ao e-mail",
-     *     tags={"Autenticação"},
+     *     tags={"Recuperação de Senha"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -220,7 +220,7 @@ class RecoverPasswordCodeController extends Controller
      * @OA\Post(
      *     path="/api/reset-password-code",
      *     summary="Reseta a senha do usuário após validação do código",
-     *     tags={"Autenticação"},
+     *     tags={"Recuperação de Senha"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

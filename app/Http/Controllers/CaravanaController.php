@@ -535,6 +535,8 @@ class CaravanaController extends Controller
                 'estado_destino' => 'sometimes|required|string',
                 'numero_vagas' => 'sometimes|required|integer',
                 'valor' => 'sometimes|required|numeric',
+                'apagar_imagens' => 'sometimes|array',
+                'ordem_imagens' => 'sometimes|array',
             ])->validate();
 
             $caravana = Caravana::findOrFail($id);
@@ -550,7 +552,7 @@ class CaravanaController extends Controller
             $caravana->update($validated);
 
             // 1. Apagar imagens específicas se informado
-            $apagarImagens = $request->input('apagar_imagens');
+            $apagarImagens = $validated['apagar_imagens'] ?? null;
             if (is_array($apagarImagens)) {
                 foreach ($apagarImagens as $imagemId) {
                     $imagem = CaravanaImagem::where('id', $imagemId)
@@ -564,15 +566,17 @@ class CaravanaController extends Controller
                 }
             }
 
-            // 2. Atualizar ordem das imagens se informado
-            $ordens = $request->input('ordem_imagens');
+            // 2. Atualizar ordem das imagens *após* excluir as que devem ser apagadas
+            $ordens = $validated['ordem_imagens'] ?? null;
             if (is_array($ordens)) {
                 foreach ($ordens as $index => $imagemId) {
+                    // Verifica se ainda existe antes de tentar atualizar
                     CaravanaImagem::where('id', $imagemId)
                         ->where('caravana_id', $caravana->id)
                         ->update(['ordem' => $index + 1]);
                 }
             }
+
 
             // 3. Adicionar novas imagens se houver
             $imageUrls = [];

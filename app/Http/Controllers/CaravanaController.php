@@ -8,6 +8,7 @@ use App\Models\Favorito;
 use App\Models\Organizador;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -546,56 +547,49 @@ class CaravanaController extends Controller
                 ], 403);
             }
 
-            // Atualizar os dados da caravana
             $caravana->update($validated);
 
-            // 1. Apagar imagens específicas se informado
-            $apagarImagens = $request->input('apagar_imagens');;
-            if (is_array($apagarImagens)) {
-                foreach ($apagarImagens as $imagemId) {
-                    $imagem = CaravanaImagem::where('id', $imagemId)
-                        ->where('caravana_id', $caravana->id)
-                        ->first();
-
-                    if ($imagem) {
-                        Storage::disk('s3')->delete(str_replace(Storage::disk('s3')->url(''), '', $imagem->path));
-                        $imagem->delete();
-                    }
-                }
-            }
-
-            // 2. Atualizar ordem das imagens *após* excluir as que devem ser apagadas
-            $ordens = $request->input('ordem_imagens');
-            if (is_array($ordens)) {
-                foreach ($ordens as $index => $imagemId) {
-                    // Verifica se ainda existe antes de tentar atualizar
-                    CaravanaImagem::where('id', $imagemId)
-                        ->where('caravana_id', $caravana->id)
-                        ->update(['ordem' => $index + 1]);
-                }
-            }
-
-
-            // 3. Adicionar novas imagens se houver
+            // Inicia o gerenciamento das imagens enviadas como array
+            $entries = $request->all()['imagens'] ?? [];
             $imageUrls = [];
-            if ($request->hasFile('imagens')) {
-                $folderPath = "caravanas/{$caravana->id}";
-                $ordemAtual = CaravanaImagem::where('caravana_id', $caravana->id)->max('ordem') ?? 0;
+            $ordem = 0;
 
-                foreach ($request->file('imagens') as $imagem) {
-                    $fileName = $imagem->getClientOriginalName();
-                    $path = $imagem->storeAs($folderPath, $fileName, 's3');
+            $idsMantidos = [];
+
+            foreach ($entries as $entry) {
+                if (is_string($entry) && filter_var($entry, FILTER_VALIDATE_URL)) {
+                    // imagem antiga
+                    $img = CaravanaImagem::where('path', $entry)->where('caravana_id', $caravana->id)->first();
+                    if ($img) {
+                        $img->update(['ordem' => ++$ordem]);
+                        $imageUrls[] = $img->path;
+                        $idsMantidos[] = $img->id;
+                    }
+                } elseif ($entry instanceof UploadedFile) {
+                    // nova imagem
+                    $fileName = $entry->getClientOriginalName();
+                    $folderPath = "caravanas/{$caravana->id}";
+                    $path = $entry->storeAs($folderPath, $fileName, 's3');
                     $url = Storage::disk('s3')->url($path);
 
-                    CaravanaImagem::create([
-                        'path' => $url,
+                    $nova = CaravanaImagem::create([
                         'caravana_id' => $caravana->id,
-                        'ordem' => ++$ordemAtual,
+                        'path' => $url,
+                        'ordem' => ++$ordem,
                     ]);
-
                     $imageUrls[] = $url;
+                    $idsMantidos[] = $nova->id;
                 }
             }
+
+            // Deletar imagens que foram removidas no front
+            CaravanaImagem::where('caravana_id', $caravana->id)
+                ->whereNotIn('id', $idsMantidos)
+                ->get()
+                ->each(function ($img) {
+                    Storage::disk('s3')->delete(str_replace(Storage::disk('s3')->url(''), '', $img->path));
+                    $img->delete();
+                });
 
             return response()->json([
                 'status' => true,
@@ -611,6 +605,7 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * @OA\Delete(

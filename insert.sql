@@ -81,10 +81,10 @@ AFTER numero_vagas;
 /* Replicar no server */
 
 ALTER TABLE users
-ADD COLUMN verificado BOOLEAN NULL AFTER email;
+ADD COLUMN email_verified_at TIMESTAMP NULL AFTER email;
 
 ALTER TABLE users
-ADD COLUMN email_verified_at TIMESTAMP NULL AFTER email;
+ADD COLUMN verificado BOOLEAN NULL AFTER email_verified_at;
 
 ALTER TABLE users
 ADD COLUMN email_verification_token VARCHAR(255) NULL AFTER verificado;

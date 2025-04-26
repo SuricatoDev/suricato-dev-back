@@ -518,6 +518,7 @@ class CaravanaController extends Controller
             $validated = Validator::make($dados, [
                 'titulo' => 'sometimes|required|string',
                 'descricao' => 'sometimes|required|string',
+                'categoria' => 'sometimes|required|string',
                 'data_partida' => 'sometimes|required|date',
                 'data_retorno' => 'sometimes|required|date',
                 'endereco_origem' => 'sometimes|required|string',
@@ -534,7 +535,6 @@ class CaravanaController extends Controller
                 'estado_destino' => 'sometimes|required|string',
                 'numero_vagas' => 'sometimes|required|integer',
                 'valor' => 'sometimes|required|numeric',
-                'evento_id' => 'sometimes|required|integer',
             ])->validate();
 
             $caravana = Caravana::findOrFail($id);
@@ -577,7 +577,7 @@ class CaravanaController extends Controller
             // 3. Adicionar novas imagens se houver
             $imageUrls = [];
             if ($request->hasFile('imagens')) {
-                $folderPath = "caravanas/{$caravana->id}/";
+                $folderPath = "caravanas/{$caravana->id}";
                 $ordemAtual = CaravanaImagem::where('caravana_id', $caravana->id)->max('ordem') ?? 0;
 
                 foreach ($request->file('imagens') as $imagem) {

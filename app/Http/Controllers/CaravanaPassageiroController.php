@@ -23,10 +23,10 @@ class CaravanaPassageiroController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/caravanas/{id}/reservas",
+     *     path="/caravana/{id}/listar-reservas",
      *     summary="Visualizar todas as reservas de uma caravana, somente para o organizador",
      *     description="Este método permite que o organizador visualize todas as reservas de sua caravana.",
-     *     operationId="exibirMinhasReservas",
+     *     operationId="listarReservas",
      *     tags={"Reservas"},
      *     @OA\Parameter(
      *         name="id",
@@ -62,7 +62,7 @@ class CaravanaPassageiroController extends Controller
      * )
      */
 
-    public function exibirMinhasReservas($id)
+    public function listarReservas($id)
     {
         $user = Auth::user();  // Obtém o usuário autenticado
         $caravana = Caravana::findOrFail($id);  // Encontra a caravana pelo ID
@@ -75,14 +75,28 @@ class CaravanaPassageiroController extends Controller
             ], 403); // Acesso negado
         }
 
+        // Array para receber apenas os dados que o Paulinho pediu
+        $passageirosData = [];
+
         // Obtém todas as reservas da caravana
         $reservas = CaravanaPassageiro::where('caravana_id', $caravana->id)->get();
+
+        // Percorre todas as reservas para obter os dados do passageiro
+        foreach ($reservas as $reserva) {
+            $usuario = User::find($reserva->passageiro_id); // Busca o passageiro pelo ID
+
+            $passageirosData[] = [
+                'user_id' => $reserva->passageiro_id,
+                'reserva_id' => $reserva->id,
+                'nome' => $usuario ? $usuario->nome : null, // Se não encontrar, deixa como null
+                'status' => $reserva->status,
+            ];
+        }
 
         // Retorna as reservas em formato JSON
         return response()->json([
             'status' => true,
-            'message' => 'Reservas da caravana encontradas com sucesso!',
-            'data' => $reservas,
+            'data' => $passageirosData
         ]);
     }
 
@@ -235,8 +249,7 @@ class CaravanaPassageiroController extends Controller
      *     ),
      *
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
+     *         required=true,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
      *             required={"status"},
      *             @OA\Property(
      *                 property="status",
@@ -255,10 +268,7 @@ class CaravanaPassageiroController extends Controller
      *             @OA\Property(property="message", type="string", example="Status da reserva atualizado com sucesso!"),
      *             @OA\Property(
      *                 property="data",
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="caravana_id", type="integer", example=10),
-     *                 @OA\Property(property="passageiro_id", type="integer", example=5),
+     *                 type="object",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e=5),
      *                 @OA\Property(property="status", type="string", example="Confirmado"),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-03-10T12:00:00Z"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2025-03-10T12:30:00Z")

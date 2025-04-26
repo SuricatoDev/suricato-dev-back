@@ -144,36 +144,6 @@ class AuthController extends Controller
 
 
     /**
-     * @OA\Post(
-     *     path="/api/logout",
-     *     summary="Desloga o usuário autenticado",
-     *     tags={"Autenticação"},
-
-     *     @OA\Response(
-     *         response=200,
-     *         description="Logout realizado com sucesso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Logout realizado com sucesso!"),
-     *             @OA\Property(property="status", type="boolean", example=true)
-     *         )
-     *     ),
-     * )
-     */
-
-
-    public function logout(Request $request)
-    {
-        $request->user()->tokens()->delete();
-        return response()->json(
-            [
-                'message' => 'Logout realizado com sucesso!',
-                'status' => true
-            ],
-            200
-        );
-    }
-
-    /**
      * @OA\Get(
      *     path="/api/confirmar-email/{token}",
      *     summary="Confirma o e-mail de um usuário a partir do token de verificação",

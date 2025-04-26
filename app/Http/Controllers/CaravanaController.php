@@ -549,14 +549,16 @@ class CaravanaController extends Controller
 
             foreach ($entries as $entry) {
                 if (is_numeric($entry)) {
+                    // Força a conversão explicita para int
+                    $idEntry = (int) $entry;
                     // ID de imagem já existente
-                    $img = CaravanaImagem::where('id', $entry)
+                    $img = CaravanaImagem::where('id', $idEntry)
                         ->where('caravana_id', $caravana->id)
                         ->first();
 
                     if ($img) {
                         $img->update(['ordem' => ++$order]);
-                        $idsMantidos[] = $img->id;
+                        $idsMantidos[] = $idEntry;
                     }
                 } elseif ($entry instanceof UploadedFile) {
                     // Novo arquivo
@@ -573,6 +575,9 @@ class CaravanaController extends Controller
                 }
             }
 
+            // Força todos os ids para inteiro
+            $idsMantidos = array_map('intval', $idsMantidos);
+
             // Remoção de imagens excluídas
             CaravanaImagem::where('caravana_id', $caravana->id)
                 ->whereNotIn('id', $idsMantidos)
@@ -582,11 +587,17 @@ class CaravanaController extends Controller
                     $img->delete();
                 });
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Caravana atualizada com sucesso!',
-                'data' => $caravana,
-            ], 200);
+                // Recarrega e ordena as imagens
+                $caravana->load(['imagens' => function ($query) {
+                    $query->orderBy('ordem');
+                }]);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Caravana atualizada com sucesso!',
+                    'data' => $caravana,
+                ], 200);
+                
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -595,7 +606,6 @@ class CaravanaController extends Controller
             ], 500);
         }
     }
-
 
 
     /**

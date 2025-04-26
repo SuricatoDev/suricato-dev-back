@@ -549,7 +549,7 @@ class CaravanaController extends Controller
             $idsMantidos = [];
 
             foreach ($entries as $entry) {
-                if (is_string($entry) && filter_var($entry, FILTER_VALIDATE_URL)) {
+                if (is_string($entry)) {
                     // imagem antiga
                     $img = CaravanaImagem::where('path', $entry)->where('caravana_id', $caravana->id)->first();
                     if ($img) {

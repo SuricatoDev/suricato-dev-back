@@ -77,14 +77,12 @@ class AvaliacaoController extends Controller
 
             if ($avaliador->passageiro) {
                 $avaliacao = Avaliacao::create([
-                    'caravana_id' => $request->caravana_id,
                     'organizador_id' => $request->organizador_id,
                     'passageiro_id' => $avaliador->id,
                     'nota' => $request->nota,
                 ]);
             } else {
                 $avaliacao = Avaliacao::create([
-                    'caravana_id' => $request->caravana_id,
                     'organizador_id' => $avaliador->id,
                     'passageiro_id' => $request->passageiro_id,
                     'nota' => $request->nota,

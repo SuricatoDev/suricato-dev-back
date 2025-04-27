@@ -196,9 +196,6 @@ class CaravanaPassageiroController extends Controller
             new ReservaRequestMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador, $telefonePassageiro)
         );
 
-        // Reduz o número de vagas da caravana
-        $caravana->decrement('vagas_disponiveis', 1);  // Decrementa 1 vaga
-
         return response()->json([
             'status' => true,
             'message' => 'Reserva realizada com sucesso!',
@@ -341,6 +338,9 @@ class CaravanaPassageiroController extends Controller
             'status' => 'required|in:Pendente,Confirmado,Cancelado',
         ]);
 
+        // Reduz o número de vagas da caravana
+        $caravana->decrement('vagas_disponiveis', 1);  // Decrementa 1 vaga
+
         // Atualiza o status da reserva
         $reserva->update([
             'status' => $validated['status'],
@@ -435,7 +435,7 @@ class CaravanaPassageiroController extends Controller
         ]);
 
         // Reverte a quantidade de vagas na caravana
-        $caravana->increment('vagas_disponiveis');
+        $caravana->increment('vagas_disponiveis', 1); // Incrementa 1 vaga'
 
         return response()->json([
             'status' => true,

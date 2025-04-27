@@ -175,7 +175,7 @@ class AvaliacaoController extends Controller
      * )
      */
 
-    public function listarPassageiros($caravana_id)
+    public function listarPassageiros(int $caravana_id)
     {
         $user = Auth::user();
         $caravana = Caravana::findOrFail($caravana_id);
@@ -183,60 +183,49 @@ class AvaliacaoController extends Controller
         // Verifica se o usuário autenticado é o organizador da caravana
         if ($caravana->organizador_id !== $user->id) {
             return response()->json([
-                'status' => false,
+                'status'  => false,
                 'message' => 'Acesso não autorizado! Somente o organizador pode visualizar os passageiros.',
-            ], 403); // Acesso negado
+            ], 403);
         }
 
-        // Obtém todas as reservas confirmadas da caravana
-        $reservas = CaravanaPassageiro::where('caravana_id', $caravana->id)
+        // Busca todas as reservas confirmadas desta caravana
+        $reservas = CaravanaPassageiro::where('caravana_id', $caravana_id)
             ->where('status', 'Confirmado')
             ->get();
 
-        // Array para armazenar os dados dos passageiros
         $passageirosData = [];
 
         foreach ($reservas as $reserva) {
-            // Busca o nome do passageiro
-            $passageiro = User::find($reserva->passageiro_id);
+            // Relação inversa: $reserva->passageiro retorna o User
             $usuario = $reserva->passageiro;
 
-            $novaAvaliacao = $usuario->avaliacao()
+            // Tenta buscar a avaliação exata deste passageiro nesta caravana
+            $avaliacao = $usuario->avaliacao()
                 ->where('passageiro', true)
-                ->where('caravana_id', !$caravana_id)  // Verifica se o passageiro foi avaliado
+                ->where('caravana_id', $caravana_id)
                 ->first();
 
-            if ($novaAvaliacao) {
-                $passageirosData[] = [
-                    'nota' => $novaAvaliacao->nota,
-                    'nome' => $passageiro->nome,
-                    'passageiro_id' => $reserva->passageiro_id,
-                    'caravana_id' => $reserva->caravana_id,
-                ];
-                // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
-                $media = $usuario->avaliacao()
-                    ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
-                    ->average('nota');  // Calcula a média diretamente
-                continue;
+            if ($avaliacao) {
+                $nota = $avaliacao->nota;
+            } else {
+                // Se não houver avaliação direta, calcular média (pode ser null)
+                $nota = $usuario->avaliacao()
+                    ->where('passageiro', true)
+                    ->where('caravana_id', $caravana_id)
+                    ->average('nota');
             }
 
-            // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
-            $media = $usuario->avaliacao()
-                ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
-                ->average('nota');  // Calcula a média diretamente
-
-            // Se não houver avaliação, define como null
             $passageirosData[] = [
-                'nota' => $media ?: null,  // Se média for 0 ou null, retornamos null
-                'nome' => $passageiro->nome,
+                'nota'          => $nota !== null ? $nota : null,
+                'nome'          => $usuario->nome,
                 'passageiro_id' => $reserva->passageiro_id,
-                'caravana_id' => $reserva->caravana_id,
+                'caravana_id'   => $caravana_id,
             ];
         }
 
         return response()->json([
             'status' => true,
-            'data' => $passageirosData,
+            'data'   => $passageirosData,
         ]);
     }
 }

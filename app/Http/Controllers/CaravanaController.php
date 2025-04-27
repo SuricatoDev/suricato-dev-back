@@ -1000,18 +1000,34 @@ class CaravanaController extends Controller
 
     public function historicoCaravanas($passageiro_id)
     {
-        // Obtém todas as caravanas que o usuário já participou
-        $caravanas = CaravanaPassageiro::where('passageiro_id', $passageiro_id)->get();
+        $usuario = auth()->user();
 
-        // Obtém os detalhes das caravanas para enviar no response
-        $caravanas = Caravana::whereIn('id', $caravanas->pluck('caravana_id'))->get();
+        if(!$usuario != $passageiro_id){
+            return response()->json([
+                'status' => false,
+                'message' => 'Não autorizado, é necessário estar logado para obter o histórico de caravanas.',
+            ], 403); // HTTP 403 Forbidden
+        }
 
-        if ($caravanas->isEmpty()) {
+        // Recupera as caravanas que o passageiro participou
+        $caravanasPassageiro = CaravanaPassageiro::with('caravana')
+            ->where('passageiro_id', $passageiro_id)
+            ->get();
+
+        if ($caravanasPassageiro->isEmpty()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Nenhuma caravana encontrada.'
             ], 404);
         }
+
+        // Array de resposta
+        $caravanas = $caravanasPassageiro->map(function ($item) {
+            return [
+                'caravana' => $item->caravana,
+                'status' => $item->status,
+            ];
+        });
 
         return response()->json([
             'status' => true,

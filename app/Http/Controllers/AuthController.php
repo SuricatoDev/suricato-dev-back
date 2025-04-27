@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Auth;
  * @OA\Info(
  *      version="1.3.0",
  *      title="Documentação - API SuricatoDev (Projeto Excursionistas)",
- *      description="Esta API fornece endpoints para a gestão de caravanas, passageiros e organizadores, realizar reservas, denúncias e avaliações.
+ *      description="Esta API fornece endpoints para a gestão de caravanas, passageiros e organizadores, realizar reservas e avaliações.
  *      🚀 **Principais funcionalidades:**
  *      - Gerenciar caravanas
  *      - Gerenciar Passageiros
  *      - Gerenciar organizadores
  *      - Realização de reservas
- *      - Denúncias e avaliações de caravanas, passageiros e organizadores
+ *      - Avaliações de passageiros e organizadores
  *      🔒 **Segurança:**
  *      - Autenticação segura via token Bearer
  *      - Utiliza Laravel Sanctum para autenticação

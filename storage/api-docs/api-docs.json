@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Documentação - API SuricatoDev (Projeto Excursionistas)",
-        "description": "Esta API fornece endpoints para a gestão de caravanas, passageiros e organizadores, realizar reservas, denúncias e avaliações.\n *      🚀 **Principais funcionalidades:**\n *      - Gerenciar caravanas\n *      - Gerenciar Passageiros\n *      - Gerenciar organizadores\n *      - Realização de reservas\n *      - Denúncias e avaliações de caravanas, passageiros e organizadores\n *      🔒 **Segurança:**\n *      - Autenticação segura via token Bearer\n *      - Utiliza Laravel Sanctum para autenticação\n *      - Requer token Bearer para acesso a endpoints protegidos",
+        "description": "Esta API fornece endpoints para a gestão de caravanas, passageiros e organizadores, realizar reservas e avaliações.\n *      🚀 **Principais funcionalidades:**\n *      - Gerenciar caravanas\n *      - Gerenciar Passageiros\n *      - Gerenciar organizadores\n *      - Realização de reservas\n *      - Avaliações de passageiros e organizadores\n *      🔒 **Segurança:**\n *      - Autenticação segura via token Bearer\n *      - Utiliza Laravel Sanctum para autenticação\n *      - Requer token Bearer para acesso a endpoints protegidos",
         "contact": {
             "name": "Suporte Suricato Dev",
             "email": "filipe.lamego@fatec.sp.gov.br"
@@ -334,17 +334,17 @@
                 }
             }
         },
-        "/listar-avaliacoes/caravana/{id}": {
+        "/caravana/{caravana_id}/listar-passageiros": {
             "get": {
                 "tags": [
                     "Avaliação"
                 ],
-                "summary": "Listar avaliações de uma caravana",
-                "description": "Esse endpoint permite listar as avaliações feitas para uma caravana específica.",
-                "operationId": "listarAvaliacoesCaravana",
+                "summary": "Listar passageiros de uma caravana",
+                "description": "Retorna todos os passageiros confirmados de uma caravana, incluindo as avaliações médias dos passageiros.",
+                "operationId": "listarPassageiros",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "caravana_id",
                         "in": "path",
                         "description": "ID da caravana",
                         "required": true,
@@ -355,7 +355,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Avaliações da caravana obtidas com sucesso",
+                        "description": "Passageiros listados com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -364,29 +364,26 @@
                                             "type": "boolean",
                                             "example": true
                                         },
-                                        "avaliacoes": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "properties": {
                                                     "nota": {
-                                                        "type": "integer",
-                                                        "example": 5
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
                                                     },
-                                                    "comentario": {
+                                                    "nome": {
                                                         "type": "string",
-                                                        "example": "Ótima viagem!"
-                                                    },
-                                                    "caravana_id": {
-                                                        "type": "integer",
-                                                        "example": 123
-                                                    },
-                                                    "organizador_id": {
-                                                        "type": "integer",
-                                                        "example": 456
+                                                        "example": "João da Silva"
                                                     },
                                                     "passageiro_id": {
                                                         "type": "integer",
-                                                        "example": 789
+                                                        "example": 123
+                                                    },
+                                                    "caravana_id": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     }
                                                 },
                                                 "type": "object"
@@ -398,8 +395,8 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Erro ao listar avaliações da caravana",
+                    "403": {
+                        "description": "Acesso não autorizado. Somente o organizador pode visualizar os passageiros.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -410,377 +407,20 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Erro ao obter avaliações da caravana."
+                                            "example": "Acesso não autorizado! Somente o organizador pode visualizar os passageiros."
                                         }
                                     },
                                     "type": "object"
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/listar-avaliacoes/organizador/{id}": {
-            "get": {
-                "tags": [
-                    "Avaliação"
-                ],
-                "summary": "Listar avaliações de um organizador",
-                "description": "Esse endpoint permite listar as avaliações feitas para um organizador específico.",
-                "operationId": "listarAvaliacoesOrganizador",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do organizador",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Avaliações do organizador obtidas com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "avaliacoes": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "nota": {
-                                                        "type": "integer",
-                                                        "example": 4
-                                                    },
-                                                    "comentario": {
-                                                        "type": "string",
-                                                        "example": "Muito atencioso!"
-                                                    },
-                                                    "caravana_id": {
-                                                        "type": "integer",
-                                                        "example": 123
-                                                    },
-                                                    "organizador_id": {
-                                                        "type": "integer",
-                                                        "example": 456
-                                                    },
-                                                    "passageiro_id": {
-                                                        "type": "integer",
-                                                        "example": 789
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao listar avaliações do organizador",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro ao obter avaliações do organizador."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/listar-avaliacoes/passageiro/{id}": {
-            "get": {
-                "tags": [
-                    "Avaliação"
-                ],
-                "summary": "Listar avaliações feitas por um organizador a um passageiro",
-                "description": "Esse endpoint permite listar as avaliações feitas por um organizador a um passageiro específico.",
-                "operationId": "listarAvaliacoesPassageiro",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID do passageiro",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Avaliações do passageiro obtidas com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "avaliacoes": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "nota": {
-                                                        "type": "integer",
-                                                        "example": 3
-                                                    },
-                                                    "comentario": {
-                                                        "type": "string",
-                                                        "example": "Passageiro muito educado."
-                                                    },
-                                                    "caravana_id": {
-                                                        "type": "integer",
-                                                        "example": 123
-                                                    },
-                                                    "organizador_id": {
-                                                        "type": "integer",
-                                                        "example": 456
-                                                    },
-                                                    "passageiro_id": {
-                                                        "type": "integer",
-                                                        "example": 789
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao listar avaliações do passageiro",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro ao obter avaliações do passageiro."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/editar-avaliacao/{id}": {
-            "put": {
-                "tags": [
-                    "Avaliação"
-                ],
-                "summary": "Editar uma avaliação existente",
-                "description": "Esse endpoint permite editar uma avaliação já registrada.",
-                "operationId": "editarAvaliacao",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID da avaliação",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "nota": {
-                                        "description": "Nova nota da avaliação",
-                                        "type": "integer",
-                                        "example": 5
-                                    },
-                                    "comentario": {
-                                        "description": "Novo comentário da avaliação",
-                                        "type": "string",
-                                        "example": "Excelente! Melhorou muito."
-                                    }
-                                },
-                                "type": "object"
                             }
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "Avaliação editada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Avaliação editada com sucesso!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Erro ao editar avaliação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": " Vocé não tem permissão para editar esta avaliação."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao editar avaliação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro ao editar avaliação."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/excluir-avaliacao/{id}": {
-            "delete": {
-                "tags": [
-                    "Avaliação"
-                ],
-                "summary": "Excluir uma avaliação",
-                "description": "Esse endpoint permite excluir uma avaliação existente.",
-                "operationId": "excluirAvaliacao",
-                "parameters": [
+                "security": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID da avaliação",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Avaliação excluída com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Avaliação excluída com sucesso!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Erro ao excluir avaliação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": " Vocé não tem permissão para excluir esta avaliação."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Erro ao excluir avaliação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Erro ao excluir avaliação."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
+                ]
             }
         },
         "/api/cnpj/{cnpj}": {
@@ -2020,6 +1660,108 @@
                                         "error": {
                                             "type": "string",
                                             "example": "Mensagem de erro detalhada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/caravanas/{passageiro_id}/historico": {
+            "get": {
+                "tags": [
+                    "Caravanas"
+                ],
+                "summary": "Obter o histórico de caravanas de um passageiro",
+                "description": "Retorna todas as caravanas que o passageiro participou, com seus detalhes.",
+                "operationId": "historicoCaravanas",
+                "parameters": [
+                    {
+                        "name": "passageiro_id",
+                        "in": "path",
+                        "description": "ID do passageiro",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Histórico de caravanas recuperado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caravanas listadas com sucesso."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nome": {
+                                                        "type": "string",
+                                                        "example": "Caravana para o show X"
+                                                    },
+                                                    "descricao": {
+                                                        "type": "string",
+                                                        "example": "Caravana para o show X na cidade Y"
+                                                    },
+                                                    "data_inicio": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-05-01T10:00:00Z"
+                                                    },
+                                                    "data_fim": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-05-01T22:00:00Z"
+                                                    },
+                                                    "local": {
+                                                        "type": "string",
+                                                        "example": "Arena X, Cidade Y"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhuma caravana encontrada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Nenhuma caravana encontrada."
                                         }
                                     },
                                     "type": "object"

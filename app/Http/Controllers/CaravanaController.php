@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caravana;
 use App\Models\CaravanaImagem;
+use App\Models\CaravanaPassageiro;
 use App\Models\Favorito;
 use App\Models\Organizador;
 use Illuminate\Http\File;
@@ -514,7 +515,7 @@ class CaravanaController extends Controller
 
             $dadosJson = $request->input('dados');
 
-            if(!$dadosJson) {
+            if (!$dadosJson) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Os dados da caravana são inválidos ou não foram enviados corretamente.',
@@ -922,6 +923,78 @@ class CaravanaController extends Controller
             'status' => true,
             'message' => 'Upload realizado com sucesso!',
             'url' => $url,
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/caravanas/{passageiro_id}/historico",
+     *     summary="Obter o histórico de caravanas de um passageiro",
+     *     description="Retorna todas as caravanas que o passageiro participou, com seus detalhes.",
+     *     operationId="historicoCaravanas",
+     *     tags={"Caravanas"},
+     *     security={{ "bearerAuth":{} }},
+     *
+     *     @OA\Parameter(
+     *         name="passageiro_id",
+     *         in="path",
+     *         description="ID do passageiro",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Histórico de caravanas recuperado com sucesso.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Caravanas listadas com sucesso."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="nome", type="string", example="Caravana para o show X"),
+     *                     @OA\Property(property="descricao", type="string", example="Caravana para o show X na cidade Y"),
+     *                     @OA\Property(property="data_inicio", type="string", format="date-time", example="2025-05-01T10:00:00Z"),
+     *                     @OA\Property(property="data_fim", type="string", format="date-time", example="2025-05-01T22:00:00Z"),
+     *                     @OA\Property(property="local", type="string", example="Arena X, Cidade Y")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Nenhuma caravana encontrada.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Nenhuma caravana encontrada.")
+     *         )
+     *     )
+     * )
+     */
+
+    public function historicoCaravanas($passageiro_id)
+    {
+        // Obtém todas as caravanas que o usuário já participou
+        $caravanas = CaravanaPassageiro::where('passageiro_id', $passageiro_id)->get();
+
+        // Obtém os detalhes das caravanas para enviar no response
+        $caravanas = Caravana::whereIn('id', $caravanas->pluck('caravana_id'))->get();
+
+        if ($caravanas->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Nenhuma caravana encontrada.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Caravanas listadas com sucesso.',
+            'data' => $caravanas,
         ]);
     }
 }

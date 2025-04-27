@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('caravanas/{id}', [CaravanaController::class, 'editarCaravana']);
     Route::delete('caravanas/{id}', [CaravanaController::class, 'excluirCaravana']);
     Route::get('minhas-caravanas', [CaravanaController::class, 'listarMinhasCaravanas']);
+    Route::get('caravanas/{passageiro_id}/historico', [CaravanaController::class, 'historicoCaravanas']);
 
     //Rotas Users
     Route::post('register-organizador/{id}', [UserController::class, 'registerOrganizador']);
@@ -95,11 +96,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('caravana/{id}/reserva/{reserva_id}', [CaravanaPassageiroController::class, 'editarReserva']);
     Route::delete('caravana/{id}/reserva/{reserva_id}', [CaravanaPassageiroController::class, 'cancelarReserva']);
 
-    //Rotas para gerenciar Denuncias
-    // Route::post('registrar-denuncia', [DenunciaController::class, 'registrarDenuncia']);
-    // Route::put('editar-denuncia/{id}', [DenunciaController::class, 'editarDenuncia']);
-    // Route::delete('excluir-denuncia/{id}', [DenunciaController::class, 'excluirDenuncia']);
-
     //Rotas para gerenciar Suporte
     Route::post('registrar-suporte', [SuporteController::class, 'registrarSuporte']);
     Route::get('listar-suporte', [SuporteController::class, 'listarSuporte']);
@@ -109,9 +105,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Rotas para gerenciar Avaliações
     Route::post('registrar-avaliacao', [AvaliacaoController::class, 'registrarAvaliacao']);
-    Route::get('listar-avaliacoes/caravana/{caravana_id}', [AvaliacaoController::class, 'listarAvaliacoesCaravana']);
-    Route::get('listar-avaliacoes/organizador/{organizador_id}', [AvaliacaoController::class, 'listarAvaliacoesOrganizador']);
-    Route::get('listar-avaliacoes/passageiro/{passageiro_id}', [AvaliacaoController::class, 'listarAvaliacoesPassageiro']);
-    Route::delete('excluir-avaliacao/{id}', [AvaliacaoController::class, 'excluirAvaliacao']);
-
+    Route::get('caravana/{caravana_id}/listar-passageiros', [AvaliacaoController::class, 'listarPassageiros']);
 });

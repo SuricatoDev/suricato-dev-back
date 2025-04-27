@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Avaliacao;
+use App\Models\Caravana;
+use App\Models\CaravanaPassageiro;
+use App\Models\Passageiro;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,11 +66,9 @@ class AvaliacaoController extends Controller
     {
         try {
             $request->validate([
-                'caravana_id' => 'nullable|exists:caravanas,id',
                 'organizador_id' => 'nullable|exists:users,id',
                 'passageiro_id' => 'nullable|exists:users,id',
                 'nota' => 'required|integer|min:1|max:5',
-                'comentario' => 'nullable|string',
             ]);
 
             DB::beginTransaction();
@@ -79,7 +81,6 @@ class AvaliacaoController extends Controller
                     'organizador_id' => $request->organizador_id,
                     'passageiro_id' => $avaliador->id,
                     'nota' => $request->nota,
-                    'comentario' => $request->comentario,
                 ]);
             } else {
                 $avaliacao = Avaliacao::create([
@@ -87,7 +88,6 @@ class AvaliacaoController extends Controller
                     'organizador_id' => $avaliador->id,
                     'passageiro_id' => $request->passageiro_id,
                     'nota' => $request->nota,
-                    'comentario' => $request->comentario,
                 ]);
             }
 
@@ -110,339 +110,90 @@ class AvaliacaoController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/listar-avaliacoes/caravana/{id}",
-     *     summary="Listar avaliações de uma caravana",
-     *     description="Esse endpoint permite listar as avaliações feitas para uma caravana específica.",
-     *     operationId="listarAvaliacoesCaravana",
+     *     path="/caravana/{caravana_id}/listar-passageiros",
+     *     summary="Listar passageiros de uma caravana",
+     *     description="Retorna todos os passageiros confirmados de uma caravana, incluindo as avaliações médias dos passageiros.",
+     *     operationId="listarPassageiros",
      *     tags={"Avaliação"},
+     *     security={{ "bearerAuth":{} }},
+     *
      *     @OA\Parameter(
-     *         name="id",
+     *         name="caravana_id",
      *         in="path",
-     *         required=true,
      *         description="ID da caravana",
+     *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="Avaliações da caravana obtidas com sucesso",
+     *         description="Passageiros listados com sucesso.",
      *         @OA\JsonContent(
-     *             type="object",
      *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="avaliacoes", type="array",
+     *             @OA\Property(property="data", type="array",
      *                 @OA\Items(
      *                     type="object",
-     *                     @OA\Property(property="nota", type="integer", example=5),
-     *                     @OA\Property(property="comentario", type="string", example="Ótima viagem!"),
-     *                     @OA\Property(property="caravana_id", type="integer", example=123),
-     *                     @OA\Property(property="organizador_id", type="integer", example=456),
-     *                     @OA\Property(property="passageiro_id", type="integer", example=789),
+     *                     @OA\Property(property="nota", type="number", format="float", example=4.5),
+     *                     @OA\Property(property="nome", type="string", example="João da Silva"),
+     *                     @OA\Property(property="passageiro_id", type="integer", example=123),
+     *                     @OA\Property(property="caravana_id", type="integer", example=1)
      *                 )
      *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erro ao listar avaliações da caravana",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao obter avaliações da caravana.")
-     *         )
-     *     )
-     * )
-     */
-
-    public function listaAvaliacoesCaravana($id)
-    {
-        try {
-            $avaliacoes = Avaliacao::where('caravana_id', $id)->get();
-            return response()->json([
-                'status' => true,
-                'avaliacoes' => $avaliacoes,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao obter avaliações da caravana: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/listar-avaliacoes/organizador/{id}",
-     *     summary="Listar avaliações de um organizador",
-     *     description="Esse endpoint permite listar as avaliações feitas para um organizador específico.",
-     *     operationId="listarAvaliacoesOrganizador",
-     *     tags={"Avaliação"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID do organizador",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Avaliações do organizador obtidas com sucesso",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="avaliacoes", type="array",
-     *                 @OA\Items(
-     *                     type="object",
-     *                     @OA\Property(property="nota", type="integer", example=4),
-     *                     @OA\Property(property="comentario", type="string", example="Muito atencioso!"),
-     *                     @OA\Property(property="caravana_id", type="integer", example=123),
-     *                     @OA\Property(property="organizador_id", type="integer", example=456),
-     *                     @OA\Property(property="passageiro_id", type="integer", example=789),
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erro ao listar avaliações do organizador",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao obter avaliações do organizador.")
-     *         )
-     *     )
-     * )
-     */
-    public function listarAvaliacoesOrganizador($id)
-    {
-        try {
-            $avaliacoes = Avaliacao::where('organizador_id', $id)->get();
-            return response()->json([
-                'status' => true,
-                'avaliacoes' => $avaliacoes,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao obter avaliações do organizador: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/listar-avaliacoes/passageiro/{id}",
-     *     summary="Listar avaliações feitas por um organizador a um passageiro",
-     *     description="Esse endpoint permite listar as avaliações feitas por um organizador a um passageiro específico.",
-     *     operationId="listarAvaliacoesPassageiro",
-     *     tags={"Avaliação"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID do passageiro",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Avaliações do passageiro obtidas com sucesso",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="avaliacoes", type="array",
-     *                 @OA\Items(
-     *                     type="object",
-     *                     @OA\Property(property="nota", type="integer", example=3),
-     *                     @OA\Property(property="comentario", type="string", example="Passageiro muito educado."),
-     *                     @OA\Property(property="caravana_id", type="integer", example=123),
-     *                     @OA\Property(property="organizador_id", type="integer", example=456),
-     *                     @OA\Property(property="passageiro_id", type="integer", example=789),
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erro ao listar avaliações do passageiro",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao obter avaliações do passageiro.")
-     *         )
-     *     )
-     * )
-     */
-
-    public function listarAvaliacoesPassageiro($id)
-    {
-        try {
-            $avaliacoes = Avaliacao::where('passageiro_id', $id)->get();
-            return response()->json([
-                'status' => true,
-                'avaliacoes' => $avaliacoes,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao obter avaliações do passageiro: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @OA\Put(
-     *     path="/editar-avaliacao/{id}",
-     *     summary="Editar uma avaliação existente",
-     *     description="Esse endpoint permite editar uma avaliação já registrada.",
-     *     operationId="editarAvaliacao",
-     *     tags={"Avaliação"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID da avaliação",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="nota", type="integer", description="Nova nota da avaliação", example=5),
-     *             @OA\Property(property="comentario", type="string", description="Novo comentário da avaliação", example="Excelente! Melhorou muito."),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Avaliação editada com sucesso",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Avaliação editada com sucesso!")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=403,
-     *         description="Erro ao editar avaliação",
+     *         description="Acesso não autorizado. Somente o organizador pode visualizar os passageiros.",
      *         @OA\JsonContent(
-     *             type="object",
      *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example=" Vocé não tem permissão para editar esta avaliação.")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erro ao editar avaliação",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao editar avaliação.")
+     *             @OA\Property(property="message", type="string", example="Acesso não autorizado! Somente o organizador pode visualizar os passageiros.")
      *         )
      *     )
      * )
      */
 
-    public function editarAvaliacao(Request $request, $id)
+    public function listarPassageiros($caravana_id)
     {
-        try {
-            $avaliacao = Avaliacao::findOrFail($id);
+        $user = Auth::user();
+        $caravana = Caravana::findOrFail($caravana_id);
 
-            // Armazena o usuário autenticado
-            $avaliador = auth()->user();
-
-            // Verifica se o usuário autenticado é proprietário da avaliação
-            if ($avaliacao->passageiro_id !== $avaliador->id && $avaliacao->organizador_id !== $avaliador->id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Você não tem permissão para excluir esta avaliação.'
-                ], 403);
-            }
-
-            $avaliacao->nota = $request->nota;
-            $avaliacao->comentario = $request->comentario;
-            $avaliacao->save();
-            return response()->json([
-                'status' => true,
-                'message' => 'Avaliação editada com sucesso!'
-            ], 200);
-        } catch (\Exception $e) {
+        // Verifica se o usuário autenticado é o organizador da caravana
+        if ($caravana->organizador_id !== $user->id) {
             return response()->json([
                 'status' => false,
-                'message' => 'Erro ao editar avaliação: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Acesso não autorizado! Somente o organizador pode visualizar os passageiros.',
+            ], 403); // Acesso negado
         }
-    }
 
-    /**
-     * @OA\Delete(
-     *     path="/excluir-avaliacao/{id}",
-     *     summary="Excluir uma avaliação",
-     *     description="Esse endpoint permite excluir uma avaliação existente.",
-     *     operationId="excluirAvaliacao",
-     *     tags={"Avaliação"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID da avaliação",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Avaliação excluída com sucesso",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="message", type="string", example="Avaliação excluída com sucesso!")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Erro ao excluir avaliação",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example=" Vocé não tem permissão para excluir esta avaliação.")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=500,
-     *         description="Erro ao excluir avaliação",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Erro ao excluir avaliação.")
-     *         )
-     *     )
-     * )
-     */
+        // Obtém todas as reservas confirmadas da caravana
+        $reservas = CaravanaPassageiro::where('caravana_id', $caravana->id)
+            ->where('status', 'Confirmado')
+            ->get();
 
-    public function excluirAvaliacao($id)
-    {
-        try {
-            $avaliacao = Avaliacao::findOrFail($id);
+        // Array para armazenar os dados dos passageiros
+        $passageirosData = [];
 
-            // Armazena o usuário autenticado
-            $avaliador = auth()->user();
+        foreach ($reservas as $reserva) {
+            // Busca o nome do passageiro
+            $passageiro = User::find($reserva->passageiro_id);
 
-            // Verifica se o usuário autenticado é proprietário da avaliação
-            if ($avaliacao->passageiro_id !== $avaliador->id && $avaliacao->organizador_id !== $avaliador->id) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Você não tem permissão para excluir esta avaliação.'
-                ], 403);
-            }
+            $usuario = $reserva->passageiro;
 
-            $avaliacao->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'Avaliação excluida com sucesso!'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Erro ao excluir avaliação: ' . $e->getMessage()
-            ], 500);
+            // Carregar as avaliações do passageiro de forma eficiente
+            $media = $usuario->avaliacao()->average('nota');
+
+            $passageirosData[] = [
+                'nota' => $media ?: null,  // Se média for 0 ou null, retornamos null
+                'nome' => $passageiro->nome,
+                'passageiro_id' => $reserva->passageiro_id,
+                'caravana_id' => $reserva->caravana_id,
+            ];
         }
+
+        return response()->json([
+            'status' => true,
+            'data' => $passageirosData,
+        ]);
     }
 }

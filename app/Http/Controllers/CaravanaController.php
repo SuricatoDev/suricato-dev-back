@@ -103,9 +103,16 @@ class CaravanaController extends Controller
             ], 404);
         }
 
+        // Obtém a média de todas as avaliações que o organizador recebeu
+        $mediaAvaliacao = DB::table('avaliacoes')
+            ->where('organizador_id', $caravana->organizador_id)
+            ->where('organizador', 1)
+            ->avg('nota');
+
         return response()->json([
             'status' => true,
-            'data' => $caravana
+            'data' => $caravana,
+            'mediaAvaliacao' => $mediaAvaliacao
         ]);
     }
 

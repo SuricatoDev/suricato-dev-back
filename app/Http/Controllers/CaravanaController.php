@@ -1002,7 +1002,7 @@ class CaravanaController extends Controller
     {
         $usuario = auth()->user();
 
-        if(!$usuario != $passageiro_id){
+        if($usuario->id != $passageiro_id){
             return response()->json([
                 'status' => false,
                 'message' => 'Não autorizado, é necessário estar logado para obter o histórico de caravanas.',

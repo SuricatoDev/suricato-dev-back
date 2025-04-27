@@ -26,11 +26,9 @@ class AvaliacaoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             required={"nota"},
-     *             @OA\Property(property="caravana_id", type="integer", description="ID da caravana (opcional)"),
      *             @OA\Property(property="organizador_id", type="integer", description="ID do organizador (opcional)"),
      *             @OA\Property(property="passageiro_id", type="integer", description="ID do passageiro (opcional, necessário para organizador avaliar passageiro)"),
      *             @OA\Property(property="nota", type="integer", description="Nota da avaliação (1 a 5)", example=5),
-     *             @OA\Property(property="comentario", type="string", description="Comentário adicional sobre a avaliação", example="Excelente viagem!"),
      *         )
      *     ),
      *     @OA\Response(
@@ -186,12 +184,14 @@ class AvaliacaoController extends Controller
         foreach ($reservas as $reserva) {
             // Busca o nome do passageiro
             $passageiro = User::find($reserva->passageiro_id);
-
             $usuario = $reserva->passageiro;
 
-            // Carregar as avaliações do passageiro de forma eficiente
-            $media = $usuario->avaliacao()->average('nota');
+            // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
+            $media = $usuario->avaliacao()
+                ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
+                ->average('nota');  // Calcula a média diretamente
 
+            // Se não houver avaliação, define como null
             $passageirosData[] = [
                 'nota' => $media ?: null,  // Se média for 0 ou null, retornamos null
                 'nome' => $passageiro->nome,

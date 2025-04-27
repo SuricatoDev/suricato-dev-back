@@ -197,33 +197,42 @@ class AvaliacaoController extends Controller
         $passageirosData = [];
 
         foreach ($reservas as $reserva) {
+            // Busca o nome do passageiro
+            $passageiro = User::find($reserva->passageiro_id);
             $usuario = $reserva->passageiro;
 
-            if (!$usuario) {
-                continue;
-            }
-
-            // Verifica se o organizador já avaliou este passageiro nesta caravana
-            if ($usuario->avaliacao()
-                ->where('caravana_id', $caravana->id)
-                ->where('organizador_id', $user->id)
-                ->exists()
-            ) {
-                continue;
-            }
-
-            $media = $usuario->avaliacao()
+            $novaAvaliacao = $usuario->avaliacao()
                 ->where('passageiro', true)
-                ->average('nota');
+                ->where('caravana_id', !$caravana_id)  // Verifica se o passageiro foi avaliado
+                ->first();
 
+            if ($novaAvaliacao) {
+                $passageirosData[] = [
+                    'nota' => $novaAvaliacao->nota,
+                    'nome' => $passageiro->nome,
+                    'passageiro_id' => $reserva->passageiro_id,
+                    'caravana_id' => $reserva->caravana_id,
+                ];
+                // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
+                $media = $usuario->avaliacao()
+                    ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
+                    ->average('nota');  // Calcula a média diretamente
+                continue;
+            }
+
+            // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
+            $media = $usuario->avaliacao()
+                ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
+                ->average('nota');  // Calcula a média diretamente
+
+            // Se não houver avaliação, define como null
             $passageirosData[] = [
-                'nota' => $media ?: null,
-                'nome' => $usuario->nome,
-                'passageiro_id' => $usuario->id,
-                'caravana_id' => $caravana->id,
+                'nota' => $media ?: null,  // Se média for 0 ou null, retornamos null
+                'nome' => $passageiro->nome,
+                'passageiro_id' => $reserva->passageiro_id,
+                'caravana_id' => $reserva->caravana_id,
             ];
         }
-
 
         return response()->json([
             'status' => true,

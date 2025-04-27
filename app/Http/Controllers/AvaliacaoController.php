@@ -80,19 +80,21 @@ class AvaliacaoController extends Controller
                     'status' => false,
                     'message' => 'O passageiro nao pode avaliar ele mesmo.'
                 ]);
-}
+            }
 
-            if ($avaliador->passageiro) {
-                $avaliacao = Avaliacao::create([
-                    'organizador_id' => $request->organizador_id,
-                    'passageiro_id' => $avaliador->id,
-                    'nota' => $request->nota,
-                ]);
-            } else {
+            if ($avaliador->organizador) {
+                // sou organizador, avaliando um passageiro
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $avaliador->id,
-                    'passageiro_id' => $request->passageiro_id,
-                    'nota' => $request->nota,
+                    'passageiro_id'  => $request->passageiro_id,
+                    'nota'           => $request->nota,
+                ]);
+            } else {
+                // sou passageiro, avaliando um organizador
+                $avaliacao = Avaliacao::create([
+                    'organizador_id' => $request->organizador_id,
+                    'passageiro_id'  => $avaliador->id,
+                    'nota'           => $request->nota,
                 ]);
             }
 

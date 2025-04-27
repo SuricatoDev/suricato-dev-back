@@ -87,6 +87,7 @@ class AvaliacaoController extends Controller
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $avaliador->id,
                     'passageiro_id'  => $request->passageiro_id,
+                    'passageiro'     => true,
                     'nota'           => $request->nota,
                 ]);
             } else {
@@ -94,6 +95,7 @@ class AvaliacaoController extends Controller
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $request->organizador_id,
                     'passageiro_id'  => $avaliador->id,
+                    'organizador'    => true,
                     'nota'           => $request->nota,
                 ]);
             }

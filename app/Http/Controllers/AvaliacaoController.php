@@ -75,6 +75,13 @@ class AvaliacaoController extends Controller
 
             $avaliador = Auth::user(); // Obtém o usuário autenticado
 
+            if ($avaliador->id === $request->passageiro_id) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'O passageiro nao pode avaliar ele mesmo.'
+                ]);
+}
+
             if ($avaliador->passageiro) {
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $request->organizador_id,

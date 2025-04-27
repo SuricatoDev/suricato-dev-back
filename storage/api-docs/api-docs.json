@@ -1651,8 +1651,8 @@
                 "tags": [
                     "Caravanas"
                 ],
-                "summary": "Obter o histórico de caravanas de um passageiro",
-                "description": "Retorna todas as caravanas que o passageiro participou, com seus detalhes.",
+                "summary": "Obtém o histórico de caravanas em que o passageiro participou",
+                "description": "Recupera a lista de caravanas que o passageiro participou, incluindo detalhes da caravana, organizador, status da reserva e avaliação.",
                 "operationId": "historicoCaravanas",
                 "parameters": [
                     {
@@ -1667,7 +1667,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Histórico de caravanas recuperado com sucesso.",
+                        "description": "Histórico de caravanas obtido com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1684,31 +1684,127 @@
                                             "type": "array",
                                             "items": {
                                                 "properties": {
-                                                    "id": {
+                                                    "caravana": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "titulo": {
+                                                                "type": "string",
+                                                                "example": "Excursão para o Rock in Rio"
+                                                            },
+                                                            "descricao": {
+                                                                "type": "string",
+                                                                "example": "Viagem de ônibus para o Rock in Rio."
+                                                            },
+                                                            "categoria": {
+                                                                "type": "string",
+                                                                "example": "Shows"
+                                                            },
+                                                            "data_partida": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-09-10"
+                                                            },
+                                                            "data_retorno": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-09-12"
+                                                            },
+                                                            "endereco_origem": {
+                                                                "type": "string",
+                                                                "example": "Rua das Flores"
+                                                            },
+                                                            "numero_origem": {
+                                                                "type": "string",
+                                                                "example": "123"
+                                                            },
+                                                            "bairro_origem": {
+                                                                "type": "string",
+                                                                "example": "Centro"
+                                                            },
+                                                            "cep_origem": {
+                                                                "type": "string",
+                                                                "example": "12345-678"
+                                                            },
+                                                            "cidade_origem": {
+                                                                "type": "string",
+                                                                "example": "São Paulo"
+                                                            },
+                                                            "estado_origem": {
+                                                                "type": "string",
+                                                                "example": "SP"
+                                                            },
+                                                            "endereco_destino": {
+                                                                "type": "string",
+                                                                "example": "Av. Atlântica"
+                                                            },
+                                                            "numero_destino": {
+                                                                "type": "string",
+                                                                "example": "500"
+                                                            },
+                                                            "bairro_destino": {
+                                                                "type": "string",
+                                                                "example": "Copacabana"
+                                                            },
+                                                            "cep_destino": {
+                                                                "type": "string",
+                                                                "example": "22070-000"
+                                                            },
+                                                            "cidade_destino": {
+                                                                "type": "string",
+                                                                "example": "Rio de Janeiro"
+                                                            },
+                                                            "estado_destino": {
+                                                                "type": "string",
+                                                                "example": "RJ"
+                                                            },
+                                                            "numero_vagas": {
+                                                                "type": "integer",
+                                                                "example": 40
+                                                            },
+                                                            "vagas_disponiveis": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "valor": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 299.99
+                                                            },
+                                                            "organizador": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 2
+                                                                    },
+                                                                    "razao_social": {
+                                                                        "type": "string",
+                                                                        "example": "Turismo LTDA"
+                                                                    },
+                                                                    "nome_fantasia": {
+                                                                        "type": "string",
+                                                                        "example": "Turismo Viagens"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "reserva_id": {
                                                         "type": "integer",
-                                                        "example": 1
+                                                        "example": 15
                                                     },
-                                                    "nome": {
+                                                    "status": {
                                                         "type": "string",
-                                                        "example": "Caravana para o show X"
+                                                        "example": "Confirmado"
                                                     },
-                                                    "descricao": {
-                                                        "type": "string",
-                                                        "example": "Caravana para o show X na cidade Y"
-                                                    },
-                                                    "data_inicio": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-05-01T10:00:00Z"
-                                                    },
-                                                    "data_fim": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2025-05-01T22:00:00Z"
-                                                    },
-                                                    "local": {
-                                                        "type": "string",
-                                                        "example": "Arena X, Cidade Y"
+                                                    "nota": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 4.5
                                                     }
                                                 },
                                                 "type": "object"
@@ -1720,8 +1816,28 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Usuário não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Não autorizado, é necessário estar logado para obter o histórico de caravanas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "404": {
-                        "description": "Nenhuma caravana encontrada.",
+                        "description": "Nenhuma caravana encontrada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1740,12 +1856,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/caravana/{id}/listar-reservas": {

@@ -89,3 +89,8 @@ ADD COLUMN verificado BOOLEAN NULL AFTER email_verified_at;
 ALTER TABLE users
 ADD COLUMN email_verification_token VARCHAR(255) NULL AFTER verificado;
 
+ALTER TABLE avaliacoes
+ADD COLUMN caravana_id INT NOT NULL AFTER organizador_id;
+
+
+

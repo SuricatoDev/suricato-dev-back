@@ -951,24 +951,24 @@ class CaravanaController extends Controller
     /**
      * @OA\Get(
      *     path="/caravanas/{passageiro_id}/historico",
-     *     summary="Obter o histórico de caravanas de um passageiro",
-     *     description="Retorna todas as caravanas que o passageiro participou, com seus detalhes.",
+     *     summary="Obtém o histórico de caravanas em que o passageiro participou",
+     *     description="Recupera a lista de caravanas que o passageiro participou, incluindo detalhes da caravana, organizador, status da reserva e avaliação.",
      *     operationId="historicoCaravanas",
      *     tags={"Caravanas"},
-     *     security={{ "bearerAuth":{} }},
-     *
      *     @OA\Parameter(
      *         name="passageiro_id",
      *         in="path",
      *         description="ID do passageiro",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
      *     ),
-     *
      *     @OA\Response(
      *         response=200,
-     *         description="Histórico de caravanas recuperado com sucesso.",
+     *         description="Histórico de caravanas obtido com sucesso",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="status", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Caravanas listadas com sucesso."),
      *             @OA\Property(
@@ -976,21 +976,59 @@ class CaravanaController extends Controller
      *                 type="array",
      *                 @OA\Items(
      *                     type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="nome", type="string", example="Caravana para o show X"),
-     *                     @OA\Property(property="descricao", type="string", example="Caravana para o show X na cidade Y"),
-     *                     @OA\Property(property="data_inicio", type="string", format="date-time", example="2025-05-01T10:00:00Z"),
-     *                     @OA\Property(property="data_fim", type="string", format="date-time", example="2025-05-01T22:00:00Z"),
-     *                     @OA\Property(property="local", type="string", example="Arena X, Cidade Y")
+     *                     @OA\Property(
+     *                         property="caravana",
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="titulo", type="string", example="Excursão para o Rock in Rio"),
+     *                         @OA\Property(property="descricao", type="string", example="Viagem de ônibus para o Rock in Rio."),
+     *                         @OA\Property(property="categoria", type="string", example="Shows"),
+     *                         @OA\Property(property="data_partida", type="string", format="date", example="2025-09-10"),
+     *                         @OA\Property(property="data_retorno", type="string", format="date", example="2025-09-12"),
+     *                         @OA\Property(property="endereco_origem", type="string", example="Rua das Flores"),
+     *                         @OA\Property(property="numero_origem", type="string", example="123"),
+     *                         @OA\Property(property="bairro_origem", type="string", example="Centro"),
+     *                         @OA\Property(property="cep_origem", type="string", example="12345-678"),
+     *                         @OA\Property(property="cidade_origem", type="string", example="São Paulo"),
+     *                         @OA\Property(property="estado_origem", type="string", example="SP"),
+     *                         @OA\Property(property="endereco_destino", type="string", example="Av. Atlântica"),
+     *                         @OA\Property(property="numero_destino", type="string", example="500"),
+     *                         @OA\Property(property="bairro_destino", type="string", example="Copacabana"),
+     *                         @OA\Property(property="cep_destino", type="string", example="22070-000"),
+     *                         @OA\Property(property="cidade_destino", type="string", example="Rio de Janeiro"),
+     *                         @OA\Property(property="estado_destino", type="string", example="RJ"),
+     *                         @OA\Property(property="numero_vagas", type="integer", example=40),
+     *                         @OA\Property(property="vagas_disponiveis", type="integer", example=10),
+     *                         @OA\Property(property="valor", type="number", format="float", example=299.99),
+     *                         @OA\Property(
+     *                             property="organizador",
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer", example=2),
+     *                             @OA\Property(property="razao_social", type="string", example="Turismo LTDA"),
+     *                             @OA\Property(property="nome_fantasia", type="string", example="Turismo Viagens"),
+     *                         ),
+     *                     ),
+     *                     @OA\Property(property="reserva_id", type="integer", example=15),
+     *                     @OA\Property(property="status", type="string", example="Confirmado"),
+     *                     @OA\Property(property="nota", type="number", format="float", example=4.5),
      *                 )
      *             )
      *         )
      *     ),
-     *
+     *     @OA\Response(
+     *         response=403,
+     *         description="Usuário não autorizado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Não autorizado, é necessário estar logado para obter o histórico de caravanas.")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Nenhuma caravana encontrada.",
+     *         description="Nenhuma caravana encontrada",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Nenhuma caravana encontrada.")
      *         )
@@ -1002,7 +1040,7 @@ class CaravanaController extends Controller
     {
         $usuario = auth()->user();
 
-        if($usuario->id != $passageiro_id){
+        if ($usuario->id != $passageiro_id) {
             return response()->json([
                 'status' => false,
                 'message' => 'Não autorizado, é necessário estar logado para obter o histórico de caravanas.',
@@ -1010,7 +1048,7 @@ class CaravanaController extends Controller
         }
 
         // Recupera as caravanas que o passageiro participou
-        $caravanasPassageiro = CaravanaPassageiro::with('caravana')
+        $caravanasPassageiro = CaravanaPassageiro::with('caravana.organizador', 'caravana.avaliacao')
             ->where('passageiro_id', $passageiro_id)
             ->get();
 
@@ -1022,10 +1060,44 @@ class CaravanaController extends Controller
         }
 
         // Array de resposta
-        $caravanas = $caravanasPassageiro->map(function ($item) {
+        $caravanas = $caravanasPassageiro->map(function ($item) use ($passageiro_id) {
+            $caravana = $item->caravana;
+            $avaliacao = $caravana->avaliacao
+                ->where('passageiro_id', $passageiro_id)
+                ->first();
+
             return [
-                'caravana' => $item->caravana,
+                'caravana' => [
+                    'id' => $caravana->id,
+                    'titulo' => $caravana->titulo,
+                    'descricao' => $caravana->descricao,
+                    'categoria' => $caravana->categoria,
+                    'data_partida' => $caravana->data_partida,
+                    'data_retorno' => $caravana->data_retorno,
+                    'endereco_origem' => $caravana->endereco_origem,
+                    'numero_origem' => $caravana->numero_origem,
+                    'bairro_origem' => $caravana->bairro_origem,
+                    'cep_origem' => $caravana->cep_origem,
+                    'cidade_origem' => $caravana->cidade_origem,
+                    'estado_origem' => $caravana->estado_origem,
+                    'endereco_destino' => $caravana->endereco_destino,
+                    'numero_destino' => $caravana->numero_destino,
+                    'bairro_destino' => $caravana->bairro_destino,
+                    'cep_destino' => $caravana->cep_destino,
+                    'cidade_destino' => $caravana->cidade_destino,
+                    'estado_destino' => $caravana->estado_destino,
+                    'numero_vagas' => $caravana->numero_vagas,
+                    'vagas_disponiveis' => $caravana->vagas_disponiveis,
+                    'valor' => $caravana->valor,
+                    'organizador' => $caravana->organizador ? [
+                        'id' => $caravana->organizador->id,
+                        'razao_social' => $caravana->organizador->razao_social,
+                        'nome_fantasia' => $caravana->organizador->nome_fantasia,
+                    ] : null,
+                ],
+                'reserva_id' => $item->id,
                 'status' => $item->status,
+                'nota' => $avaliacao ? $avaliacao->nota : null,
             ];
         });
 

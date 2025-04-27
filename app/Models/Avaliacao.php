@@ -17,6 +17,7 @@ class Avaliacao extends Model
         'organizador',
         'passageiro_id',
         'organizador_id',
+        'caravana_id',
     ];
 
 

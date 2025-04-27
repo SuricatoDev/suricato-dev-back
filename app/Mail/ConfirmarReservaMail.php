@@ -16,20 +16,20 @@ class ConfirmarReservaMail extends Mailable
 
     public $user;
     public $caravana;
-    public $organizador;
-    public $caravanaPassageiro;
+    public $passageiro;
+    public $reserva;
 
-    public function __construct(CaravanaPassageiro $caravanaPassageiro, $user, $caravana, $organizador)
+    public function __construct(CaravanaPassageiro $reserva, $user, $caravana, $passageiro)
     {
-        $this->caravanaPassageiro = $caravanaPassageiro;
+        $this->reserva = $reserva;
         $this->user = $user;
         $this->caravana = $caravana;
-        $this->organizador = $organizador;
+        $this->passageiro = $passageiro;
     }
 
     public function build()
     {
         return $this->subject('🎉 Reserva confirmada — Prepare-se para o evento!')
-                    ->markdown('emails.reservaConfirmada');
+                    ->markdown('emails.emailReservaConfirmada');
     }
 }

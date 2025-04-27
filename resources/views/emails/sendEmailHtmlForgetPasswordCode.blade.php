@@ -89,7 +89,7 @@
                 </tr>
             </table>
         </div>
-        <div class="content">
+        <div class="content" style="padding: 16px;">
             <p>Olá, <strong>{{ $user->nome }}</strong>,</p>
 
             <p>Você solicitou a recuperação da sua senha no sistema <strong>Excursionistas</strong>.</p>

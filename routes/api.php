@@ -84,6 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //Rota para envio de e-mail de suporte
     Route::post('suporte', [SuporteController::class, 'registrarSuporte']);
 
+    //Rota para envio de e-mail de confirmação de reserva
+    Route::post('confirmar-reserva', [CaravanaPassageiroController::class, 'confirmarReserva']);
+
     //Rota via CEP
     Route::get('cep/{cep}', [CepController::class, 'buscarCep']);
 

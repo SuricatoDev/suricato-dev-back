@@ -102,7 +102,7 @@
                 </tr>
             </table>
         </div>
-        <div class="content">
+        <div class="content" style="padding: 16px;">
             <p>Olá, equipe do <strong>Excursionistas</strong>,</p>
 
             <p>Um novo pedido de suporte foi enviado através da plataforma.</p>

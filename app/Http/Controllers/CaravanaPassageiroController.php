@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmarReservaMail;
 use App\Mail\ReservaRequestMail;
 use App\Models\Caravana;
 use App\Models\CaravanaPassageiro;
@@ -345,6 +346,14 @@ class CaravanaPassageiroController extends Controller
         $reserva->update([
             'status' => $validated['status'],
         ]);
+
+        // Obtém o email do passageiro
+        $passageiro = User::find($reserva->passageiro_id);
+
+        // Envia um email ao usuário informado que a reserva foi confirmada
+        if ($validated['status'] === 'Confirmado') {
+            Mail::to($passageiro->email)->send(new ConfirmarReservaMail($reserva, $user, $caravana, $passageiro));
+        }
 
         return response()->json([
             'status' => true,

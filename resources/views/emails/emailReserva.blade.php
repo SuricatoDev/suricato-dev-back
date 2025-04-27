@@ -103,7 +103,7 @@
                 </tr>
             </table>
         </div>
-        <div class="content">
+        <div class="content" style="padding: 16px;">
             <p>Olá,
                 @if ($dadosOrganizador->nome_fantasia !== '')
                     <strong>{{ $dadosOrganizador->nome_fantasia }}</strong>,

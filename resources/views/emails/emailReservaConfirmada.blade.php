@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>Confirmação de Cadastro - Excursionistas</title>
+    <title>Pedido de Suporte - Excursionistas</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #ffffff;
             margin: 0;
             padding: 0;
-            color: #222222;
+            color: #111111;
         }
 
         .container {
@@ -43,11 +42,16 @@
             color: white;
             text-align: center;
             font-weight: bold;
-            /* Caso queira deixar mais destacado */
         }
 
         .content {
             padding: 30px 20px;
+        }
+
+        .content h2 {
+            font-size: 20px;
+            color: #FF6D3C;
+            margin-bottom: 20px;
         }
 
         .content p {
@@ -69,22 +73,10 @@
             font-size: 20px;
         }
 
-        .code {
-            background-color: #FFAA8E;
-            color: #000;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 15px;
-            text-align: center;
-            margin: 30px 0;
-            border-radius: 6px;
-            letter-spacing: 4px;
-        }
-
         .info {
             margin-top: 20px;
             font-size: 14px;
-            color: #555;
+            color: #111111;
         }
 
         .footer {
@@ -117,19 +109,50 @@
             </table>
         </div>
         <div class="content" style="padding: 16px;">
-            <p>Olá, <strong>{{ $user->nome }}</strong>,</p>
+            <p>
+            <h2>Que ótimo, sua reserva foi confirmada! 🧡</h2>
+            </p>
 
-            <p>Obrigado por se juntar a nós no <strong>Excursionistas</strong>!</p>
+            <p style="color: #6A6A6A;">Olá, <strong>{{ $passageiro->nome }}</strong>,</p>
+            <p style="color: #6A6A6A;">Seguem abaixo as informações sobre o evento:</p>
 
-            <p>Confirme seu e-mail para ter acesso a todas as funcionalidades do site.</p>
+            <div class="info">
+                <p><strong>📌 Caravana:</strong> {{ $caravana->titulo }}</p>
+                <p><strong>📅 Data de Partida:</strong>
+                    {{ \Carbon\Carbon::parse($caravana->data_partida)->format('d/m/Y') }}</p>
+                <p><strong>⏰ Horário de Partida:</strong>
+                    {{ \Carbon\Carbon::parse($caravana->horario_partida)->format('H:i') }}
+                </p>
+                <p><strong>📍 Local de partida:</strong> {{ $caravana->endereco_origem }},
+                    {{ $caravana->numero_origem }}, {{ $caravana->bairro_origem }}</p>
+                <p><strong>🏙️ Cidade:</strong> {{ $caravana->cidade_origem }} - {{ $caravana->estado_origem }}</p>
 
-            <div class="code">
-                <a href="{{ $link }}">Confirmar e-mail</a>
+                <p>Qualquer dúvida, entre em contato com o organizador.</p>
+                {{-- Informações de contato com o organizador --}}
+                @php
+                    $telefone = preg_replace('/[^0-9]/', '', $caravana->organizador->telefone_comercial);
+
+                    if (strlen($telefone) === 11) {
+                        // celular (ex: (15) 99123-4567)
+                        $telefoneFormatado =
+                            '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 5) . '-' . substr($telefone, 7);
+                    } elseif (strlen($telefone) === 10) {
+                        // fixo (ex: (15) 3123-4567)
+                        $telefoneFormatado =
+                            '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 4) . '-' . substr($telefone, 6);
+                    } else {
+                        $telefoneFormatado = $caravana->organizador->telefone_comercial; // Caso não tenha 10 ou 11 números, exibe como veio
+                    }
+                @endphp
+
+                <p><strong>📞 Telefone:</strong>
+                    <a href="https://api.whatsapp.com/send?phone={{ $telefone }}" target="_blank">
+                        {{ $telefoneFormatado }}
+                    </a>
+                </p>
             </div>
-
-            <p>Se você não se cadastrou no site, por favor, ignore este e-mail.</p>
             <br>
-            <p>Atenciosamente,<br>Equipe Excursionistas</p>
+            <p style="color: #6A6A6A;">Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
         <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
             <tr>

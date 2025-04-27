@@ -27,49 +27,62 @@ class CaravanaController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/caravanas/{id}",
-     *     summary="Detalhar uma caravana",
-     *     description="Retorna as informações detalhadas de uma caravana específica, incluindo imagens.",
+     *     path="api/caravanas/{id}",
+     *     summary="Detalha informações sobre uma caravana específica, incluindo o organizador e a média das avaliações do organizador.",
+     *     description="Recupera informações detalhadas sobre uma caravana, incluindo as imagens, organizador e a média das avaliações que o organizador recebeu.",
+     *     operationId="detalharCaravana",
      *     tags={"Caravanas"},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
+     *         description="ID da caravana",
      *         required=true,
-     *         description="ID da caravana a ser detalhada",
-     *         @OA\Schema(type="integer", example=1)
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Detalhes da caravana retornados com sucesso",
+     *         description="Caravana detalhada com sucesso",
      *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=true),
-     *             @OA\Property(property="data", type="object",
+     *             type="object",
+     *             @OA\Property(
+     *                 property="status",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="titulo", type="string", example="Caravana para o Show X"),
-     *                 @OA\Property(property="descricao", type="string", example="Descrição da caravana..."),
-     *                 @OA\Property(property="data_partida", type="string", format="date", example="2025-05-01"),
-     *                 @OA\Property(property="data_retorno", type="string", format="date", example="2025-05-02"),
-     *                 @OA\Property(property="numero_vagas", type="integer", example=40),
-     *                 @OA\Property(property="valor", type="number", format="float", example=150.00),
-     *                 @OA\Property(property="imagens", type="array",
+     *                 @OA\Property(property="nome", type="string", example="Caravana de Verão"),
+     *                 @OA\Property(property="data_inicio", type="string", format="date", example="2025-06-01"),
+     *                 @OA\Property(property="data_fim", type="string", format="date", example="2025-06-15"),
+     *                 @OA\Property(
+     *                     property="organizador",
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=2),
+     *                     @OA\Property(property="razao_social", type="string", example="Empresa XYZ"),
+     *                     @OA\Property(property="nome_fantasia", type="string", example="XYZ Turismo"),
+     *                     @OA\Property(property="bairro", type="string", example="Centro"),
+     *                     @OA\Property(property="cidade", type="string", example="São Paulo"),
+     *                     @OA\Property(property="estado", type="string", example="SP"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-01-01T10:00:00Z")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="imagens",
+     *                     type="array",
      *                     @OA\Items(
      *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="url", type="string", example="https://example.com/imagem.jpg")
+     *                         @OA\Property(property="url", type="string", example="https://exemplo.com/imagem.jpg")
      *                     )
      *                 ),
-     *                 @OA\Property(property="organizador", type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="nome_fantasia", type="string", example="Organizador X"),
-     *                     @OA\Property(property="bairro", type="string", example="Bairro X"),
-     *                     @OA\Property(property="cidade", type="string", example="Cidade X"),
-     *                     @OA\Property(property="estado", type="string", example="Estado X"),
-     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2023-05-01T10:00:00Z")
-     *                 ),
-     *                 @OA\Property(property="user", type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="foto_perfil", type="string", example="https://example.com/perfil.jpg")
-     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="mediaAvaliacao",
+     *                 type="number",
+     *                 format="float",
+     *                 example=4.5
      *             )
      *         )
      *     ),
@@ -77,12 +90,14 @@ class CaravanaController extends Controller
      *         response=404,
      *         description="Caravana não encontrada",
      *         @OA\JsonContent(
+     *             type="object",
      *             @OA\Property(property="status", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Caravana nao encontrada!")
      *         )
      *     )
      * )
      */
+
 
     public function detalharCarvana($id)
     {

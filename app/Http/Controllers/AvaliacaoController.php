@@ -81,6 +81,18 @@ class AvaliacaoController extends Controller
                 ]);
             }
 
+            // Verifica se o passageiro já foi avaliado nesta caravana, pois não o passageiro não pode ser avaliado mais de uma vez
+            $avaliacaoExistente = Avaliacao::where('passageiro_id', $request->passageiro_id)
+                ->where('caravana_id', $request->caravana_id)
+                ->first();
+
+            if ($avaliacaoExistente) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'O passageiro já foi avaliado nesta caravana.'
+                ]);
+            }
+
             if ($avaliador->organizador && !$request->organizador_id) {
                 // sou organizador, avaliando um passageiro
                 $avaliacao = Avaliacao::create([
@@ -188,6 +200,11 @@ class AvaliacaoController extends Controller
             // Busca o nome do passageiro
             $passageiro = User::find($reserva->passageiro_id);
             $usuario = $reserva->passageiro;
+
+            // Verifica se o passageiro já foi avaliado nesta caravana, se sim, pula para o próximo passageiro
+            if ($usuario->avaliacao()->where('caravana_id', $caravana->id)->exists()) {
+                continue;
+            }
 
             // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
             $media = $usuario->avaliacao()

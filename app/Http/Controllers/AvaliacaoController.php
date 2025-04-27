@@ -197,28 +197,33 @@ class AvaliacaoController extends Controller
         $passageirosData = [];
 
         foreach ($reservas as $reserva) {
-            // Busca o nome do passageiro
-            $passageiro = User::find($reserva->passageiro_id);
             $usuario = $reserva->passageiro;
 
-            // Verifica se o passageiro já foi avaliado nesta caravana, se sim, pula para o próximo passageiro
-            if ($usuario->avaliacao()->where('caravana_id', $caravana->id)->exists()) {
+            if (!$usuario) {
                 continue;
             }
 
-            // Carregar as avaliações do passageiro de forma eficiente, considerando o campo 'passageiro' como true
-            $media = $usuario->avaliacao()
-                ->where('passageiro', true)  // Verifica se o passageiro foi avaliado
-                ->average('nota');  // Calcula a média diretamente
+            // Verifica se o organizador já avaliou este passageiro nesta caravana
+            if ($usuario->avaliacao()
+                ->where('caravana_id', $caravana->id)
+                ->where('avaliador_id', $user->id)
+                ->exists()
+            ) {
+                continue;
+            }
 
-            // Se não houver avaliação, define como null
+            $media = $usuario->avaliacao()
+                ->where('passageiro', true)
+                ->average('nota');
+
             $passageirosData[] = [
-                'nota' => $media ?: null,  // Se média for 0 ou null, retornamos null
-                'nome' => $passageiro->nome,
-                'passageiro_id' => $reserva->passageiro_id,
-                'caravana_id' => $reserva->caravana_id,
+                'nota' => $media ?: null,
+                'nome' => $usuario->nome,
+                'passageiro_id' => $usuario->id,
+                'caravana_id' => $caravana->id,
             ];
         }
+
 
         return response()->json([
             'status' => true,

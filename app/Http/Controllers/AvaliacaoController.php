@@ -196,6 +196,8 @@ class AvaliacaoController extends Controller
         $passageirosData = [];
 
         foreach ($reservas as $reserva) {
+            // Busca o nome do passageiro
+            $passageiro = User::find($reserva->passageiro_id);
             // Relação inversa: $reserva->passageiro retorna o User
             $usuario = $reserva->passageiro;
 
@@ -217,7 +219,7 @@ class AvaliacaoController extends Controller
 
             $passageirosData[] = [
                 'nota'          => $nota !== null ? $nota : null,
-                'nome'          => $usuario->nome,
+                'nome'          => $passageiro->nome,
                 'passageiro_id' => $reserva->passageiro_id,
                 'caravana_id'   => $caravana_id,
             ];

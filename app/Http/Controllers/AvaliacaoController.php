@@ -206,7 +206,7 @@ class AvaliacaoController extends Controller
             // Verifica se o organizador já avaliou este passageiro nesta caravana
             if ($usuario->avaliacao()
                 ->where('caravana_id', $caravana->id)
-                ->where('avaliador_id', $user->id)
+                ->where('organizador_id', $user->id)
                 ->exists()
             ) {
                 continue;

@@ -90,7 +90,12 @@ ALTER TABLE users
 ADD COLUMN email_verification_token VARCHAR(255) NULL AFTER verificado;
 
 ALTER TABLE avaliacoes
-ADD COLUMN caravana_id INT NOT NULL AFTER organizador_id;
+ADD COLUMN caravana_id INT UNSIGNED NOT NULL AFTER organizador_id;
+
+ALTER TABLE avaliacoes
+ADD CONSTRAINT fk_avaliacoes_caravana_id
+FOREIGN KEY (caravana_id)
+REFERENCES caravanas(id);
 
 
 

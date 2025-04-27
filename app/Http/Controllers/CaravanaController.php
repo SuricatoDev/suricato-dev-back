@@ -1064,6 +1064,7 @@ class CaravanaController extends Controller
             $caravana = $item->caravana;
             $avaliacao = $caravana->avaliacao
                 ->where('passageiro_id', $passageiro_id)
+                ->where('organizador', true)
                 ->first();
 
             return [

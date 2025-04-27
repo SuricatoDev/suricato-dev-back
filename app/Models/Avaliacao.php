@@ -13,11 +13,11 @@ class Avaliacao extends Model
 
     protected $fillable = [
         'nota',
-        'passageiro',
-        'organizador',
         'passageiro_id',
         'organizador_id',
         'caravana_id',
+        'passageiro',
+        'organizador',
     ];
 
 

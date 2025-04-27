@@ -66,6 +66,7 @@ class AvaliacaoController extends Controller
             $request->validate([
                 'organizador_id' => 'nullable|exists:users,id',
                 'passageiro_id' => 'nullable|exists:users,id',
+                'caravana_id' => 'nullable|exists:caravanas,id',
                 'nota' => 'required|integer|min:1|max:5',
             ]);
 
@@ -85,6 +86,7 @@ class AvaliacaoController extends Controller
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $avaliador->id,
                     'passageiro_id'  => $request->passageiro_id,
+                    'caravana_id'    => $request->caravana_id,
                     'passageiro'     => true,
                     'nota'           => $request->nota,
                 ]);
@@ -93,6 +95,7 @@ class AvaliacaoController extends Controller
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $request->organizador_id,
                     'passageiro_id'  => $avaliador->id,
+                    'caravana_id'    => $request->caravana_id,
                     'organizador'    => true,
                     'nota'           => $request->nota,
                 ]);

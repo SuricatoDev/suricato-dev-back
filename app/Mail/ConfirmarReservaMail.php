@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\CaravanaPassageiro;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,14 +14,18 @@ class ConfirmarReservaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public $user;
+    public $caravana;
+    public $organizador;
+    public $caravanaPassageiro;
 
+    public function __construct(CaravanaPassageiro $caravanaPassageiro, $user, $caravana, $organizador)
+    {
+        $this->caravanaPassageiro = $caravanaPassageiro;
+        $this->user = $user;
+        $this->caravana = $caravana;
+        $this->organizador = $organizador;
+    }
 
     public function build()
     {

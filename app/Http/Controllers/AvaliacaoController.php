@@ -81,7 +81,7 @@ class AvaliacaoController extends Controller
                 ]);
             }
 
-            if ($avaliador->organizador) {
+            if ($avaliador->organizador && !$request->organizador_id) {
                 // sou organizador, avaliando um passageiro
                 $avaliacao = Avaliacao::create([
                     'organizador_id' => $avaliador->id,

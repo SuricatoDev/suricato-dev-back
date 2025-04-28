@@ -124,7 +124,7 @@
         </div>
         <div class="content" style="padding: 16px;">
             <p>
-                <h2>Bem vindo ao Excursionistas! 🚀</h2>
+                <h2>Bem vindo(a) ao Excursionistas! 🚀</h2>
             </p>
 
             <p style="color: #6A6A6A;">Olá, <strong>{{ $user->nome }}</strong>,</p>

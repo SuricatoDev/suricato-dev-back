@@ -121,7 +121,7 @@
                 <p><strong>📅 Data de Partida:</strong>
                     {{ \Carbon\Carbon::parse($caravana->data_partida)->format('d/m/Y') }}</p>
                 <p><strong>⏰ Horário de Partida:</strong>
-                    {{ \Carbon\Carbon::parse($caravana->horario_partida)->format('H:i') }}
+                    {{ \Carbon\Carbon::parse($caravana->data_partida)->format('H:i') }}
                 </p>
                 <p><strong>📍 Local de partida:</strong> {{ $caravana->endereco_origem }},
                     {{ $caravana->numero_origem }}, {{ $caravana->bairro_origem }}</p>

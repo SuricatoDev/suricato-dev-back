@@ -122,7 +122,7 @@
 
             <p style="color: #6A6A6A;">
                 Para garantir sua vaga, basta efetuar o pagamento diretamente ao organizador.
-                Fique à vontade para aguardar o contato ou enviar uma mensagem e garantir já sua reserva.
+                Fique à vontade para aguardar o contato ou enviar uma mensagem e garantir sua reserva.
             </p>
 
             <p style="color: #6A6A6A;">

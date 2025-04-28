@@ -76,7 +76,7 @@
         .user-info {
             margin-top: 20px;
             font-size: 14px;
-            color: #555;
+            color: #6A6A6A;
         }
 
         .footer {
@@ -113,9 +113,9 @@
                 <h2>Um usuário precisa de ajuda! 👋</h2>
             </p>
 
-            <p>Olá, equipe do <strong>Excursionistas</strong>,</p>
+            <p style="color: #6A6A6A;">Olá, equipe do <strong>Excursionistas</strong>,</p>
 
-            <p>Um novo pedido de suporte foi enviado através da plataforma.</p>
+            <p style="color: #6A6A6A;">Um novo pedido de suporte foi enviado através da plataforma.</p>
 
             <div class="support-box">
                 <h3>📌 {{ $suporte->titulo }}</h3>
@@ -126,7 +126,7 @@
                 <p><strong>Solicitado por:</strong> {{ $user->nome }} ({{ $user->email }})</p>
             </div>
             <br>
-            <p>Atenciosamente,<br>Equipe Excursionistas</p>
+            <p style="color: #6A6A6A;">Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
         <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
             <tr>

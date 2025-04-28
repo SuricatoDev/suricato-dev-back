@@ -111,26 +111,28 @@
         </div>
         <div class="content" style="padding: 16px;">
             <p>
-                <h2>Nova solicitação de reserva! 🚀</h2>
+            <h2>Nova solicitação de reserva! 🚀</h2>
             </p>
 
-            <p style="color: #6A6A6A;">Olá,
-                @if ($dadosOrganizador->nome_fantasia !== '')
+            @if ($dadosOrganizador->nome_fantasia !== '')
+                <p style="color: #6A6A6A;">Olá,
                     <strong>{{ $dadosOrganizador->nome_fantasia }}</strong>,
-            </p>
-            <p style="color: #6A6A6A;">Um passageiro solicitou reserva em uma de suas caravanas!</p>
-        @else
-            <strong>{{ $dadosOrganizador->razao_social }}</strong>,</p>
+                </p>
+                <p style="color: #6A6A6A;">Um(a) passageiro(a) solicitou reserva em uma de suas caravanas!</p>
+            @else
+                <strong>{{ $dadosOrganizador->razao_social }}</strong>,</p>
+                <p style="color: #6A6A6A;">Um(a) passageiro(a) solicitou reserva em uma de suas caravanas!</p>
             @endif
 
             <div class="info">
                 <p><strong>📌 Caravana:</strong> {{ $caravana->titulo }}</p>
 
-                <p>Entre em contato com o passageiro para formalizar a reserva.</p>
+                <p>Entre em contato com o(a) passageiro(a) para formalizar a reserva.</p>
                 {{-- Informações de contato com o passageiro --}}
-                <p><strong>👤 Passageiro:</strong> {{ $user->nome }}</p>
+                <p><strong>👤 Passageiro(a):</strong> {{ $user->nome }}</p>
                 <p><strong>📞 Telefone:</strong>
-                    <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $telefonePassageiro) }}" target="_blank">
+                    <a href="https://api.whatsapp.com/send?phone={{ preg_replace('/[^0-9]/', '', $telefonePassageiro) }}"
+                        target="_blank">
                         {{ $telefonePassageiro }}
                     </a>
                 </p>

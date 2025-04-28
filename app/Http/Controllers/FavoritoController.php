@@ -190,14 +190,6 @@ class FavoritoController extends Controller
             ], 401);
         }
 
-        // Verifica se o usuário logado é o organizador da caravana
-        if ($user->id === $caravana->organizador_id) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Organizadores não podem desfavoritar suas caravanas.',
-            ], 403);
-        }
-
         $favorito = Favorito::where('caravana_id', $caravana->id)
             ->where('user_id', $user->id)
             ->first();

@@ -159,6 +159,14 @@ class CaravanaPassageiroController extends Controller
             ], 400);  // Status 400 para requisição mal formulada
         }
 
+        // Verifica se o usuário logado é o organizador da caravana
+        if ($user->id == $caravana->organizador_id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Você não pode fazer uma reserva nesta caravana!'
+            ]);
+        }
+
         // Verifica se ainda há vagas disponíveis
         if ($caravana->vagas_disponiveis <= 0) {
             return response()->json([

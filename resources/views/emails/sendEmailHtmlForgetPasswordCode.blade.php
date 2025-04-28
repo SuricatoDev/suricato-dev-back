@@ -105,6 +105,7 @@
             <p style="color: #6A6A6A;">Você solicitou a recuperação da sua senha no sistema <strong>Excursionistas</strong>.</p>
 
             <p style="color: #6A6A6A;">Use o código abaixo para prosseguir com a redefinição de senha:</p>
+            <p style="color: #6A6A6A;">Após este prazo, será necessário solicitar um novo código.</p>
 
             <div class="code">{{ $code }}</div>
 

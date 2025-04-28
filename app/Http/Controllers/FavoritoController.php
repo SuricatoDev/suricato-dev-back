@@ -150,14 +150,6 @@ class FavoritoController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=403,
-     *         description="Organizadores não podem desfavoritar suas próprias caravanas.",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Organizadores não podem desfavoritar suas caravanas.")
-     *         )
-     *     ),
-     *     @OA\Response(
      *         response=400,
      *         description="Caravana não foi favoritada pelo usuário.",
      *         @OA\JsonContent(

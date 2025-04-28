@@ -124,6 +124,14 @@ class CaravanaPassageiroController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=400,
+     *         description="Apenas passageiros podem reservar"
+     *      ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Acesso não autorizado (Você não pode reservar sua própria caravana!)"
+     *      ),
+     *     @OA\Response(
      *         response=200,
      *         description="Reserva realizada com sucesso",
      *         @OA\JsonContent(
@@ -132,7 +140,7 @@ class CaravanaPassageiroController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=404,
      *         description="Reserva não pode ser realizada",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=false),
@@ -164,7 +172,7 @@ class CaravanaPassageiroController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Você não pode fazer uma reserva nesta caravana!'
-            ]);
+            ], 403);  // Status 403 para acesso negado
         }
 
         // Verifica se ainda há vagas disponíveis
@@ -172,7 +180,7 @@ class CaravanaPassageiroController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Não há vagas disponíveis!'
-            ], 400);  // Status 400 para requisição mal formulada
+            ], 404);  // Not Found
         }
 
         // Verifica se o passageiro já fez uma reserva na caravana

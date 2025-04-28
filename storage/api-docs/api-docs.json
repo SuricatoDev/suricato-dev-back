@@ -1964,6 +1964,12 @@
                     }
                 },
                 "responses": {
+                    "400": {
+                        "description": "Apenas passageiros podem reservar"
+                    },
+                    "403": {
+                        "description": "Acesso não autorizado (Você não pode reservar sua própria caravana!)"
+                    },
                     "200": {
                         "description": "Reserva realizada com sucesso",
                         "content": {
@@ -1984,7 +1990,7 @@
                             }
                         }
                     },
-                    "400": {
+                    "404": {
                         "description": "Reserva não pode ser realizada",
                         "content": {
                             "application/json": {
@@ -2591,26 +2597,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Usuário precisa estar logado para desfavoritar uma caravana."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Organizadores não podem desfavoritar suas próprias caravanas.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Organizadores não podem desfavoritar suas caravanas."
                                         }
                                     },
                                     "type": "object"

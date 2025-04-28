@@ -44,6 +44,12 @@
             padding: 30px 20px;
         }
 
+        .content h2 {
+            font-size: 20px;
+            color: #FF6D3C;
+            margin-bottom: 20px;
+        }
+
         .content p {
             font-size: 16px;
             line-height: 1.6;

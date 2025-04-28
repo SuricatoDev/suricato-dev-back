@@ -90,20 +90,24 @@
             </table>
         </div>
         <div class="content" style="padding: 16px;">
-            <p>Olá, <strong>{{ $user->nome }}</strong>,</p>
+            <p>
+                <h2>Solicitação de recuperação de senha. 🔑</h2>
+            </p>
 
-            <p>Você solicitou a recuperação da sua senha no sistema <strong>Excursionistas</strong>.</p>
+            <p style="color: #6A6A6A;">Olá, <strong>{{ $user->nome }}</strong>,</p>
 
-            <p>Use o código abaixo para prosseguir com a redefinição de senha:</p>
+            <p style="color: #6A6A6A;">Você solicitou a recuperação da sua senha no sistema <strong>Excursionistas</strong>.</p>
+
+            <p style="color: #6A6A6A;">Use o código abaixo para prosseguir com a redefinição de senha:</p>
 
             <div class="code">{{ $code }}</div>
 
-            <p>⚠️ Este código é válido até as <strong>{{ $formattedTime }}</strong> do dia
+            <p style="color: #6A6A6A;">⚠️ Este código é válido até as <strong>{{ $formattedTime }}</strong> do dia
                 <strong>{{ $formattedDate }}</strong>.</p>
 
-            <p>Se você não solicitou esta recuperação, por favor, ignore este e-mail.</p>
+            <p style="color: #6A6A6A;">Se você não solicitou esta recuperação, por favor, ignore este e-mail.</p>
             <br>
-            <p>Atenciosamente,<br>Equipe Excursionistas</p>
+            <p style="color: #6A6A6A;">Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
         <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
             <tr>

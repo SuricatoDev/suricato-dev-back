@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -18,7 +17,7 @@ class SendEmailForgetPasswordCode extends Mailable
      */
     public function __construct(public $user, public $code, public $formattedDate, public $formattedTime)
     {
-        
+
     }
 
     /**

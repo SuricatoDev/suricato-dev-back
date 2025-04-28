@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ReservaRequestMail extends Mailable
+class FeedbackReservaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -15,20 +15,18 @@ class ReservaRequestMail extends Mailable
     public $caravanaPassageiro;
     public $caravana;
     public $dadosOrganizador;
-    public $telefonePassageiro;
 
-    public function __construct(CaravanaPassageiro $caravanaPassageiro, $user, $caravana, $dadosOrganizador, $telefonePassageiro)
+    public function __construct(CaravanaPassageiro $caravanaPassageiro, $user, $caravana, $dadosOrganizador)
     {
         $this->caravanaPassageiro = $caravanaPassageiro;
         $this->user = $user;
         $this->caravana = $caravana;
         $this->dadosOrganizador = $dadosOrganizador;
-        $this->telefonePassageiro = $telefonePassageiro;
     }
 
     public function build()
     {
-        return $this->subject('📩 Nova solicitação de reserva - Excursionistas')
-                    ->markdown('emails.emailReserva');
+        return $this->subject('🧡 Solicitação de inscrição realizada! - Excursionistas')
+                    ->markdown('emails.emailFeedbackReserva');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ConfirmarReservaMail;
+use App\Mail\FeedbackReservaMail;
 use App\Mail\ReservaRequestMail;
 use App\Models\Caravana;
 use App\Models\CaravanaPassageiro;
@@ -195,6 +196,11 @@ class CaravanaPassageiroController extends Controller
         // Envia o email para o organizador
         Mail::to($dadosOrganizador->user->email)->send(
             new ReservaRequestMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador, $telefonePassageiro)
+        );
+
+        // Envia o email para o passageiro com as instruções
+        Mail::to($user->email)->send(
+            new FeedbackReservaMail($caravanaPassageiro, $user, $caravana, $dadosOrganizador)
         );
 
         return response()->json([

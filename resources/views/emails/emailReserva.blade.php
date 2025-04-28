@@ -49,6 +49,12 @@
             padding: 30px 20px;
         }
 
+        .content h2 {
+            font-size: 20px;
+            color: #FF6D3C;
+            margin-bottom: 20px;
+        }
+
         .content p {
             font-size: 16px;
             line-height: 1.6;
@@ -104,15 +110,18 @@
             </table>
         </div>
         <div class="content" style="padding: 16px;">
-            <p>Olá,
+            <p>
+                <h2>Nova solicitação de reserva! 🚀</h2>
+            </p>
+
+            <p style="color: #6A6A6A;">Olá,
                 @if ($dadosOrganizador->nome_fantasia !== '')
                     <strong>{{ $dadosOrganizador->nome_fantasia }}</strong>,
             </p>
+            <p style="color: #6A6A6A;">Um passageiro solicitou reserva em uma de suas caravanas!</p>
         @else
             <strong>{{ $dadosOrganizador->razao_social }}</strong>,</p>
             @endif
-
-            <p>Um passageiro solicitou reserva em uma de suas caravanas!</p>
 
             <div class="info">
                 <p><strong>📌 Caravana:</strong> {{ $caravana->titulo }}</p>
@@ -128,7 +137,7 @@
                 <p><strong>📧 E-mail:</strong> {{ $user->email }}</p>
             </div>
             <br>
-            <p>Atenciosamente,<br>Equipe Excursionistas</p>
+            <p style="color: #6A6A6A;">Atenciosamente,<br>Equipe Excursionistas</p>
         </div>
         <table role="presentation" style="width: 100%; background-color: #f4f4f4; padding: 15px;">
             <tr>

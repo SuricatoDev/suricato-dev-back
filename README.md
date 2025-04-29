@@ -27,7 +27,7 @@ O back-end do sistema foi desenvolvido utilizando **Laravel 11** como framework 
 ## 👥 Equipe do Projeto  
 
 - **Gestão, Documentação e Testes:** Fernanda Szabadi  
-- **Frontend:** Paulo Geliandes, Alexandre Arantes  
+- **Front-end:** Paulo Geliandes, Alexandre Arantes  
 - **Back-end:** Filipe Lamego, Kaike Fonseca  
 
 O back-end está em constante evolução para garantir uma experiência segura e eficiente para todos os usuários. 🚀  

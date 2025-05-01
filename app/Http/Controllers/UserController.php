@@ -851,14 +851,14 @@ class UserController extends Controller
                 Storage::disk('s3')->deleteDirectory("usuarios/{$user->id}");
             }
 
-            // Verifica se o usuário possui alguma reserva em caravana_passageiro
-            $reservas = DB::table('caravana_passageiro')
+            // Verifica se o usuário possui alguma reserva em caravana_passageiros
+            $reservas = DB::table('caravana_passageiros')
                 ->where('passageiro_id', $user->id)
                 ->get();
 
             if ($reservas->isNotEmpty()) {
-                // Deleta as reservas associadas ao passageiro, pois há uma chave estrangeira na tabela caravana_passageiro
-                DB::table('caravana_passageiro')
+                // Deleta as reservas associadas ao passageiro, pois há uma chave estrangeira na tabela caravana_passageiros
+                DB::table('caravana_passageiros')
                     ->where('passageiro_id', $user->id)
                     ->delete();
             }

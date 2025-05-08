@@ -7,12 +7,11 @@ O back-end do sistema foi desenvolvido utilizando **Laravel 11** como framework 
 - **Linguagem:** PHP 8+  
 - **Framework:** Laravel 11  
 - **Banco de Dados:** MySQL
-- **Servidor:** Apache (hospedado em um droplet da DigitalOcean)  
+- **Servidor:** Apache (hospedado na EC2 da AWS)  
 - **Autenticação:** Laravel Sanctum (API Token)  
 - **Documentação da API:** Swagger (L5 Swagger)  
 - **Gerenciamento de Dependências:** Composer  
-- **ORM:** Eloquent  
-- **Testes Automatizados:** PHPUnit  
+- **ORM:** Eloquent
 
 ## 📌 Principais Funcionalidades do Back-end  
 

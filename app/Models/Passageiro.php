@@ -42,9 +42,4 @@ class Passageiro extends Model
         return $this->hasMany(Avaliacao::class);
     }
 
-    public function denuncia()
-    {
-        return $this->hasMany(Denuncia::class);
-    }
-
 }

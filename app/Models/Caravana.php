@@ -47,11 +47,6 @@ class Caravana extends Model
         return $this->hasMany(CaravanaPassageiro::class);
     }
 
-    public function eventos()
-    {
-        return $this->belongsToMany(Evento::class);
-    }
-
     public function favoritos()
     {
         return $this->hasMany(Favorito::class);
@@ -65,11 +60,6 @@ class Caravana extends Model
     public function organizador()
     {
         return $this->belongsTo(Organizador::class);
-    }
-
-    public function veiculos()
-    {
-        return $this->hasMany(Veiculo::class);
     }
 
 

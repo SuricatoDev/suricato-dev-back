@@ -41,18 +41,8 @@ class Organizador extends Model
         return $this->hasMany(Caravana::class);
     }
 
-    public function veiculos()
-    {
-        return $this->hasMany(Veiculo::class);
-    }
-
     public function avaliacao()
     {
         return $this->hasMany(Avaliacao::class);
-    }
-
-    public function denuncia()
-    {
-        return $this->hasMany(Denuncia::class);
     }
 }

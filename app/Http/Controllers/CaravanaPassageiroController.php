@@ -185,7 +185,7 @@ class CaravanaPassageiroController extends Controller
 
         // Verifica se o passageiro já fez uma reserva na caravana
         $caravanaPassageiro = CaravanaPassageiro::where('caravana_id', $id)
-            ->where('passageiro_id', $user->id)
+            ->where('passageiro_id', $user->id)->where('status', '!=', 'Cancelado')
             ->first();
 
         if ($caravanaPassageiro) {

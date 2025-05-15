@@ -188,13 +188,11 @@ class CaravanaPassageiroController extends Controller
             ->where('passageiro_id', $user->id)
             ->first();
 
-        if ($caravanaPassageiro) {
-            if ($caravanaPassageiro->status != 'Cancelado') {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Passageiro já tem uma reserva ativa nesta caravana!'
-                ], 409);  // Conflito: não pode reservar de novo
-            }
+        if ($caravanaPassageiro->status != 'Cancelado') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Passageiro já tem uma reserva ativa nesta caravana!'
+            ], 409);  // Conflito: não pode reservar de novo
         }
 
         // Criação da reserva

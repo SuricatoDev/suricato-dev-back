@@ -184,18 +184,17 @@ class CaravanaPassageiroController extends Controller
         }
 
         // Verifica se o passageiro já tem uma reserva ativa (Pendente ou Ativo) na caravana
-        $caravanaPassageiro = CaravanaPassageiro::where('caravana_id', $id)
+        $existeReservaAtiva = CaravanaPassageiro::where('caravana_id', $id)
             ->where('passageiro_id', $user->id)
             ->whereIn('status', ['Pendente', 'Confirmado'])
             ->exists();
 
-        if ($caravanaPassageiro) {
+        if ($existeReservaAtiva) {
             return response()->json([
                 'status' => false,
-                'message' => 'Você já possui uma reserva ativa nesta caravana.',
-            ], 409); // Conflito
+                'message' => 'Você já possui uma reserva ativa nesta caravana.'
+            ], 409);
         }
-
 
         // Criação da reserva
         $caravanaPassageiro = CaravanaPassageiro::create([

@@ -23,7 +23,6 @@ return new class extends Migration
                 ->references('id')
                 ->on('caravanas');
             $table->enum('status', ['Pendente', 'Confirmado', 'Cancelado']);
-            $table->unique(['passageiro_id', 'caravana_id']);
             $table->timestamps();
         });
     }

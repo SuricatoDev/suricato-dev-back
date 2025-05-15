@@ -44,7 +44,7 @@ class Caravana extends Model
 
     public function caravanaPassageiros()
     {
-        return $this->hasMany(CaravanaPassageiro::class, 'caravana_id', 'id');
+        return $this->hasMany(CaravanaPassageiro::class);
     }
 
     public function favoritos()

@@ -192,13 +192,9 @@ class CaravanaPassageiroController extends Controller
             if ($caravanaPassageiro->status != 'Cancelado') {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Passageiro ja fez uma reserva nesta caravana!'
-                ], 409);  // Status 409 para conflito
+                    'message' => 'Passageiro já tem uma reserva ativa nesta caravana!'
+                ], 409);  // Conflito: não pode reservar de novo
             }
-            return response()->json([
-                'status' => false,
-                'message' => 'Passageiro já fez uma reserva nesta caravana!'
-            ], 409);  // Status 409 para conflito
         }
 
         // Criação da reserva

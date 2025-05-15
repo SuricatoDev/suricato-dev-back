@@ -449,7 +449,6 @@ class CaravanaPassageiroController extends Controller
     public function cancelarReserva($id, $id_reserva)
     {
         $caravana = Caravana::findOrFail($id);
-        dd($caravana);
         $user = Auth::user();
 
         // Verifica se o usuário é o passageiro da reserva

@@ -13,7 +13,8 @@ return new class extends Migration
             $table->unsignedInteger('id'); // Usa o mesmo ID do user
             $table->primary('id'); // Define como chave primária
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade'); // Chave estrangeira vinculada a users
-            $table->string('razao_social');
+            $table->string('razao_social', 255);
+            $table->string('nome_fantasia', 255)->nullable();
             $table->string('cnpj', 14)->unique()->notNull();
             $table->boolean('cadastur')->default(false);
             $table->string('inscricao_estadual', 14);

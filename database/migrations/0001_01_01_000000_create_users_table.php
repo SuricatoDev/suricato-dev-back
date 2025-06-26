@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('nome');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('verificado')->default(false);
+            $table->string('email_verification_token')->unique();
             $table->string('password');
             $table->date('data_nascimento');
             $table->string('telefone')->nullable();

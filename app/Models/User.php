@@ -16,6 +16,9 @@ class User extends Authenticatable
     protected $fillable = [
         'nome',
         'email',
+        'email_verified_at',
+        'verificado',
+        'email_verification_token',
         'password',
         'data_nascimento',
         'telefone',
@@ -23,9 +26,6 @@ class User extends Authenticatable
         'organizador',
         'ativo',
         'foto_perfil',
-        'email_verified_at',
-        'verificado',
-        'email_verification_token'
     ];
 
     protected $hidden = [
